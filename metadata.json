@@ -1,0 +1,5 @@
+{
+  "name": "Cyclic Alarms",
+  "description": "Set alarms for cyclic days and recurring events with custom notification sounds.",
+  "requestFramePermissions": []
+}

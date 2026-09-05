@@ -1,0 +1,26 @@
+# Build output
+/build
+app/build/
+
+# Gradle
+.gradle/
+.kotlin/
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# Local machine config
+local.properties
+local.defaults.properties
+
+# Release APK (upload via GitHub Releases instead)
+app/release/
+
+# Other
+.DS_Store
+/captures
+.externalNativeBuild
+.cxx
+.env
+debug.keystore

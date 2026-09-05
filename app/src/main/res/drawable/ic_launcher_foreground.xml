@@ -1,0 +1,127 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- All strokes are WHITE so they show on both dark and light launcher backgrounds -->
+
+    <!-- Outer clock body -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.0"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"
+        android:pathData="M54,18
+            C74.44,18 91,34.56 91,55
+            C91,75.44 74.44,92 54,92
+            C33.56,92 17,75.44 17,55
+            C17,34.56 33.56,18 54,18 Z"/>
+
+    <!-- Spiral ring 1 (outermost) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.2"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"
+        android:pathData="M54,30
+            C67.8,30 79,41.2 79,55
+            C79,68.8 67.8,80 54,80
+            C40.2,80 29,68.8 29,55
+            C29,41.2 40.2,30 54,30"/>
+
+    <!-- Spiral ring 2 -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.0"
+        android:strokeAlpha="0.85"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"
+        android:pathData="M54,38
+            C63.39,38 71,45.61 71,55
+            C71,64.39 63.39,72 54,72
+            C44.61,72 37,64.39 37,55
+            C37,45.61 44.61,38 54,38"/>
+
+    <!-- Spiral ring 3 (innermost) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeAlpha="0.7"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"
+        android:pathData="M54,46
+            C58.97,46 63,50.03 63,55
+            C63,59.97 58.97,64 54,64
+            C49.03,64 45,59.97 45,55
+            C45,50.03 49.03,46 54,46"/>
+
+    <!-- Spiral connector curve -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.6"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"
+        android:pathData="M54,46
+            C58,50 58,60 54,63
+            C50,63 46,59 46,55
+            C46,51 49,47 54,46
+            C61,45 68,50 68,55
+            C68,63 61,70 54,70
+            C47,70 40,63 40,55
+            C40,47 47,40 54,40"/>
+
+    <!-- Center dot -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M51.5,55 A2.5,2.5 0 1,1 56.5,55 A2.5,2.5 0 1,1 51.5,55 Z"/>
+
+    <!-- Tick marks 12, 3, 6, 9 -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,20 L54,26
+                           M89,55 L83,55
+                           M54,90 L54,84
+                           M19,55 L25,55"/>
+
+    <!-- Left bell -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.4"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"
+        android:pathData="M28,26 C24,22 21,17 25,15 C29,13 33,17 34,21"/>
+
+    <!-- Right bell -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.4"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"
+        android:pathData="M80,26 C84,22 87,17 83,15 C79,13 75,17 74,21"/>
+
+    <!-- Top knob -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,18 L54,13"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M52,11 A2,2 0 1,1 56,11 A2,2 0 1,1 52,11 Z"/>
+
+    <!-- Feet -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M40,91 C38,95 36,98 39,99
+                           M68,91 C70,95 72,98 69,99"/>
+
+</vector>
