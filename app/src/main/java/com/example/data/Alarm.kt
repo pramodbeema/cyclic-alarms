@@ -28,6 +28,7 @@ data class Alarm(
     val customTrackUri: String = "",   // URI string if user picked a file from device, else ""
     val vibrate: Boolean = true,
     val volume: Float = 1.0f,
+    val snoozeMinutes: Int = 5,
     val snoozeCount: Int = 0,
     val lastTriggeredTime: Long = 0L
 ) {

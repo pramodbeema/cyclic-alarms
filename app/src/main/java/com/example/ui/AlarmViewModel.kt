@@ -24,6 +24,14 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     private val _themeMode = MutableStateFlow(prefs.getString("theme_mode", "Dark") ?: "Dark")
     val themeMode = _themeMode.asStateFlow()
 
+    // Time format: "12H" or "24H"
+    private val _timeFormat = MutableStateFlow(prefs.getString("time_format", "12H") ?: "12H")
+    val timeFormat = _timeFormat.asStateFlow()
+
+    // First launch theme setup status
+    private val _isThemeSetupDone = MutableStateFlow(prefs.getBoolean("theme_setup_done", false))
+    val isThemeSetupDone = _isThemeSetupDone.asStateFlow()
+
     // Keep for legacy compatibility — always false now
     val isDynamicColor = MutableStateFlow(false).asStateFlow()
 
@@ -50,6 +58,17 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     fun setThemeMode(mode: String) {
         _themeMode.value = mode
         prefs.edit().putString("theme_mode", mode).apply()
+    }
+
+    fun completeThemeSetup(mode: String) {
+        setThemeMode(mode)
+        _isThemeSetupDone.value = true
+        prefs.edit().putBoolean("theme_setup_done", true).apply()
+    }
+
+    fun setTimeFormat(format: String) {
+        _timeFormat.value = format
+        prefs.edit().putString("time_format", format).apply()
     }
 
     fun setSnoozeMinutes(minutes: Int) {

@@ -1,8 +1,14 @@
 package com.example.ui
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
@@ -24,6 +30,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -71,24 +78,27 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     val logs   by viewModel.logs.collectAsStateWithLifecycle()
     val activeAlarm by com.example.service.RingingState.activeAlarm.collectAsState()
 
-    var showSettings  by remember { mutableStateOf(false) }
     var showAddEdit   by remember { mutableStateOf(false) }
     var editTarget    by remember { mutableStateOf<Alarm?>(null) }
     var currentTab    by remember { mutableStateOf(0) }
     var selectedIds   by remember { mutableStateOf(setOf<Int>()) }
     val selectionMode = selectedIds.isNotEmpty()
 
-    val themeMode  by viewModel.themeMode.collectAsState()
-    val snoozeMins by viewModel.snoozeMinutes.collectAsState()
+    val themeMode        by viewModel.themeMode.collectAsStateWithLifecycle()
+    val timeFormat       by viewModel.timeFormat.collectAsStateWithLifecycle()
+    val isThemeSetupDone by viewModel.isThemeSetupDone.collectAsStateWithLifecycle()
+    var selectedThemeForSetup by remember { mutableStateOf(themeMode) }
 
     var clock by remember { mutableStateOf("--:--:--") }
     var date  by remember { mutableStateOf("") }
-    LaunchedEffect(Unit) {
-        val tf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-        val df = SimpleDateFormat("EEE, MMM d", Locale.getDefault())
+    LaunchedEffect(timeFormat) {
+        val tfPattern = if (timeFormat == "24H") "HH:mm:ss" else "hh:mm:ss a"
+        val tf = SimpleDateFormat(tfPattern, Locale.US)
+        val df = SimpleDateFormat("EEE, MMM d, yyyy", Locale.US)
         while (true) {
             val now = Calendar.getInstance().time
-            clock = tf.format(now); date = df.format(now)
+            clock = tf.format(now).uppercase(Locale.US)
+            date  = df.format(now)
             delay(1000)
         }
     }
@@ -140,9 +150,11 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
         bottomBar = {
             Column(modifier = Modifier.fillMaxWidth().background(c.surfaceColor)) {
                 HorizontalDivider(color = c.outlineColor)
-                Row(modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 32.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
-                    BottomTab("Alarms",  Icons.Default.Notifications,    currentTab == 0) { currentTab = 0 }
-                    BottomTab("History", Icons.AutoMirrored.Filled.List, currentTab == 1) { currentTab = 1 }
+                Row(modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
+                    BottomTab("Alarms",   Icons.Default.Notifications,    currentTab == 0) { currentTab = 0 }
+                    BottomTab("History",  Icons.AutoMirrored.Filled.List, currentTab == 1) { currentTab = 1 }
+                    BottomTab("Settings", Icons.Default.Settings,         currentTab == 2) { currentTab = 2 }
+                    BottomTab("About",    Icons.Default.Info,             currentTab == 3) { currentTab = 3 }
                 }
             }
         }
@@ -153,39 +165,30 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             // Header
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column {
-                    // "Beema's FINCON" — tap to send feedback email
                     Text(
                         text = "Beema's FINCON",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = BrandBlue,
-                        modifier = Modifier.clickable {
-                            val intent = android.content.Intent(android.content.Intent.ACTION_SENDTO).apply {
-                                data = android.net.Uri.parse("mailto:bp.beema@outlook.com")
-                                putExtra(android.content.Intent.EXTRA_SUBJECT, "Cyclic Alarms Feedback")
-                            }
-                            context.startActivity(android.content.Intent.createChooser(intent, "Send Feedback"))
-                        }
+                        color = BrandBlue
                     )
-                    Text(clock, fontSize = 28.sp, fontWeight = FontWeight.Black, color = c.textPrimary, fontFamily = FontFamily.Monospace)
-                    Text(date,  fontSize = 13.sp, color = c.textSecondary)
-                }
-                Box(modifier = Modifier.size(44.dp).clip(CircleShape).background(c.surfaceVariant).border(BorderStroke(1.dp, c.outlineColor), CircleShape).clickable { showSettings = true }.testTag("settings_gear_button"), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Default.Settings, contentDescription = "Settings", tint = c.textSecondary, modifier = Modifier.size(20.dp))
+                    Text(clock, fontSize = 24.sp, fontWeight = FontWeight.Black, color = c.textPrimary, fontFamily = FontFamily.Monospace)
+                    Text(date,  fontSize = 13.sp, color = c.textSecondary, fontWeight = FontWeight.Medium)
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             // Next alarm pill
-            Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(
-                if (c.isDark) Brush.horizontalGradient(listOf(Color(0xFF1C2D4A), Color(0xFF1E1A2E)))
-                else Brush.horizontalGradient(listOf(Color(0xFFD6E4FF), Color(0xFFEBDEFF)))
-            ).padding(horizontal = 12.dp, vertical = 7.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(14.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(nextAlarmText, fontSize = 12.sp, color = if (c.isDark) BrandCyan else BrandBlue, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (currentTab == 0) {
+                Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(
+                    if (c.isDark) Brush.horizontalGradient(listOf(Color(0xFF1C2D4A), Color(0xFF1E1A2E)))
+                    else Brush.horizontalGradient(listOf(Color(0xFFD6E4FF), Color(0xFFEBDEFF)))
+                ).padding(horizontal = 12.dp, vertical = 7.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(14.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(nextAlarmText, fontSize = 12.sp, color = if (c.isDark) BrandCyan else BrandBlue, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
                 }
             }
 
@@ -200,7 +203,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             }
 
             // Selection bar
-            AnimatedVisibility(visible = selectionMode, enter = fadeIn() + expandVertically(), exit = fadeOut() + shrinkVertically()) {
+            AnimatedVisibility(visible = selectionMode && currentTab == 0, enter = fadeIn() + expandVertically(), exit = fadeOut() + shrinkVertically()) {
                 Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp).clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).padding(horizontal = 12.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -230,56 +233,61 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
 
             // Tab content
             AnimatedContent(targetState = currentTab, transitionSpec = { fadeIn() togetherWith fadeOut() }, label = "tabs") { tab ->
-                if (tab == 0) {
-                    if (alarms.isEmpty()) {
-                        EmptyStateView(Icons.Default.Notifications, "No Alarms Yet", "Tap + to create your first cyclic or weekly alarm.")
-                    } else {
-                        LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxSize().padding(bottom = 80.dp)) {
-                            items(alarms, key = { it.id }) { alarm ->
-                                val isSel = selectedIds.contains(alarm.id)
-                                AlarmCard(
-                                    alarm = alarm, isSelected = isSel, isSelectionMode = selectionMode,
-                                    onToggle = { if (!selectionMode) viewModel.toggleAlarm(alarm) },
-                                    onEdit = { editTarget = alarm; showAddEdit = true },
-                                    onDelete = { viewModel.deleteAlarm(alarm) },
-                                    onPlayPreview = { viewModel.previewSound(alarm.soundPreset, alarm.volume) },
-                                    onLongPress = { selectedIds = selectedIds + alarm.id },
-                                    onSelectToggle = { selectedIds = if (isSel) selectedIds - alarm.id else selectedIds + alarm.id }
-                                )
+                when (tab) {
+                    0 -> {
+                        if (alarms.isEmpty()) {
+                            EmptyStateView(Icons.Default.Notifications, "No Alarms Yet", "Tap + to create your first cyclic or weekly alarm.")
+                        } else {
+                            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxSize().padding(bottom = 80.dp)) {
+                                items(alarms, key = { it.id }) { alarm ->
+                                    val isSel = selectedIds.contains(alarm.id)
+                                    AlarmCard(
+                                        alarm = alarm, isSelected = isSel, isSelectionMode = selectionMode,
+                                        onToggle = { if (!selectionMode) viewModel.toggleAlarm(alarm) },
+                                        onEdit = { editTarget = alarm; showAddEdit = true },
+                                        onDelete = { viewModel.deleteAlarm(alarm) },
+                                        onPlayPreview = { viewModel.previewSound(alarm.soundPreset, alarm.volume) },
+                                        onLongPress = { selectedIds = selectedIds + alarm.id },
+                                        onSelectToggle = { selectedIds = if (isSel) selectedIds - alarm.id else selectedIds + alarm.id }
+                                    )
+                                }
                             }
                         }
                     }
-                } else {
-                    if (logs.isEmpty()) {
-                        EmptyStateView(Icons.AutoMirrored.Filled.List, "No History", "Dismissed and snoozed alarms will appear here.")
-                    } else {
-                        Column(modifier = Modifier.fillMaxSize()) {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                                TextButton(onClick = { viewModel.clearLogs() }) {
-                                    Icon(Icons.Default.Delete, contentDescription = null, tint = DeleteRed, modifier = Modifier.size(16.dp))
-                                    Spacer(Modifier.width(4.dp))
-                                    Text("Clear", color = DeleteRed, fontWeight = FontWeight.Bold)
+                    1 -> {
+                        if (logs.isEmpty()) {
+                            EmptyStateView(Icons.AutoMirrored.Filled.List, "No History", "Dismissed and snoozed alarms will appear here.")
+                        } else {
+                            Column(modifier = Modifier.fillMaxSize()) {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                                    TextButton(onClick = { viewModel.clearLogs() }) {
+                                        Icon(Icons.Default.Delete, contentDescription = null, tint = DeleteRed, modifier = Modifier.size(16.dp))
+                                        Spacer(Modifier.width(4.dp))
+                                        Text("Clear", color = DeleteRed, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                                LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.weight(1f).padding(bottom = 80.dp)) {
+                                    items(logs, key = { it.id }) { LogItem(it) }
                                 }
                             }
-                            LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.weight(1f).padding(bottom = 80.dp)) {
-                                items(logs, key = { it.id }) { LogItem(it) }
-                            }
                         }
+                    }
+                    2 -> {
+                        SettingsPageView(
+                            themeMode = themeMode,
+                            onThemeModeChange = { viewModel.setThemeMode(it) },
+                            timeFormat = timeFormat,
+                            onTimeFormatChange = { viewModel.setTimeFormat(it) }
+                        )
+                    }
+                    3 -> {
+                        AboutPageView()
                     }
                 }
             }
         }
     }
 
-    if (showSettings) {
-        SettingsDialog(
-            onDismiss = { showSettings = false },
-            themeMode = themeMode,
-            onThemeModeChange = { viewModel.setThemeMode(it) },
-            snoozeMinutes = snoozeMins,
-            onSnoozeMinutesChange = { viewModel.setSnoozeMinutes(it) }
-        )
-    }
     if (showAddEdit) {
         AlarmAddEditDialog(
             alarm = editTarget,
@@ -288,6 +296,78 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             onPlayPreview = { s, v -> viewModel.previewSound(s, v) },
             onStopPreview = { viewModel.stopPreview() }
         )
+    }
+
+    // First Launch Theme Selection Dialog
+    if (!isThemeSetupDone) {
+        Dialog(
+            onDismissRequest = { /* Force explicit user choice */ },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        ) {
+            Surface(
+                shape = RoundedCornerShape(20.dp),
+                color = c.surfaceColor,
+                border = BorderStroke(1.dp, c.outlineColor),
+                modifier = Modifier.fillMaxWidth(0.92f).padding(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                            .background(BrandBlue.copy(alpha = 0.18f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(Icons.Default.Build, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(28.dp))
+                    }
+                    Spacer(Modifier.height(14.dp))
+                    Text("Welcome to Cyclic Alarms", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = c.textPrimary, textAlign = TextAlign.Center)
+                    Spacer(Modifier.height(6.dp))
+                    Text("Select your preferred theme. You can change this anytime in Settings.", fontSize = 13.sp, color = c.textSecondary, textAlign = TextAlign.Center, lineHeight = 18.sp)
+                    Spacer(Modifier.height(20.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(c.surfaceVariant)
+                            .padding(4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        listOf("Dark", "System", "Light").forEach { mode ->
+                            val isSel = selectedThemeForSetup == mode
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(42.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(if (isSel) BrandBlue else Color.Transparent)
+                                    .clickable {
+                                        selectedThemeForSetup = mode
+                                        viewModel.setThemeMode(mode)
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(mode, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = if (isSel) Color(0xFF003166) else c.textSecondary)
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(24.dp))
+                    Button(
+                        onClick = { viewModel.completeThemeSetup(selectedThemeForSetup) },
+                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166)),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text("Save & Continue", fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -298,10 +378,11 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
 private fun BottomTab(label: String, icon: ImageVector, selected: Boolean, onClick: () -> Unit) {
     val c = LocalAppColors.current
     Column(horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable(onClick = onClick).padding(horizontal = 16.dp, vertical = 4.dp)) {
-        Box(modifier = Modifier.width(56.dp).height(28.dp).clip(RoundedCornerShape(14.dp)).background(if (selected) BrandBlue.copy(alpha = 0.2f) else Color.Transparent), contentAlignment = Alignment.Center) {
+        modifier = Modifier.clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = 4.dp)) {
+        Box(modifier = Modifier.width(48.dp).height(26.dp).clip(RoundedCornerShape(13.dp)).background(if (selected) BrandBlue.copy(alpha = 0.2f) else Color.Transparent), contentAlignment = Alignment.Center) {
             Icon(icon, contentDescription = label, tint = if (selected) BrandBlue else c.textDisabled, modifier = Modifier.size(18.dp))
         }
+        Spacer(Modifier.height(2.dp))
         Text(label, fontSize = 11.sp, fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal, color = if (selected) BrandBlue else c.textDisabled)
     }
 }
@@ -352,8 +433,13 @@ fun AlarmCard(
 
             // Badge + switch row
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(accent.copy(alpha = 0.18f)).padding(horizontal = 8.dp, vertical = 3.dp)) {
-                    Text(headerText, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, color = accent.copy(alpha = alpha), letterSpacing = 0.8.sp)
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(accent.copy(alpha = 0.18f)).padding(horizontal = 8.dp, vertical = 3.dp)) {
+                        Text(headerText, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, color = accent.copy(alpha = alpha), letterSpacing = 0.8.sp)
+                    }
+                    Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(c.surfaceVariant).padding(horizontal = 6.dp, vertical = 3.dp)) {
+                        Text("💤 ${alarm.snoozeMinutes}m", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = c.textSecondary.copy(alpha = alpha))
+                    }
                 }
                 if (isSelectionMode) {
                     Checkbox(checked = isSelected, onCheckedChange = { onSelectToggle() },
@@ -550,6 +636,10 @@ fun AlarmAddEditDialog(
     var volume         by remember { mutableFloatStateOf(alarm?.volume ?: 1.0f) }
     var isPreviewing   by remember { mutableStateOf<String?>(null) }
 
+    // Per-Alarm Snooze Duration
+    var snoozeMinutes  by remember { mutableIntStateOf(alarm?.snoozeMinutes ?: 5) }
+    var customSnooze   by remember { mutableStateOf((alarm?.snoozeMinutes ?: 5).toString()) }
+
     val context = LocalContext.current
     val presets = listOf("High Pitch","Zen Bowl","Sunrise Chime","Digital Beeps","Morning Forest","Synth Wave Beat","Cyber Alert","Lofi Chord")
 
@@ -685,6 +775,53 @@ fun AlarmAddEditDialog(
                         }
                     }
 
+                    // SNOOZE DURATION (Per Alarm)
+                    item {
+                        SectionCard("Snooze Duration") {
+                            Text("Select or enter snooze duration in minutes", fontSize = 11.sp, color = c.textSecondary)
+                            Spacer(Modifier.height(8.dp))
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                listOf(5, 10, 15, 20, 30).forEach { opt ->
+                                    val sel = opt == snoozeMinutes
+                                    Box(
+                                        modifier = Modifier
+                                            .weight(1f).height(36.dp)
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .background(if (sel) BrandBlue else c.surfaceVariant)
+                                            .border(BorderStroke(1.dp, if (sel) BrandBlue else c.outlineColor), RoundedCornerShape(8.dp))
+                                            .clickable { snoozeMinutes = opt; customSnooze = opt.toString() },
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text("${opt}m", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold,
+                                            color = if (sel) Color(0xFF003166) else c.textSecondary)
+                                    }
+                                }
+                            }
+                            Spacer(Modifier.height(10.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("Custom:", color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                Spacer(Modifier.width(10.dp))
+                                OutlinedTextField(
+                                    value = customSnooze,
+                                    onValueChange = { input ->
+                                        if (input.all { it.isDigit() } && input.length <= 3) {
+                                            customSnooze = input
+                                            input.toIntOrNull()?.let { snoozeMinutes = it.coerceIn(1, 180) }
+                                        }
+                                    },
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                    modifier = Modifier.width(78.dp),
+                                    singleLine = true,
+                                    shape = RoundedCornerShape(8.dp),
+                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = BrandBlue, unfocusedBorderColor = c.outlineColor, focusedTextColor = c.textPrimary, unfocusedTextColor = c.textPrimary, cursorColor = BrandBlue),
+                                    textStyle = TextStyle(textAlign = TextAlign.Center, color = c.textPrimary, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text("minutes", color = c.textSecondary, fontSize = 13.sp)
+                            }
+                        }
+                    }
+
                     // SOUND
                     item {
                         SectionCard("Alarm Sound") {
@@ -759,14 +896,569 @@ fun AlarmAddEditDialog(
                     Button(onClick = {
                         val daysStr  = weeklyDays.filterValues { it }.keys.sorted().joinToString(",")
                         val interval = cyclicInterval.toIntOrNull() ?: 3
+                        val validSnooze = snoozeMinutes.coerceIn(1, 180)
                         onSave(Alarm(id = alarm?.id ?: 0, label = label, hour = hour, minute = minute, isEnabled = true,
                             alarmType = alarmType, weeklyDays = daysStr, cyclicIntervalDays = interval,
                             cyclicStartDate = cyclicStart, soundPreset = soundPreset, customTrackUri = customTrackUri,
-                            vibrate = vibrate, volume = volume, lastTriggeredTime = alarm?.lastTriggeredTime ?: 0L))
+                            vibrate = vibrate, volume = volume, snoozeMinutes = validSnooze, lastTriggeredTime = alarm?.lastTriggeredTime ?: 0L))
                     }, modifier = Modifier.weight(1.6f).height(48.dp).testTag("save_alarm_button"),
                         colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166)),
                         shape = RoundedCornerShape(12.dp)) {
                         Text("Save Alarm", fontWeight = FontWeight.ExtraBold, fontSize = 15.sp)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ════════════════════════════════════════════════════════
+//  SETTINGS PAGE VIEW
+// ════════════════════════════════════════════════════════
+@Composable
+fun SettingsPageView(
+    themeMode: String,
+    onThemeModeChange: (String) -> Unit,
+    timeFormat: String,
+    onTimeFormatChange: (String) -> Unit
+) {
+    val c = LocalAppColors.current
+    val context = LocalContext.current
+
+    // Helper functions to check permissions live
+    fun checkNotif(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        } else true
+    }
+
+    fun checkExactAlarm(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val am = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+            am?.canScheduleExactAlarms() ?: true
+        } else true
+    }
+
+    fun checkFullScreenIntent(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+            nm?.canUseFullScreenIntent() ?: true
+        } else true
+    }
+
+    fun checkOverlay(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Settings.canDrawOverlays(context)
+        } else true
+    }
+
+    var notifGranted      by remember { mutableStateOf(checkNotif()) }
+    var exactAlarmGranted by remember { mutableStateOf(checkExactAlarm()) }
+    var fullScreenGranted by remember { mutableStateOf(checkFullScreenIntent()) }
+    var overlayGranted    by remember { mutableStateOf(checkOverlay()) }
+
+    LaunchedEffect(Unit) {
+        notifGranted      = checkNotif()
+        exactAlarmGranted = checkExactAlarm()
+        fullScreenGranted = checkFullScreenIntent()
+        overlayGranted    = checkOverlay()
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 80.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text("SETTINGS", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
+
+        // ── APPEARANCE — Theme Mode ──
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(14.dp))
+                .background(c.surfaceColor)
+                .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(14.dp))
+                .padding(16.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Build, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text("Theme", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = c.textPrimary)
+            }
+            Spacer(Modifier.height(12.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(c.surfaceVariant)
+                    .padding(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                listOf("Dark", "System", "Light").forEach { mode ->
+                    val selected = themeMode == mode
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(38.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(if (selected) BrandBlue else Color.Transparent)
+                            .clickable { onThemeModeChange(mode) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = mode,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = if (selected) Color(0xFF003166) else c.textSecondary
+                        )
+                    }
+                }
+            }
+        }
+
+        // ── CLOCK DISPLAY FORMAT (12H / 24H) ──
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(14.dp))
+                .background(c.surfaceColor)
+                .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(14.dp))
+                .padding(16.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text("Clock Display Format", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = c.textPrimary)
+            }
+            Spacer(Modifier.height(6.dp))
+            Text("Choose how time is displayed on the home screen clock", fontSize = 12.sp, color = c.textSecondary)
+            Spacer(Modifier.height(12.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(c.surfaceVariant)
+                    .padding(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                listOf("12H" to "12-Hour (AM/PM)", "24H" to "24-Hour").forEach { (fmt, lbl) ->
+                    val selected = timeFormat == fmt
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(38.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(if (selected) BrandBlue else Color.Transparent)
+                            .clickable { onTimeFormatChange(fmt) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = lbl,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = if (selected) Color(0xFF003166) else c.textSecondary
+                        )
+                    }
+                }
+            }
+        }
+
+        // ── PERMISSIONS & SYSTEM ACCESS ──
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(14.dp))
+                .background(c.surfaceColor)
+                .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(14.dp))
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Lock, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text("Permissions & App Access", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = c.textPrimary)
+            }
+            Text("Manage system access required for reliable alarm ringing and lock-screen popups", fontSize = 12.sp, color = c.textSecondary)
+            Spacer(Modifier.height(4.dp))
+
+            PermissionRowItem(
+                title = "Notifications",
+                subtitle = "Required to trigger loud alarm sounds and banners",
+                isGranted = notifGranted,
+                onClickManage = {
+                    val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                        }
+                    } else {
+                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
+                    }
+                    context.startActivity(intent)
+                }
+            )
+
+            PermissionRowItem(
+                title = "Exact Alarm Scheduling",
+                subtitle = "Allows alarm to fire at the exact second requested",
+                isGranted = exactAlarmGranted,
+                onClickManage = {
+                    val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:${context.packageName}"))
+                    } else {
+                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
+                    }
+                    context.startActivity(intent)
+                }
+            )
+
+            PermissionRowItem(
+                title = "Full-Screen Alarm Alerts",
+                subtitle = "Displays full-screen ringing UI over keyguard when device is locked",
+                isGranted = fullScreenGranted,
+                onClickManage = {
+                    val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                        Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, Uri.parse("package:${context.packageName}"))
+                    } else {
+                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
+                    }
+                    context.startActivity(intent)
+                }
+            )
+
+            PermissionRowItem(
+                title = "Display Over Other Apps",
+                subtitle = "Allows popup window display on top of other running applications",
+                isGranted = overlayGranted,
+                onClickManage = {
+                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
+                    context.startActivity(intent)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun PermissionRowItem(
+    title: String,
+    subtitle: String,
+    isGranted: Boolean,
+    onClickManage: () -> Unit
+) {
+    val c = LocalAppColors.current
+    val bg = if (isGranted) SuccessGreen.copy(alpha = 0.1f) else DeleteRed.copy(alpha = 0.12f)
+    val borderCol = if (isGranted) SuccessGreen.copy(alpha = 0.35f) else DeleteRed.copy(alpha = 0.4f)
+    val statusCol = if (isGranted) SuccessGreen else DeleteRed
+    val statusText = if (isGranted) "✓ Granted" else "⚠ Disabled"
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(bg)
+            .border(BorderStroke(1.dp, borderCol), RoundedCornerShape(12.dp))
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = title,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 14.sp,
+                color = c.textPrimary,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(Modifier.width(8.dp))
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(statusCol.copy(alpha = 0.2f))
+                    .padding(horizontal = 8.dp, vertical = 3.dp)
+            ) {
+                Text(
+                    text = statusText,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = statusCol
+                )
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = subtitle,
+                fontSize = 11.sp,
+                color = c.textSecondary,
+                lineHeight = 15.sp,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(Modifier.width(12.dp))
+            Button(
+                onClick = onClickManage,
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                modifier = Modifier.height(34.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isGranted) BrandBlue else DeleteRed,
+                    contentColor = if (isGranted) Color(0xFF003166) else Color.White
+                ),
+                elevation = ButtonDefaults.buttonElevation(0.dp)
+            ) {
+                Text(
+                    text = if (isGranted) "Manage" else "Fix Now",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+        }
+    }
+}
+
+// ════════════════════════════════════════════════════════
+//  ABOUT PAGE VIEW
+// ════════════════════════════════════════════════════════
+@Composable
+fun AboutPageView() {
+    val c = LocalAppColors.current
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 80.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text("ABOUT & RELEASE NOTES", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
+
+        // Hero Card
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(c.surfaceColor)
+                .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(16.dp))
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(BrandBlue.copy(alpha = 0.18f))
+                    .border(BorderStroke(1.dp, BrandBlue), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(32.dp))
+            }
+            Spacer(Modifier.height(12.dp))
+            Text("Cyclic Alarms", fontWeight = FontWeight.Black, fontSize = 20.sp, color = c.textPrimary)
+            Spacer(Modifier.height(4.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
+                Spacer(Modifier.width(8.dp))
+                Text("Version 1.2", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                    modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
+            }
+            Spacer(Modifier.height(8.dp))
+            Text("Smart shift, roster & repeating cycle alarm app", fontSize = 12.sp, color = c.textSecondary, textAlign = TextAlign.Center)
+        }
+
+        // ── SUPPORT & COMMUNITY CARD ──
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(14.dp))
+                .background(c.surfaceColor)
+                .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(14.dp))
+                .padding(16.dp)
+        ) {
+            Text("SUPPORT & COMMUNITY", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.sp)
+            Spacer(Modifier.height(10.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(BrandBlue.copy(alpha = 0.12f))
+                    .border(BorderStroke(1.dp, BrandBlue.copy(alpha = 0.3f)), RoundedCornerShape(12.dp))
+                    .clickable {
+                        val intent = Intent(Intent.ACTION_SENDTO).apply {
+                            data = Uri.parse("mailto:bp.beema@outlook.com")
+                            putExtra(Intent.EXTRA_SUBJECT, "Cyclic Alarms - Feedbacks, Suggestions or Bugs")
+                        }
+                        context.startActivity(Intent.createChooser(intent, "Send Email"))
+                    }
+                    .padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                    Box(modifier = Modifier.size(40.dp).background(BrandBlue.copy(alpha = 0.2f), CircleShape), contentAlignment = Alignment.Center) {
+                        Icon(Icons.Default.Email, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
+                    }
+                    Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text("Feedbacks, Suggestions or Bugs Reporting", fontWeight = FontWeight.ExtraBold, fontSize = 13.sp, color = c.textPrimary)
+                        Text("bp.beema@outlook.com", fontSize = 11.sp, color = BrandBlue, fontWeight = FontWeight.Medium)
+                    }
+                }
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(18.dp))
+            }
+        }
+
+        // ── EXPANDABLE RELEASE NOTES ──
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(14.dp))
+                .background(c.surfaceColor)
+                .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(14.dp))
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Star, contentDescription = null, tint = BrandPurple, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text("Release History & Notes", fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = c.textPrimary)
+            }
+            Text("Tap on any release version to expand or collapse notes", fontSize = 12.sp, color = c.textSecondary)
+            Spacer(Modifier.height(4.dp))
+
+            // v1.2 — Expanded by default
+            ExpandableReleaseNoteCard(
+                version = "v1.2 (Current Release)",
+                badgeText = "Latest",
+                isInitiallyExpanded = true,
+                items = listOf(
+                    "🌀" to "Pencil-Sketched Spiral Alarm Icon — clean, symmetrical alarm clock launcher icon",
+                    "⏱" to "Per-Alarm Custom Snooze — set desired snooze duration (5, 10, 15, 20m or custom minutes)",
+                    "🔒" to "Native Lock Screen Ringing — rings smoothly over keyguard without PIN unlock prompt",
+                    "📱" to "4-Tab Navigation — clean layout for Alarms, History, Settings & About",
+                    "🕒" to "12H / 24H Clock Toggle — select preferred format with uppercase 'PM'/'AM'",
+                    "📅" to "Year Display in Date — home clock displays full year (e.g. Sat, Sep 5, 2026)",
+                    "🎨" to "First-Launch Theme Prompt & Status Bar Fix — seamless light/dark theme icon visibility",
+                    "🔑" to "In-App Permissions Manager — view and manage notification, exact alarm & overlay access",
+                    "✉️" to "Support & Community Card — moved to About page for easy feedback & bug reporting"
+                )
+            )
+
+            // v1.1 — Collapsed by default
+            ExpandableReleaseNoteCard(
+                version = "v1.1 Release Notes",
+                badgeText = "v1.1",
+                isInitiallyExpanded = false,
+                items = listOf(
+                    "🌙" to "Dark / Light / System theme selector in Settings",
+                    "🕐" to "Alarm editor now defaults to current time",
+                    "👁"  to "Minute spinner always visible — no more invisible digits",
+                    "🔔" to "New High Pitch alarm sound — loud dual-tone alert",
+                    "🔊" to "Volume defaults to maximum for new alarms",
+                    "🏷"  to "Beema's FINCON branding on home screen"
+                )
+            )
+
+            // v1.0 — Collapsed by default
+            ExpandableReleaseNoteCard(
+                version = "v1.0 Initial Release",
+                badgeText = "v1.0",
+                isInitiallyExpanded = false,
+                items = listOf(
+                    "⏰" to "Cyclic alarms — repeat every N days from a start date",
+                    "📅" to "Weekly alarms — pick any combination of weekdays",
+                    "🎵" to "7 built-in synth sounds + custom audio file support",
+                    "😴" to "Configurable snooze and vibration toggle",
+                    "📋" to "Alarm history log with clear option"
+                )
+            )
+        }
+
+        // Creator Card
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(14.dp))
+                .background(c.surfaceColor)
+                .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(14.dp))
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text("CREATOR & ACKNOWLEDGMENTS", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.sp)
+            Text("Built for shift workers, roster personnel, and anyone needing recurring interval alarms beyond standard weekly schedules.", fontSize = 12.sp, color = c.textSecondary, lineHeight = 18.sp)
+            Spacer(Modifier.height(4.dp))
+            Text("100% AI-assisted development. Zero tracking. Zero ads. 100% free.", fontSize = 11.sp, color = BrandBlue, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+@Composable
+private fun ExpandableReleaseNoteCard(
+    version: String,
+    badgeText: String,
+    isInitiallyExpanded: Boolean,
+    items: List<Pair<String, String>>
+) {
+    val c = LocalAppColors.current
+    var expanded by remember { mutableStateOf(isInitiallyExpanded) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(c.surfaceVariant)
+            .border(BorderStroke(1.dp, if (isInitiallyExpanded) BrandBlue.copy(alpha = 0.4f) else c.outlineColor), RoundedCornerShape(12.dp))
+            .clickable { expanded = !expanded }
+            .padding(14.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(version, fontWeight = FontWeight.ExtraBold, fontSize = 14.sp, color = c.textPrimary)
+                Spacer(Modifier.width(8.dp))
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(if (isInitiallyExpanded) BrandBlue.copy(alpha = 0.18f) else c.outlineColor.copy(alpha = 0.3f))
+                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                ) {
+                    Text(badgeText, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = if (isInitiallyExpanded) BrandBlue else c.textSecondary)
+                }
+            }
+            Icon(
+                imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                contentDescription = if (expanded) "Collapse" else "Expand",
+                tint = c.textSecondary,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+
+        AnimatedVisibility(
+            visible = expanded,
+            enter = fadeIn() + expandVertically(),
+            exit = fadeOut() + shrinkVertically()
+        ) {
+            Column(
+                modifier = Modifier.padding(top = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                HorizontalDivider(color = c.outlineColor)
+                Spacer(Modifier.height(2.dp))
+                items.forEach { (emoji, desc) ->
+                    Row(verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxWidth()) {
+                        Text(emoji, fontSize = 13.sp, modifier = Modifier.width(24.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text(desc, fontSize = 12.sp, color = c.textSecondary, fontWeight = FontWeight.Medium, lineHeight = 18.sp)
                     }
                 }
             }
@@ -808,13 +1500,13 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
             }
 
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Button(onClick = { com.example.service.AlarmService.snoozeAlarm(context, activeAlarm.alarmId, activeAlarm.label, activeAlarm.hour, activeAlarm.minute, activeAlarm.soundPreset, activeAlarm.vibrate, activeAlarm.volume) },
+                Button(onClick = { com.example.service.AlarmService.snoozeAlarm(context, activeAlarm.alarmId, activeAlarm.label, activeAlarm.hour, activeAlarm.minute, activeAlarm.soundPreset, activeAlarm.vibrate, activeAlarm.volume, activeAlarm.snoozeMinutes) },
                     modifier = Modifier.fillMaxWidth().height(60.dp).testTag("snooze_active_button"),
                     colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166)),
                     shape = RoundedCornerShape(30.dp)) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Snooze", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Snooze (${activeAlarm.snoozeMinutes}m)", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                 }
                 OutlinedButton(onClick = { com.example.service.AlarmService.dismissAlarm(context, activeAlarm.alarmId, activeAlarm.label, activeAlarm.hour, activeAlarm.minute) },
                     modifier = Modifier.fillMaxWidth().height(60.dp).testTag("dismiss_active_button"),
@@ -829,212 +1521,4 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
     }
 }
 
-// ════════════════════════════════════════════════════════
-//  SETTINGS DIALOG
-// ════════════════════════════════════════════════════════
-@Composable
-fun SettingsDialog(
-    onDismiss: () -> Unit,
-    themeMode: String,
-    onThemeModeChange: (String) -> Unit,
-    snoozeMinutes: Int,
-    onSnoozeMinutesChange: (Int) -> Unit
-) {
-    Dialog(onDismissRequest = onDismiss) {
-        val c = LocalAppColors.current
-        Surface(
-            modifier = Modifier.fillMaxWidth(0.95f).wrapContentHeight(),
-            shape = RoundedCornerShape(20.dp), color = c.surfaceColor,
-            border = BorderStroke(1.dp, c.outlineColor)
-        ) {
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 620.dp)
-                .verticalScroll(rememberScrollState())
-                .padding(20.dp)) {
-
-                // ── Header ──
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Settings, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text("Settings", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = c.textPrimary)
-                    }
-                    IconButton(onClick = onDismiss) {
-                        Icon(Icons.Default.Close, contentDescription = "Close", tint = c.textSecondary)
-                    }
-                }
-                HorizontalDivider(color = c.outlineColor, modifier = Modifier.padding(vertical = 8.dp))
-
-                // ── APPEARANCE — Theme Mode ──
-                Text("APPEARANCE", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.sp)
-                Spacer(Modifier.height(8.dp))
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(c.appBackground)
-                        .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(12.dp))
-                        .padding(16.dp)
-                ) {
-                    Text("Theme", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = c.textPrimary)
-                    Spacer(Modifier.height(10.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(c.surfaceVariant)
-                            .padding(3.dp),
-                        horizontalArrangement = Arrangement.spacedBy(3.dp)
-                    ) {
-                        listOf("Dark", "System", "Light").forEach { mode ->
-                            val selected = themeMode == mode
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(36.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (selected) BrandBlue else Color.Transparent)
-                                    .clickable { onThemeModeChange(mode) },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = mode,
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = if (selected) Color(0xFF003166) else c.textSecondary
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                // ── DEFAULT SNOOZE ──
-                Text("DEFAULT SNOOZE", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.sp)
-                Spacer(Modifier.height(8.dp))
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(c.appBackground)
-                        .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(12.dp))
-                        .padding(16.dp)
-                ) {
-                    Text("$snoozeMinutes minutes", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = c.textPrimary)
-                    Spacer(Modifier.height(10.dp))
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        listOf(5, 10, 15, 20).forEach { opt ->
-                            val sel = opt == snoozeMinutes
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f).height(38.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (sel) BrandBlue else c.surfaceVariant)
-                                    .border(BorderStroke(1.dp, if (sel) BrandBlue else c.outlineColor), RoundedCornerShape(8.dp))
-                                    .clickable { onSnoozeMinutesChange(opt) },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("${opt}m", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold,
-                                    color = if (sel) Color(0xFF003166) else c.textSecondary)
-                            }
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                // ── WHAT'S NEW ──
-                Text("WHAT'S NEW", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.sp)
-                Spacer(Modifier.height(8.dp))
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(c.appBackground)
-                        .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(12.dp))
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.Top) {
-                        Text("v1.1", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = BrandBlue,
-                            modifier = Modifier.width(32.dp))
-                        Text("Latest", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(4.dp))
-                                .background(SuccessGreen.copy(alpha = 0.15f))
-                                .padding(horizontal = 6.dp, vertical = 1.dp))
-                    }
-                    val newItems = listOf(
-                        "🌙" to "Dark / Light / System theme selector in Settings",
-                        "🕐" to "Alarm editor now defaults to current time",
-                        "👁"  to "Minute spinner always visible — no more invisible digits",
-                        "🔔" to "New High Pitch alarm sound — loud dual-tone alert",
-                        "🔊" to "Volume defaults to maximum for new alarms",
-                        "🏷"  to "Beema's FINCON branding on home screen",
-                        "✉️" to "Tap header to send feedback to bp.beema@outlook.com",
-                    )
-                    newItems.forEach { (emoji, desc) ->
-                        Row(verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxWidth()) {
-                            Text(emoji, fontSize = 13.sp, modifier = Modifier.width(24.dp))
-                            Spacer(Modifier.width(6.dp))
-                            Text(desc, fontSize = 12.sp, color = c.textSecondary, fontWeight = FontWeight.Medium)
-                        }
-                    }
-
-                    Spacer(Modifier.height(4.dp))
-                    HorizontalDivider(color = c.outlineColor)
-                    Spacer(Modifier.height(4.dp))
-
-                    Row(verticalAlignment = Alignment.Top) {
-                        Text("v1.0", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textDisabled,
-                            modifier = Modifier.width(32.dp))
-                    }
-                    val v1Items = listOf(
-                        "⏰" to "Cyclic alarms — repeat every N days from a start date",
-                        "📅" to "Weekly alarms — pick any combination of weekdays",
-                        "🎵" to "7 built-in synth sounds (Zen Bowl, Sunrise Chime, Digital Beeps…)",
-                        "📂" to "Pick any audio file from your device as alarm sound",
-                        "😴" to "Configurable snooze (5 / 10 / 15 / 20 minutes)",
-                        "📳" to "Vibration toggle per alarm",
-                        "🔔" to "Rings on lock screen — even when phone is sleeping",
-                        "📋" to "Alarm history log with clear option",
-                    )
-                    v1Items.forEach { (emoji, desc) ->
-                        Row(verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxWidth()) {
-                            Text(emoji, fontSize = 13.sp, modifier = Modifier.width(24.dp))
-                            Spacer(Modifier.width(6.dp))
-                            Text(desc, fontSize = 12.sp, color = c.textDisabled, fontWeight = FontWeight.Normal)
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                // ── ABOUT ──
-                Text("ABOUT", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.sp)
-                Spacer(Modifier.height(8.dp))
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(c.appBackground)
-                        .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(12.dp))
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("Cyclic Alarms", fontWeight = FontWeight.ExtraBold, fontSize = 16.sp, color = c.textPrimary)
-                    Text("Version 1.1", fontSize = 12.sp, color = c.textSecondary)
-                    Spacer(Modifier.height(6.dp))
-                    Text("Smart shift & roster alarm manager", fontSize = 11.sp, color = c.textSecondary, textAlign = TextAlign.Center)
-                }
-            }
-        }
-    }
-}
 

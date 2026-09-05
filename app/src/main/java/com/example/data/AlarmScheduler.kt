@@ -30,6 +30,7 @@ class AlarmScheduler(private val context: Context) {
             putExtra("ALARM_CUSTOM_URI", alarm.customTrackUri)
             putExtra("ALARM_VIBRATE", alarm.vibrate)
             putExtra("ALARM_VOLUME", alarm.volume)
+            putExtra("ALARM_SNOOZE_MINUTES", alarm.snoozeMinutes)
         }
 
         // Use a unique requestCode for each alarm

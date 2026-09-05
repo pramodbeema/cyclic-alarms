@@ -20,14 +20,19 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 
 - **Cyclic alarms** — repeat every N days from a start date (e.g. every 3 days, every 14 days)
 - **Weekly alarms** — pick any combination of weekdays
-- **Rings on lock screen** — works even when the phone is asleep
+- **Rings on lock screen** — native keyguard behavior, rings seamlessly over lock screen without PIN unlock prompt
+- **Per-alarm customizable snooze** — set desired snooze minutes per alarm (preset chips or custom duration)
+- **4-Tab Page Navigation** — clean dedicated tabs for Alarms, History, Settings, and About
+- **12H / 24H Clock Toggle** — clock toggle with capital "AM"/"PM" indicator and full year display on home screen date
+- **First-launch Theme Prompt & Light/Dark visibility** — select theme on install, with proper status bar icon contrast on devices like Galaxy S26
+- **In-App Permissions & App Access Manager** — view and manage notification, exact alarm, full-screen alert, and overlay permissions live in Settings
+- **Expandable Release Notes** — interactive collapsible release notes accordions on the About page
+- **Support & Community Card** — dedicated feedback & bug reporting section on the About page (`bp.beema@outlook.com`)
 - **8 built-in alarm sounds** — High Pitch, Zen Bowl, Sunrise Chime, Digital Beeps, Morning Forest, Synth Wave Beat, Cyber Alert, Lofi Chord
 - **Pick your own audio** — use any audio file from your device
-- **Volume control** — per-alarm volume slider, defaults to maximum
-- **Vibration toggle** — per alarm
-- **Snooze** — configurable 5 / 10 / 15 / 20 minutes
-- **Alarm history** — log of all dismissed and snoozed alarms
-- **Dark / Light / System theme** — switchable in Settings
+- **Volume & Vibration control** — per-alarm controls, volume defaults to maximum
+- **Alarm history** — log of all dismissed and snoozed alarms with clear option
+- **Pencil-sketched spiral launcher icon** — clean, symmetrical alarm clock icon design
 - **Zero ads. Zero tracking. Zero sign-in.**
 
 ---
@@ -75,13 +80,26 @@ You can tap **"Install anyway"** safely.
 
 ## AI disclosure
 
-This app was built **100% using AI assistance** (Kiro AI / Claude). Every line of Kotlin, every layout, every fix — written by AI based on my descriptions of what I wanted.
+This app was built **100% using AI assistance** (Google Antigravity AI / Claude). Every line of Kotlin, every layout, every fix — written by AI based on my descriptions of what I wanted.
 
 I'm not a software developer. I'm just someone who needed a specific alarm app, couldn't find one that did exactly what I wanted, and used AI to build it. The ideas, requirements, and testing are mine — the code is the AI's.
 
 ---
 
-## What's new — v1.1
+## What's new — v1.2
+
+- 🌀 **Pencil-Sketched Spiral Alarm Icon** — brand new centered, symmetrical pencil-sketched spiral alarm clock launcher icon
+- ⏱ **Per-Alarm Custom Snooze** — set desired snooze duration per alarm (quick preset chips + custom minute input) instead of global setting
+- 🔒 **Native Lock Screen Ringing** — rings over keyguard cleanly without prompting for PIN/password unlock
+- 📱 **Dedicated Page Navigation** — full 4-tab bottom navigation bar for Alarms, History, Settings, and About
+- 🕒 **12H / 24H Clock Toggle** — choose 12-Hour (uppercase "AM"/"PM") or 24-Hour format on the home screen clock
+- 📅 **Year display in date** — home screen date format now displays the full year (e.g. Sat, Sep 5, 2026)
+- 🎨 **First-Launch Theme Prompt & Status Bar Visibility** — asks theme preference on first install and ensures status bar icons stay visible on light themes
+- 🔑 **In-App Permissions Manager** — live permission status badges and direct settings management in Settings
+- ✉️ **Support & Community Card** — moved to About page for easy feedback & bug reporting (`bp.beema@outlook.com`)
+- 📂 **Expandable Release Notes** — collapsible release note cards on About page for clean readability
+
+## v1.1
 
 - 🌙 Dark / Light / System theme selector in Settings
 - 🕐 Alarm editor now defaults to current time
@@ -89,7 +107,6 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 - 🔔 New **High Pitch** alarm sound — loud dual-tone alert (2400 Hz + 3200 Hz)
 - 🔊 Volume defaults to maximum for new alarms
 - 🏷 "Beema's FINCON" branding on home screen
-- ✉️ Tap the header to send feedback
 
 ## v1.0 — Initial release
 
@@ -103,10 +120,11 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 
 ## Feedback
 
-Tap **"Beema's FINCON"** at the top of the home screen to send feedback directly by email. Or open an issue here on GitHub.
+Open the **About** page in the app and tap **"Feedbacks, Suggestions or Bugs Reporting"** to send feedback directly by email to `bp.beema@outlook.com`. Or open an issue here on GitHub.
 
 ---
 
 ## License
 
 This project has no formal license. Use it, fork it, do whatever you want with it.
+

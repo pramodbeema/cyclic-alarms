@@ -33,7 +33,8 @@ object RingingState {
         val soundPreset: String,
         val customTrackUri: String = "",
         val vibrate: Boolean,
-        val volume: Float
+        val volume: Float,
+        val snoozeMinutes: Int = 5
     )
     
     private val _activeAlarm = MutableStateFlow<ActiveAlarm?>(null)
@@ -75,7 +76,8 @@ class AlarmService : Service() {
             minute: Int,
             sound: String,
             vibrate: Boolean,
-            volume: Float
+            volume: Float,
+            snoozeMinutes: Int = 5
         ) {
             val intent = Intent(context, AlarmService::class.java).apply {
                 action = "SNOOZE_ALARM"
@@ -86,6 +88,7 @@ class AlarmService : Service() {
                 putExtra("ALARM_SOUND", sound)
                 putExtra("ALARM_VIBRATE", vibrate)
                 putExtra("ALARM_VOLUME", volume)
+                putExtra("ALARM_SNOOZE_MINUTES", snoozeMinutes)
             }
             context.startService(intent)
         }
@@ -107,16 +110,17 @@ class AlarmService : Service() {
         val customTrackUri = intent?.getStringExtra("ALARM_CUSTOM_URI") ?: ""
         val vibrate = intent?.getBooleanExtra("ALARM_VIBRATE", true) ?: true
         val volume = intent?.getFloatExtra("ALARM_VOLUME", 0.8f) ?: 0.8f
+        val snoozeMinutes = intent?.getIntExtra("ALARM_SNOOZE_MINUTES", 5) ?: 5
 
         when (action) {
             "START_ALARM" -> {
-                startAlarmMode(alarmId, label, hour, minute, soundPreset, customTrackUri, vibrate, volume)
+                startAlarmMode(alarmId, label, hour, minute, soundPreset, customTrackUri, vibrate, volume, snoozeMinutes)
             }
             "DISMISS_ALARM" -> {
                 dismissAlarmMode(alarmId, label, hour, minute)
             }
             "SNOOZE_ALARM" -> {
-                snoozeAlarmMode(alarmId, label, hour, minute, soundPreset, vibrate, volume)
+                snoozeAlarmMode(alarmId, label, hour, minute, soundPreset, vibrate, volume, snoozeMinutes)
             }
         }
 
@@ -131,7 +135,8 @@ class AlarmService : Service() {
         soundPreset: String,
         customTrackUri: String,
         vibrate: Boolean,
-        volume: Float
+        volume: Float,
+        snoozeMinutes: Int = 5
     ) {
         // Acquire a FULL WakeLock to turn on the screen when the alarm fires on a locked device.
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -158,7 +163,8 @@ class AlarmService : Service() {
                 soundPreset = soundPreset,
                 customTrackUri = customTrackUri,
                 vibrate = vibrate,
-                volume = volume
+                volume = volume,
+                snoozeMinutes = snoozeMinutes
             )
         )
 
@@ -206,6 +212,7 @@ class AlarmService : Service() {
             putExtra("ALARM_CUSTOM_URI", customTrackUri)
             putExtra("ALARM_VIBRATE", vibrate)
             putExtra("ALARM_VOLUME", volume)
+            putExtra("ALARM_SNOOZE_MINUTES", snoozeMinutes)
         }
         val snoozePendingIntent = PendingIntent.getService(
             this,
@@ -232,8 +239,6 @@ class AlarmService : Service() {
         )
 
         val timeStr = String.format("%02d:%02d", hour, minute)
-        val prefs = getSharedPreferences("alarm_settings", Context.MODE_PRIVATE)
-        val snoozeMins = prefs.getInt("snooze_minutes", 5)
 
         val notification = NotificationCompat.Builder(this, "alarm_channel")
             .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
@@ -248,7 +253,7 @@ class AlarmService : Service() {
             .setContentIntent(contentPendingIntent)
             .setFullScreenIntent(contentPendingIntent, true)
             .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Dismiss", dismissPendingIntent)
-            .addAction(android.R.drawable.ic_menu_send, "Snooze (${snoozeMins}m)", snoozePendingIntent)
+            .addAction(android.R.drawable.ic_menu_send, "Snooze (${snoozeMinutes}m)", snoozePendingIntent)
             .build()
 
         startForeground(1001, notification)
@@ -302,7 +307,8 @@ class AlarmService : Service() {
         minute: Int,
         soundPreset: String,
         vibrate: Boolean,
-        volume: Float
+        volume: Float,
+        snoozeMinutes: Int = 5
     ) {
         stopAlarmResources()
 
@@ -318,9 +324,9 @@ class AlarmService : Service() {
                 )
             )
 
-            val prefs = getSharedPreferences("alarm_settings", Context.MODE_PRIVATE)
-            val snoozeMins = prefs.getInt("snooze_minutes", 5)
-            val snoozeTimeMs = System.currentTimeMillis() + snoozeMins * 60 * 1000
+            val alarm = if (alarmId != -1) repository.getAlarmById(alarmId) else null
+            val effectiveSnoozeMins = alarm?.snoozeMinutes ?: snoozeMinutes
+            val snoozeTimeMs = System.currentTimeMillis() + effectiveSnoozeMins * 60 * 1000
 
             val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(applicationContext, com.example.receiver.AlarmReceiver::class.java).apply {
@@ -331,6 +337,7 @@ class AlarmService : Service() {
                 putExtra("ALARM_SOUND", soundPreset)
                 putExtra("ALARM_VIBRATE", vibrate)
                 putExtra("ALARM_VOLUME", volume)
+                putExtra("ALARM_SNOOZE_MINUTES", effectiveSnoozeMins)
             }
 
             val snoozePendingIntent = PendingIntent.getBroadcast(

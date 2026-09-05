@@ -4,124 +4,246 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- All strokes are WHITE so they show on both dark and light launcher backgrounds -->
+    <!-- PENCIL SKETCH SPIRAL ALARM CLOCK (Symmetrical & Centered at 54,54) -->
 
-    <!-- Outer clock body -->
+    <!-- Pencil Shading & Hatching Lines (Background Texture) -->
+    <!-- Left Bell Shading -->
     <path
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="3.0"
-        android:fillColor="@android:color/transparent"
+        android:strokeWidth="0.9"
+        android:strokeAlpha="0.3"
         android:strokeLineCap="round"
-        android:pathData="M54,18
-            C74.44,18 91,34.56 91,55
-            C91,75.44 74.44,92 54,92
-            C33.56,92 17,75.44 17,55
-            C17,34.56 33.56,18 54,18 Z"/>
+        android:fillColor="@android:color/transparent"
+        android:pathData="M24,19 L28,24  M27,17 L31,22  M30,16 L34,20" />
 
-    <!-- Spiral ring 1 (outermost) -->
+    <!-- Right Bell Shading -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="0.9"
+        android:strokeAlpha="0.3"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M84,19 L80,24  M81,17 L77,22  M78,16 L74,20" />
+
+    <!-- Twin Alarm Bells (Left: X=21..37, Y=14..29 | Right: X=71..87, Y=14..29) -->
+    <!-- Left Bell Primary Sketch -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M26,29 C21,24 19,16 26,13 C33,10 37,17 37,23 L26,29 Z" />
+
+    <!-- Left Bell Secondary Sketch Line -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.2"
+        android:strokeAlpha="0.65"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M24,27 C20,23 18,15 25,12 C32,9 38,16 38,22" />
+
+    <!-- Right Bell Primary Sketch -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M82,29 C87,24 89,16 82,13 C75,10 71,17 71,23 L82,29 Z" />
+
+    <!-- Right Bell Secondary Sketch Line -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.2"
+        android:strokeAlpha="0.65"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M84,27 C88,23 90,15 83,12 C76,9 70,16 70,22" />
+
+    <!-- Top Hammer & Loop (Centered at X=54) -->
+    <!-- Hammer Stem -->
     <path
         android:strokeColor="#FFFFFF"
         android:strokeWidth="2.2"
-        android:fillColor="@android:color/transparent"
         android:strokeLineCap="round"
-        android:pathData="M54,30
-            C67.8,30 79,41.2 79,55
-            C79,68.8 67.8,80 54,80
-            C40.2,80 29,68.8 29,55
-            C29,41.2 40.2,30 54,30"/>
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,21 L54,14" />
 
-    <!-- Spiral ring 2 -->
+    <!-- Top Loop Cap -->
     <path
         android:strokeColor="#FFFFFF"
         android:strokeWidth="2.0"
-        android:strokeAlpha="0.85"
-        android:fillColor="@android:color/transparent"
         android:strokeLineCap="round"
-        android:pathData="M54,38
-            C63.39,38 71,45.61 71,55
-            C71,64.39 63.39,72 54,72
-            C44.61,72 37,64.39 37,55
-            C37,45.61 44.61,38 54,38"/>
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,14 C50,14 47,11 47,8 C47,5 50,3 54,3 C58,3 61,5 61,8 C61,11 58,14 54,14 Z" />
 
-    <!-- Spiral ring 3 (innermost) -->
+    <!-- Hammer Strikers (Symmetrical Left & Right) -->
     <path
         android:strokeColor="#FFFFFF"
         android:strokeWidth="1.8"
-        android:strokeAlpha="0.7"
-        android:fillColor="@android:color/transparent"
         android:strokeLineCap="round"
-        android:pathData="M54,46
-            C58.97,46 63,50.03 63,55
-            C63,59.97 58.97,64 54,64
-            C49.03,64 45,59.97 45,55
-            C45,50.03 49.03,46 54,46"/>
-
-    <!-- Spiral connector curve -->
-    <path
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="1.5"
-        android:strokeAlpha="0.6"
         android:fillColor="@android:color/transparent"
-        android:strokeLineCap="round"
-        android:pathData="M54,46
-            C58,50 58,60 54,63
-            C50,63 46,59 46,55
-            C46,51 49,47 54,46
-            C61,45 68,50 68,55
-            C68,63 61,70 54,70
-            C47,70 40,63 40,55
-            C40,47 47,40 54,40"/>
+        android:pathData="M48,16 L43,18  M60,16 L65,18" />
 
-    <!-- Center dot -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M51.5,55 A2.5,2.5 0 1,1 56.5,55 A2.5,2.5 0 1,1 51.5,55 Z"/>
-
-    <!-- Tick marks 12, 3, 6, 9 -->
+    <!-- Feet (Left: X=33..41, Y=87..97 | Right: X=67..75, Y=87..97) -->
+    <!-- Left Foot Primary -->
     <path
         android:strokeColor="#FFFFFF"
         android:strokeWidth="2.5"
         android:strokeLineCap="round"
         android:fillColor="@android:color/transparent"
-        android:pathData="M54,20 L54,26
-                           M89,55 L83,55
-                           M54,90 L54,84
-                           M19,55 L25,55"/>
-
-    <!-- Left bell -->
+        android:pathData="M38,87 L33,96 C32,98 35,99 37,98 L41,87" />
+    <!-- Left Foot Sketch Overlay -->
     <path
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="2.4"
-        android:fillColor="@android:color/transparent"
+        android:strokeWidth="1.2"
+        android:strokeAlpha="0.6"
         android:strokeLineCap="round"
-        android:pathData="M28,26 C24,22 21,17 25,15 C29,13 33,17 34,21"/>
+        android:fillColor="@android:color/transparent"
+        android:pathData="M36,88 L31,97 C30,99 33,100 35,99" />
 
-    <!-- Right bell -->
+    <!-- Right Foot Primary -->
     <path
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="2.4"
-        android:fillColor="@android:color/transparent"
+        android:strokeWidth="2.5"
         android:strokeLineCap="round"
-        android:pathData="M80,26 C84,22 87,17 83,15 C79,13 75,17 74,21"/>
+        android:fillColor="@android:color/transparent"
+        android:pathData="M70,87 L75,96 C76,98 73,99 71,98 L67,87" />
+    <!-- Right Foot Sketch Overlay -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.2"
+        android:strokeAlpha="0.6"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M72,88 L77,97 C78,99 75,100 73,99" />
 
-    <!-- Top knob -->
+    <!-- Outer Circular Clock Body (Centered at 54,54, Radius=33) -->
+    <!-- Outer Main Stroke -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.8"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,21 C72.22,21 87,35.78 87,54 C87,72.22 72.22,87 54,87 C35.78,87 21,72.22 21,54 C21,35.78 35.78,21 54,21 Z" />
+
+    <!-- Outer Pencil Sketch Double Line -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.2"
+        android:strokeAlpha="0.65"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,19.5 C73.05,19.5 88.5,34.95 88.5,54 C88.5,73.05 73.05,88.5 54,88.5 C34.95,88.5 19.5,73.05 19.5,54 C19.5,34.95 34.95,19.5 54,19.5 Z" />
+
+    <!-- Inner Rim Sketch Circle -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeAlpha="0.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,24.5 C70.29,24.5 83.5,37.71 83.5,54 C83.5,70.29 70.29,83.5 54,83.5 C37.71,83.5 24.5,70.29 24.5,54 C24.5,37.71 37.71,24.5 54,24.5 Z" />
+
+    <!-- SPIRAL DIAL FACE (Centric Symmetrical Pencil Spiral) -->
+    <!-- Spiral Ring 1 (Outermost Spiral Coil, R=25..28) -->
     <path
         android:strokeColor="#FFFFFF"
         android:strokeWidth="2.2"
         android:strokeLineCap="round"
         android:fillColor="@android:color/transparent"
-        android:pathData="M54,18 L54,13"/>
+        android:pathData="M54,27 C68.91,27 81,39.09 81,54 C81,68.91 68.91,81 54,81 C39.09,81 27,68.91 27,54 C27,40.5 37.5,29.5 51,29" />
+
+    <!-- Spiral Ring 2 (Middle Spiral Coil, R=18..21) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.0"
+        android:strokeAlpha="0.88"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M51,29 C64.81,29.5 75,40.5 75,54 C75,65.6 65.6,75 54,75 C42.4,75 33,65.6 33,54 C33,43.2 41.5,34.5 52,34" />
+
+    <!-- Spiral Ring 3 (Inner Spiral Coil, R=11..14) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeAlpha="0.75"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M52,34 C63.05,34.5 70,42.5 70,54 C70,62.83 62.83,70 54,70 C45.17,70 38,62.83 38,54 C38,46.5 44,40 52,39.5" />
+
+    <!-- Spiral Ring 4 (Innermost Coil to Center Dot, R=4..7) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.6"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M52,39.5 C59.73,40 64,45.5 64,54 C64,59.5 59.5,64 54,64 C48.5,64 44,59.5 44,54 C44,49 48,45 53,45 C56.5,45 59,47.5 59,51 C59,53.5 57,55.5 54.5,55.5 C52.5,55.5 51,54 51,52" />
+
+    <!-- Spiral Symmetrical Counter-Curve (Sketch Balance Lines) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.2"
+        android:strokeAlpha="0.45"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,31 C41,31 31,41 31,54 M54,77 C67,77 77,67 77,54" />
+
+    <!-- Tick Marks (12, 3, 6, 9 o'clock + 45-degree diagonals) -->
+    <!-- Major Ticks -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,23 L54,28  M85,54 L80,54  M54,85 L54,80  M23,54 L28,54" />
+
+    <!-- Diagonal Ticks -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeAlpha="0.75"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M76,32 L72,36  M76,76 L72,72  M32,76 L36,72  M32,32 L36,36" />
+
+    <!-- Center Pivot Dot -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M52,11 A2,2 0 1,1 56,11 A2,2 0 1,1 52,11 Z"/>
+        android:pathData="M51.5,54 A2.5,2.5 0 1,1 56.5,54 A2.5,2.5 0 1,1 51.5,54 Z" />
 
-    <!-- Feet -->
+    <!-- Pencil Sketched Clock Hands (Hour pointing to 10:00, Minute pointing to 2:00) -->
+    <!-- Hour Hand -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.6"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,54 L43,43" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.2"
+        android:strokeAlpha="0.6"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,54 L41,41" />
+
+    <!-- Minute Hand -->
     <path
         android:strokeColor="#FFFFFF"
         android:strokeWidth="2.2"
         android:strokeLineCap="round"
         android:fillColor="@android:color/transparent"
-        android:pathData="M40,91 C38,95 36,98 39,99
-                           M68,91 C70,95 72,98 69,99"/>
+        android:pathData="M54,54 L68,40" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.0"
+        android:strokeAlpha="0.6"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,54 L70,38" />
 
 </vector>

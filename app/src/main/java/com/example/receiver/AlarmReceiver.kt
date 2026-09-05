@@ -21,6 +21,7 @@ class AlarmReceiver : BroadcastReceiver() {
             putExtra("ALARM_CUSTOM_URI", intent.getStringExtra("ALARM_CUSTOM_URI") ?: "")
             putExtra("ALARM_VIBRATE", intent.getBooleanExtra("ALARM_VIBRATE", true))
             putExtra("ALARM_VOLUME", intent.getFloatExtra("ALARM_VOLUME", 0.8f))
+            putExtra("ALARM_SNOOZE_MINUTES", intent.getIntExtra("ALARM_SNOOZE_MINUTES", 5))
         }
 
         try {
