@@ -44,7 +44,7 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 
 | ⏰ Alarms & Cyclic Schedules | ⏳ Countdown Timer | ⏱ Stopwatch & Laps |
 |:---:|:---:|:---:|
-| <img src="screenshots/mockup_alarms_tab.jpg" width="280" alt="Alarms Tab" /> | <img src="screenshots/mockup_timer_tab.jpg" width="280" alt="Timer Tab" /> | <img src="screenshots/mockup_stopwatch_tab.jpg" width="280" alt="Stopwatch Tab" /> |
+| <img src="screenshots/ChatGPT_mockup_all_tabs.jpg" width="280" alt="Alarms Tab" /> |
 
 ---
 
