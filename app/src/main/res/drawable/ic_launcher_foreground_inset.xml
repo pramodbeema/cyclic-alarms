@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Wraps the custom PNG with ~18% inset on all sides so the icon
+     fits within the safe zone of Android's adaptive icon canvas (108dp)
+     and is not clipped when the launcher applies its mask. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_launcher_custom"
+    android:inset="18dp" />

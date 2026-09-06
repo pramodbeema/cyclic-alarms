@@ -1,6 +1,5 @@
 package com.example
 
-import android.app.KeyguardManager
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -16,12 +15,18 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import com.example.service.RingingState
 import com.example.ui.AlarmDashboard
 import com.example.ui.AlarmViewModel
 import com.example.ui.theme.MyApplicationTheme
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 
 class MainActivity : ComponentActivity() {
     private val viewModel: AlarmViewModel by viewModels()
@@ -30,6 +35,46 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // ── Lock screen: show activity above keyguard and turn screen on ──
+        applyAlarmWindowFlags()
+
+        // ── Request all special permissions on first launch ──
+        requestRequiredPermissions()
+
+        enableEdgeToEdge()
+        setContent {
+            val themeMode by viewModel.themeMode.collectAsState()
+
+            // ── Return to lock screen / previous app after dismiss or snooze ──
+            // When RingingState transitions from ringing → idle, we move the task
+            // to background so the system restores the pre-alarm screen (lock screen
+            // or whichever app was open), matching native alarm app behaviour.
+            val activeAlarm by RingingState.activeAlarm.collectAsState()
+            LaunchedEffect(Unit) {
+                RingingState.activeAlarm
+                    .map { it != null }
+                    .distinctUntilChanged()
+                    .filter { isRinging -> !isRinging } // fires only when alarm stops
+                    .collect {
+                        // Clear keep-screen-on; let Android manage the screen state
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        // Send app to background → returns user to lock screen or previous app
+                        moveTaskToBack(true)
+                    }
+            }
+
+            MyApplicationTheme(themeMode = themeMode) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    AlarmDashboard(viewModel = viewModel)
+                }
+            }
+        }
+    }
+
+    /** Apply window flags needed to show the ringing UI over the lock screen. */
+    private fun applyAlarmWindowFlags() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
@@ -41,22 +86,6 @@ class MainActivity : ComponentActivity() {
             )
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-        // ── Request all special permissions on first launch ──
-        requestRequiredPermissions()
-
-        enableEdgeToEdge()
-        setContent {
-            val themeMode by viewModel.themeMode.collectAsState()
-            MyApplicationTheme(themeMode = themeMode) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    AlarmDashboard(viewModel = viewModel)
-                }
-            }
-        }
     }
 
     private fun requestRequiredPermissions() {
@@ -101,16 +130,6 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         // Re-apply lock screen flags when woken via notification tap
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            setShowWhenLocked(true)
-            setTurnScreenOn(true)
-        } else {
-            @Suppress("DEPRECATION")
-            window.addFlags(
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-            )
-        }
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        applyAlarmWindowFlags()
     }
 }

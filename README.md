@@ -20,9 +20,13 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 
 - **Cyclic alarms** — repeat every N days from a start date (e.g. every 3 days, every 14 days)
 - **Weekly alarms** — pick any combination of weekdays
+- **Default Cyclic Days** — new alarms open on the Cyclic Days tab by default
+- **Timer** — built-in countdown timer with circular progress ring, 1m–30m quick presets, pause & reset
+- **Stopwatch** — elapsed time tracker with lap recording, fastest/slowest lap highlights, and reset
 - **Rings on lock screen** — native keyguard behavior, rings seamlessly over lock screen without PIN unlock prompt
+- **Lock screen return** — after dismiss or snooze, phone returns to lock screen (or previous app) — matching native alarm app behaviour
 - **Per-alarm customizable snooze** — set desired snooze minutes per alarm (preset chips or custom duration)
-- **4-Tab Page Navigation** — clean dedicated tabs for Alarms, History, Settings, and About
+- **5-Tab Navigation** — Alarms, Timer, Stopwatch, Settings, About; History accessible via top-right icon on the Alarms tab
 - **12H / 24H Clock Toggle** — clock toggle with capital "AM"/"PM" indicator and full year display on home screen date
 - **First-launch Theme Prompt & Light/Dark visibility** — select theme on install, with proper status bar icon contrast on devices like Galaxy S26
 - **In-App Permissions & App Access Manager** — view and manage notification, exact alarm, full-screen alert, and overlay permissions live in Settings
@@ -31,7 +35,7 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 - **8 built-in alarm sounds** — High Pitch, Zen Bowl, Sunrise Chime, Digital Beeps, Morning Forest, Synth Wave Beat, Cyber Alert, Lofi Chord
 - **Pick your own audio** — use any audio file from your device
 - **Volume & Vibration control** — per-alarm controls, volume defaults to maximum
-- **Alarm history** — log of all dismissed and snoozed alarms with clear option
+- **Alarm history** — log of all dismissed and snoozed alarms with clear option (accessible via 📋 icon on the Alarms tab)
 - **Pencil-sketched spiral launcher icon** — clean, symmetrical alarm clock icon design
 - **Zero ads. Zero tracking. Zero sign-in.**
 
@@ -85,6 +89,15 @@ This app was built **100% using AI assistance** (Google Antigravity AI / Claude)
 I'm not a software developer. I'm just someone who needed a specific alarm app, couldn't find one that did exactly what I wanted, and used AI to build it. The ideas, requirements, and testing are mine — the code is the AI's.
 
 ---
+
+## What's new — v1.3
+
+- ⏱ **Timer** — built-in countdown timer with circular progress ring, quick presets (1m, 5m, 10m, 15m, 30m), pause & reset
+- ⏱ **Stopwatch** — elapsed time display with lap tracking, fastest/slowest lap highlights, and reset
+- 🔒 **Lock Screen Return** — after dismissing or snoozing an alarm, the phone returns to the lock screen (or whatever was open before), matching native alarm app behaviour
+- 📱 **5-Tab Navigation** — Alarms, Timer, Stopwatch, Settings, About; History moved to a 📋 icon in the top-right of the Alarms tab
+- 🌀 **Default Cyclic** — new alarms now open on Cyclic Days tab by default
+- 🖼 **Icon Fit Fix** — app icon no longer appears cropped or zoomed in on the launcher
 
 ## What's new — v1.2
 

@@ -12,9 +12,14 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,6 +28,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
@@ -41,6 +47,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -82,6 +90,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     var editTarget    by remember { mutableStateOf<Alarm?>(null) }
     var currentTab    by remember { mutableStateOf(0) }
     var selectedIds   by remember { mutableStateOf(setOf<Int>()) }
+    var showHistory   by remember { mutableStateOf(false) }
     val selectionMode = selectedIds.isNotEmpty()
 
     val themeMode        by viewModel.themeMode.collectAsStateWithLifecycle()
@@ -150,11 +159,12 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
         bottomBar = {
             Column(modifier = Modifier.fillMaxWidth().background(c.surfaceColor)) {
                 HorizontalDivider(color = c.outlineColor)
-                Row(modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
-                    BottomTab("Alarms",   Icons.Default.Notifications,    currentTab == 0) { currentTab = 0 }
-                    BottomTab("History",  Icons.AutoMirrored.Filled.List, currentTab == 1) { currentTab = 1 }
-                    BottomTab("Settings", Icons.Default.Settings,         currentTab == 2) { currentTab = 2 }
-                    BottomTab("About",    Icons.Default.Info,             currentTab == 3) { currentTab = 3 }
+                Row(modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 8.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
+                    BottomTab("Alarms",    Icons.Default.Notifications,  currentTab == 0) { currentTab = 0 }
+                    BottomTab("Timer",     Icons.Default.Timer,          currentTab == 1) { currentTab = 1 }
+                    BottomTab("Stopwatch", Icons.Default.AccessTime,     currentTab == 2) { currentTab = 2 }
+                    BottomTab("Settings",  Icons.Default.Settings,       currentTab == 3) { currentTab = 3 }
+                    BottomTab("About",     Icons.Default.Info,           currentTab == 4) { currentTab = 4 }
                 }
             }
         }
@@ -173,6 +183,17 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                     )
                     Text(clock, fontSize = 24.sp, fontWeight = FontWeight.Black, color = c.textPrimary, fontFamily = FontFamily.Monospace)
                     Text(date,  fontSize = 13.sp, color = c.textSecondary, fontWeight = FontWeight.Medium)
+                }
+                // History icon button (top-right, only visible on Alarms tab)
+                if (currentTab == 0) {
+                    IconButton(onClick = { showHistory = true }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.List,
+                            contentDescription = "Alarm History",
+                            tint = c.textSecondary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 }
             }
 
@@ -254,25 +275,9 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                             }
                         }
                     }
-                    1 -> {
-                        if (logs.isEmpty()) {
-                            EmptyStateView(Icons.AutoMirrored.Filled.List, "No History", "Dismissed and snoozed alarms will appear here.")
-                        } else {
-                            Column(modifier = Modifier.fillMaxSize()) {
-                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                                    TextButton(onClick = { viewModel.clearLogs() }) {
-                                        Icon(Icons.Default.Delete, contentDescription = null, tint = DeleteRed, modifier = Modifier.size(16.dp))
-                                        Spacer(Modifier.width(4.dp))
-                                        Text("Clear", color = DeleteRed, fontWeight = FontWeight.Bold)
-                                    }
-                                }
-                                LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.weight(1f).padding(bottom = 80.dp)) {
-                                    items(logs, key = { it.id }) { LogItem(it) }
-                                }
-                            }
-                        }
-                    }
-                    2 -> {
+                    1 -> { TimerScreen() }
+                    2 -> { StopwatchScreen() }
+                    3 -> {
                         SettingsPageView(
                             themeMode = themeMode,
                             onThemeModeChange = { viewModel.setThemeMode(it) },
@@ -280,9 +285,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                             onTimeFormatChange = { viewModel.setTimeFormat(it) }
                         )
                     }
-                    3 -> {
-                        AboutPageView()
-                    }
+                    4 -> { AboutPageView() }
                 }
             }
         }
@@ -296,6 +299,41 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             onPlayPreview = { s, v -> viewModel.previewSound(s, v) },
             onStopPreview = { viewModel.stopPreview() }
         )
+    }
+
+    // History bottom sheet
+    if (showHistory) {
+        val c2 = LocalAppColors.current
+        Dialog(onDismissRequest = { showHistory = false }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(0.96f).fillMaxHeight(0.82f),
+                shape = RoundedCornerShape(20.dp), color = c2.surfaceColor, border = BorderStroke(1.dp, c2.outlineColor)
+            ) {
+                Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Text("Alarm History", color = c2.textPrimary, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (logs.isNotEmpty()) {
+                                TextButton(onClick = { viewModel.clearLogs() }) {
+                                    Icon(Icons.Default.Delete, contentDescription = null, tint = DeleteRed, modifier = Modifier.size(16.dp))
+                                    Spacer(Modifier.width(4.dp))
+                                    Text("Clear", color = DeleteRed, fontWeight = FontWeight.Bold)
+                                }
+                            }
+                            IconButton(onClick = { showHistory = false }) { Icon(Icons.Default.Close, contentDescription = "Close", tint = c2.textSecondary) }
+                        }
+                    }
+                    HorizontalDivider(color = c2.outlineColor, modifier = Modifier.padding(vertical = 8.dp))
+                    if (logs.isEmpty()) {
+                        EmptyStateView(Icons.AutoMirrored.Filled.List, "No History", "Dismissed and snoozed alarms will appear here.")
+                    } else {
+                        LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxSize()) {
+                            items(logs, key = { it.id }) { LogItem(it) }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // First Launch Theme Selection Dialog
@@ -616,7 +654,7 @@ fun AlarmAddEditDialog(
     var label     by remember { mutableStateOf(alarm?.label ?: "") }
     var hour      by remember { mutableIntStateOf(alarm?.hour ?: nowHour) }
     var minute    by remember { mutableIntStateOf(alarm?.minute ?: nowMin) }
-    var alarmType by remember { mutableStateOf(alarm?.alarmType ?: "WEEKLY") }
+    var alarmType by remember { mutableStateOf(alarm?.alarmType ?: "CYCLIC") }
     var isPm      by remember { mutableStateOf((alarm?.hour ?: nowHour) >= 12) }
     var hour12Str by remember { mutableStateOf(run { val h = alarm?.hour ?: nowHour; (if (h == 0) 12 else if (h > 12) h - 12 else h).toString() }) }
     var minuteStr by remember { mutableStateOf(String.format("%02d", alarm?.minute ?: nowMin)) }
@@ -1226,6 +1264,373 @@ private fun PermissionRowItem(
 // ════════════════════════════════════════════════════════
 //  ABOUT PAGE VIEW
 // ════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+//  TIMER SCREEN
+// ════════════════════════════════════════════════════════
+@Composable
+fun TimerScreen() {
+    val c = LocalAppColors.current
+
+    // Input state (hours, minutes, seconds to count down from)
+    var inputHours   by remember { mutableStateOf("00") }
+    var inputMinutes by remember { mutableStateOf("05") }
+    var inputSeconds by remember { mutableStateOf("00") }
+
+    // Runtime state
+    var totalSeconds  by remember { mutableLongStateOf(0L) }
+    var remainingMs   by remember { mutableLongStateOf(0L) }
+    var isRunning     by remember { mutableStateOf(false) }
+    var isFinished    by remember { mutableStateOf(false) }
+
+    // Tick the timer
+    LaunchedEffect(isRunning) {
+        if (isRunning) {
+            val tickMs = 50L
+            while (isRunning && remainingMs > 0L) {
+                delay(tickMs)
+                remainingMs = (remainingMs - tickMs).coerceAtLeast(0L)
+                if (remainingMs == 0L) {
+                    isRunning = false
+                    isFinished = true
+                }
+            }
+        }
+    }
+
+    // Flashing animation when finished
+    val infiniteTransition = rememberInfiniteTransition(label = "timerFlash")
+    val flashAlpha by infiniteTransition.animateFloat(
+        initialValue = 1f, targetValue = 0.1f,
+        animationSpec = infiniteRepeatable(tween(500, easing = LinearEasing)), label = "flash"
+    )
+
+    val displayAlpha = if (isFinished) flashAlpha else 1f
+
+    fun buildTotalMs(): Long {
+        val h = inputHours.toLongOrNull() ?: 0L
+        val m = inputMinutes.toLongOrNull() ?: 0L
+        val s = inputSeconds.toLongOrNull() ?: 0L
+        return (h * 3600 + m * 60 + s) * 1000L
+    }
+
+    val progress = if (totalSeconds == 0L) 0f
+    else (remainingMs / 1000f) / totalSeconds.toFloat()
+
+    val remH  = (remainingMs / 3_600_000L)
+    val remM  = (remainingMs / 60_000L) % 60
+    val remS  = (remainingMs / 1_000L) % 60
+    val remMs = (remainingMs % 1000L) / 10
+
+    Column(
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        Spacer(Modifier.height(8.dp))
+        Text("TIMER", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
+
+        // Progress ring
+        Box(modifier = Modifier.size(240.dp), contentAlignment = Alignment.Center) {
+            androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
+                val stroke = Stroke(width = 16f, cap = StrokeCap.Round)
+                drawArc(color = BrandBlue.copy(alpha = 0.12f), startAngle = -90f, sweepAngle = 360f, useCenter = false, style = stroke)
+                if (progress > 0f || isFinished) {
+                    drawArc(
+                        color = if (isFinished) DeleteRed else BrandBlue,
+                        startAngle = -90f,
+                        sweepAngle = 360f * progress,
+                        useCenter = false, style = stroke
+                    )
+                }
+            }
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = if (totalSeconds == 0L && !isRunning && !isFinished)
+                        "--:--:--"
+                    else
+                        String.format("%02d:%02d:%02d", remH, remM, remS),
+                    fontSize = 44.sp, fontWeight = FontWeight.Black,
+                    fontFamily = FontFamily.Monospace, color = (if (isFinished) DeleteRed else c.textPrimary).copy(alpha = displayAlpha)
+                )
+                if (isFinished) {
+                    Text("Time's Up!", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, color = DeleteRed.copy(alpha = displayAlpha))
+                }
+            }
+        }
+
+        // Input fields (only editable when not running)
+        if (!isRunning && !isFinished) {
+            val focusMgr = LocalFocusManager.current
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                TimerInputField(value = inputHours, label = "HH", tag = "timer_hours",
+                    onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputHours = it })
+                Text(":", fontSize = 32.sp, fontWeight = FontWeight.Black, color = BrandBlue, modifier = Modifier.padding(horizontal = 6.dp))
+                TimerInputField(value = inputMinutes, label = "MM", tag = "timer_minutes",
+                    onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputMinutes = it })
+                Text(":", fontSize = 32.sp, fontWeight = FontWeight.Black, color = BrandBlue, modifier = Modifier.padding(horizontal = 6.dp))
+                TimerInputField(value = inputSeconds, label = "SS", tag = "timer_seconds",
+                    onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputSeconds = it },
+                    onDone = { focusMgr.clearFocus() })
+            }
+            Text("hours : minutes : seconds", fontSize = 11.sp, color = c.textSecondary)
+        }
+
+        // Quick preset chips
+        if (!isRunning && !isFinished) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                listOf("1m" to Pair("00", "01"), "5m" to Pair("00", "05"), "10m" to Pair("00", "10"),
+                       "15m" to Pair("00", "15"), "30m" to Pair("00", "30")).forEach { (label, mins) ->
+                    Box(
+                        modifier = Modifier.clip(RoundedCornerShape(20.dp)).background(BrandBlue.copy(alpha = 0.12f))
+                            .border(BorderStroke(1.dp, BrandBlue.copy(alpha = 0.3f)), RoundedCornerShape(20.dp))
+                            .clickable { inputHours = "00"; inputMinutes = mins.second; inputSeconds = "00" }
+                            .padding(horizontal = 14.dp, vertical = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) { Text(label, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = BrandBlue) }
+                }
+            }
+        }
+
+        // Control buttons
+        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            if (!isFinished) {
+                OutlinedButton(
+                    onClick = {
+                        isRunning = false
+                        remainingMs = buildTotalMs()
+                        totalSeconds = remainingMs / 1000L
+                        isFinished = false
+                    },
+                    modifier = Modifier.weight(1f).height(54.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, c.outlineColor),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = c.textSecondary)
+                ) { Text("Reset", fontWeight = FontWeight.ExtraBold) }
+            }
+            Button(
+                onClick = {
+                    if (isFinished) {
+                        // Clear
+                        isFinished = false; isRunning = false; remainingMs = 0L; totalSeconds = 0L
+                    } else if (!isRunning) {
+                        val ms = buildTotalMs()
+                        if (ms > 0L) {
+                            if (remainingMs == 0L) { remainingMs = ms; totalSeconds = ms / 1000L }
+                            isRunning = true
+                        }
+                    } else {
+                        isRunning = false
+                    }
+                },
+                modifier = Modifier.weight(if (isFinished) 2f else 1f).height(54.dp),
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isFinished) DeleteRed else if (isRunning) WarningAmber else BrandBlue,
+                    contentColor = if (isFinished) Color.White else Color(0xFF003166)
+                )
+            ) {
+                Icon(
+                    imageVector = if (isFinished) Icons.Default.Close else if (isRunning) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    contentDescription = null
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = if (isFinished) "Clear" else if (isRunning) "Pause" else "Start",
+                    fontWeight = FontWeight.ExtraBold, fontSize = 16.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TimerInputField(
+    value: String, label: String, tag: String,
+    onValueChange: (String) -> Unit, onDone: (() -> Unit)? = null
+) {
+    val c = LocalAppColors.current
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        OutlinedTextField(
+            value = value, onValueChange = onValueChange,
+            textStyle = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace,
+                textAlign = TextAlign.Center, color = c.textPrimary),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number,
+                imeAction = if (onDone != null) ImeAction.Done else ImeAction.Next),
+            keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
+            modifier = Modifier.width(72.dp).testTag(tag),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = BrandBlue, unfocusedBorderColor = c.outlineColor,
+                focusedContainerColor = c.surfaceVariant, unfocusedContainerColor = c.surfaceVariant,
+                cursorColor = BrandBlue, focusedTextColor = c.textPrimary, unfocusedTextColor = c.textPrimary
+            ),
+            singleLine = true, shape = RoundedCornerShape(10.dp)
+        )
+        Text(label, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = c.textSecondary)
+    }
+}
+
+// ════════════════════════════════════════════════════════
+//  STOPWATCH SCREEN
+// ════════════════════════════════════════════════════════
+@Composable
+fun StopwatchScreen() {
+    val c = LocalAppColors.current
+
+    var elapsedMs  by remember { mutableLongStateOf(0L) }
+    var isRunning  by remember { mutableStateOf(false) }
+    var laps       by remember { mutableStateOf(listOf<Long>()) }
+    var lastLapMs  by remember { mutableLongStateOf(0L) }
+
+    // Tick
+    LaunchedEffect(isRunning) {
+        if (isRunning) {
+            val tickMs = 20L
+            while (isRunning) {
+                delay(tickMs)
+                elapsedMs += tickMs
+            }
+        }
+    }
+
+    fun formatElapsed(ms: Long): String {
+        val h  = ms / 3_600_000L
+        val m  = (ms / 60_000L) % 60
+        val s  = (ms / 1_000L) % 60
+        val cs = (ms % 1_000L) / 10
+        return if (h > 0) String.format("%02d:%02d:%02d.%02d", h, m, s, cs)
+        else String.format("%02d:%02d.%02d", m, s, cs)
+    }
+
+    val lapMs = elapsedMs - lastLapMs
+    val lapListState = rememberLazyListState()
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(bottom = 80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(Modifier.height(8.dp))
+        Text("STOPWATCH", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
+        Spacer(Modifier.height(24.dp))
+
+        // Main display
+        Box(
+            modifier = Modifier.size(240.dp)
+                .background(BrandBlue.copy(alpha = 0.07f), CircleShape)
+                .border(BorderStroke(2.dp, BrandBlue.copy(alpha = 0.18f)), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = formatElapsed(elapsedMs),
+                    fontSize = if (elapsedMs >= 3_600_000L) 34.sp else 40.sp,
+                    fontWeight = FontWeight.Black, fontFamily = FontFamily.Monospace,
+                    color = if (isRunning) CyclicAccent else c.textPrimary
+                )
+                if (laps.isNotEmpty()) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = "Lap ${laps.size + 1}: ${formatElapsed(lapMs)}",
+                        fontSize = 13.sp, color = c.textSecondary, fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+
+        Spacer(Modifier.height(28.dp))
+
+        // Controls
+        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            // Lap / Reset button
+            OutlinedButton(
+                onClick = {
+                    if (isRunning) {
+                        laps = laps + lapMs
+                        lastLapMs = elapsedMs
+                    } else {
+                        elapsedMs = 0L; laps = listOf(); lastLapMs = 0L
+                    }
+                },
+                modifier = Modifier.weight(1f).height(54.dp),
+                shape = RoundedCornerShape(14.dp),
+                border = BorderStroke(1.dp, c.outlineColor),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = c.textSecondary)
+            ) {
+                Icon(
+                    imageVector = if (isRunning) Icons.Default.Flag else Icons.Default.Refresh,
+                    contentDescription = null, modifier = Modifier.size(18.dp)
+                )
+                Spacer(Modifier.width(6.dp))
+                Text(if (isRunning) "Lap" else "Reset", fontWeight = FontWeight.ExtraBold)
+            }
+
+            // Start / Stop button
+            Button(
+                onClick = { isRunning = !isRunning },
+                modifier = Modifier.weight(1f).height(54.dp),
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isRunning) DeleteRed else CyclicAccent,
+                    contentColor = if (isRunning) Color.White else Color(0xFF003166)
+                )
+            ) {
+                Icon(
+                    imageVector = if (isRunning) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    contentDescription = null
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(if (isRunning) "Stop" else "Start", fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
+            }
+        }
+
+        // Lap list
+        if (laps.isNotEmpty()) {
+            Spacer(Modifier.height(20.dp))
+            HorizontalDivider(color = c.outlineColor, modifier = Modifier.padding(horizontal = 24.dp))
+            Spacer(Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("LAP", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 0.8.sp)
+                Text("LAP TIME", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 0.8.sp)
+                Text("OVERALL", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 0.8.sp)
+            }
+            Spacer(Modifier.height(4.dp))
+            LazyColumn(
+                state = lapListState,
+                modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                val overallMs = laps.runningFold(0L) { acc, v -> acc + v }.drop(1)
+                val fastestLap = laps.minOrNull() ?: 0L
+                val slowestLap = laps.maxOrNull() ?: 0L
+                items(laps.indices.toList().reversed()) { i ->
+                    val lapTime = laps[i]
+                    val overall = overallMs[i]
+                    val isF = laps.size > 1 && lapTime == fastestLap
+                    val isS = laps.size > 1 && lapTime == slowestLap
+                    val accent = when { isF -> CyclicAccent; isS -> DeleteRed; else -> c.textSecondary }
+                    Row(
+                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp))
+                            .background(accent.copy(alpha = 0.07f))
+                            .border(BorderStroke(1.dp, accent.copy(alpha = 0.2f)), RoundedCornerShape(8.dp))
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("${i + 1}", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = accent, modifier = Modifier.width(32.dp))
+                        Text(formatElapsed(lapTime), fontSize = 13.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = c.textPrimary)
+                        Text(formatElapsed(overall), fontSize = 12.sp, fontFamily = FontFamily.Monospace, color = c.textSecondary)
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun AboutPageView() {
     val c = LocalAppColors.current
@@ -1266,7 +1671,7 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.2", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.3", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
@@ -1333,11 +1738,26 @@ fun AboutPageView() {
             Text("Tap on any release version to expand or collapse notes", fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.2 — Expanded by default
+            // v1.3 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = "v1.2 (Current Release)",
+                version = "v1.3 (Current Release)",
                 badgeText = "Latest",
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "⏱" to "Timer — built-in countdown timer with progress ring, quick presets (1m–30m), pause & reset",
+                    "⏱" to "Stopwatch — elapsed time tracker with lap recording, fastest/slowest lap highlights, reset",
+                    "🔒" to "Lock Screen Return — phone goes back to lock screen (or previous app) after dismiss or snooze, matching native alarm behaviour",
+                    "📱" to "5-Tab Navigation — Alarms, Timer, Stopwatch, Settings, About; History accessible via top-right icon on Alarms",
+                    "🌀" to "Default Cyclic — new alarms open on Cyclic Days tab by default",
+                    "🖼" to "Icon Fit Fix — app icon no longer appears cropped on launcher"
+                )
+            )
+
+            // v1.2 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = "v1.2 Release Notes",
+                badgeText = "v1.2",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "🌀" to "Pencil-Sketched Spiral Alarm Icon — clean, symmetrical alarm clock launcher icon",
                     "⏱" to "Per-Alarm Custom Snooze — set desired snooze duration (5, 10, 15, 20m or custom minutes)",
