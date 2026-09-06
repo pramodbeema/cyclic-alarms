@@ -142,8 +142,42 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     var availableUpdateNotes   by remember { mutableStateOf<String?>(null) }
     var showUpdateDialog       by remember { mutableStateOf(false) }
 
+    var remoteAnnouncementTitle   by remember { mutableStateOf<String?>(null) }
+    var remoteAnnouncementMessage by remember { mutableStateOf<String?>(null) }
+    var showAnnouncementDialog    by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
+            // 1. Fetch remote announcement JSON
+            try {
+                val annUrl = java.net.URL("https://raw.githubusercontent.com/pramodbeema/cyclicalarms/main/announcement.json")
+                val annConn = annUrl.openConnection() as java.net.HttpURLConnection
+                annConn.requestMethod = "GET"
+                annConn.connectTimeout = 4000
+                annConn.readTimeout = 4000
+                if (annConn.responseCode == 200) {
+                    val text = annConn.inputStream.bufferedReader().use { it.readText() }
+                    val json = org.json.JSONObject(text)
+                    val enabled = json.optBoolean("enabled", false)
+                    val annId = json.optString("id", "")
+                    val title = json.optString("title", "Announcement")
+                    val msg = json.optString("message", "")
+
+                    val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    val lastSeenAnnId = prefs.getString("last_seen_announcement_id", "")
+
+                    if (enabled && msg.isNotEmpty() && annId != lastSeenAnnId) {
+                        withContext(Dispatchers.Main) {
+                            remoteAnnouncementTitle = title
+                            remoteAnnouncementMessage = msg
+                            showAnnouncementDialog = true
+                            prefs.edit().putString("last_seen_announcement_id", annId).apply()
+                        }
+                    }
+                }
+            } catch (_: Exception) {}
+
+            // 2. Fetch GitHub Update Check
             try {
                 val url = java.net.URL("https://api.github.com/repos/pramodbeema/cyclicalarms/releases/latest")
                 val conn = url.openConnection() as java.net.HttpURLConnection
@@ -160,7 +194,6 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                     val body = json.optString("body", "New version available!")
                     val htmlUrl = json.optString("html_url", "https://github.com/pramodbeema/cyclicalarms/releases/latest")
 
-                    // Find app-release.apk download url if present
                     var downloadUrl = htmlUrl
                     val assets = json.optJSONArray("assets")
                     if (assets != null) {
@@ -416,6 +449,28 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             },
             dismissButton = {
                 TextButton(onClick = { showUpdateDialog = false }) { Text("Later", color = c.textSecondary) }
+            },
+            containerColor = c.surfaceColor
+        )
+    }
+    if (showAnnouncementDialog && remoteAnnouncementMessage != null) {
+        AlertDialog(
+            onDismissRequest = { showAnnouncementDialog = false },
+            title = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Info, contentDescription = null, tint = BrandBlue)
+                    Spacer(Modifier.width(8.dp))
+                    Text(remoteAnnouncementTitle ?: "Message from Developer", fontWeight = FontWeight.Bold, color = c.textPrimary)
+                }
+            },
+            text = {
+                Text(remoteAnnouncementMessage!!, fontSize = 13.sp, color = c.textPrimary, lineHeight = 18.sp)
+            },
+            confirmButton = {
+                Button(
+                    onClick = { showAnnouncementDialog = false },
+                    colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166))
+                ) { Text("Got It", fontWeight = FontWeight.Bold) }
             },
             containerColor = c.surfaceColor
         )
