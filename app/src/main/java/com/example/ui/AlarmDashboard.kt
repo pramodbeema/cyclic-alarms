@@ -124,6 +124,48 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     }
     val notifLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { hasNotifPerm = it }
 
+    // Critical permission state — re-checked on every resume so UI reflects immediately after settings change
+    var hasExactAlarm by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                (context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager)?.canScheduleExactAlarms() ?: true
+            else true
+        )
+    }
+    var hasFullScreen by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                (context.getSystemService(Context.NOTIFICATION_SERVICE) as? android.app.NotificationManager)?.canUseFullScreenIntent() ?: true
+            else true
+        )
+    }
+    var hasOverlay by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Settings.canDrawOverlays(context) else true
+        )
+    }
+
+    // Re-read all permissions on every Activity resume (no force-quit needed)
+    val dashLifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
+    androidx.compose.runtime.DisposableEffect(dashLifecycle) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                hasNotifPerm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+                else true
+                hasExactAlarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    (context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager)?.canScheduleExactAlarms() ?: true
+                else true
+                hasFullScreen = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                    (context.getSystemService(Context.NOTIFICATION_SERVICE) as? android.app.NotificationManager)?.canUseFullScreenIntent() ?: true
+                else true
+                hasOverlay = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Settings.canDrawOverlays(context) else true
+            }
+        }
+        dashLifecycle.addObserver(observer)
+        onDispose { dashLifecycle.removeObserver(observer) }
+    }
+
     val nextAlarmText = remember(alarms) {
         val enabled = alarms.filter { it.isEnabled }
         if (enabled.isEmpty()) return@remember "No active alarms"
@@ -224,6 +266,83 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
 
     val c = LocalAppColors.current
 
+    // ── PERMISSION GATE — block app until critical permissions are granted ──
+    val criticalMissing = !hasExactAlarm || !hasFullScreen || !hasOverlay
+    if (criticalMissing) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(c.appBackground)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                Icons.Default.Lock,
+                contentDescription = null,
+                tint = WarningAmber,
+                modifier = Modifier.size(64.dp)
+            )
+            Spacer(Modifier.height(20.dp))
+            Text(
+                "Permissions Required",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = c.textPrimary
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "Cyclic Alarms needs these system permissions to ring alarms reliably. Please grant them all to continue.",
+                fontSize = 14.sp,
+                color = c.textSecondary,
+                textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(28.dp))
+
+            if (!hasExactAlarm) {
+                PermissionGateItem(
+                    icon = Icons.Default.Alarm,
+                    title = "Exact Alarm Scheduling",
+                    description = "Allows alarms to fire at the exact time you set",
+                    onOpenSettings = {
+                        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                            Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:${context.packageName}"))
+                        else Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
+                        context.startActivity(intent)
+                    }
+                )
+                Spacer(Modifier.height(12.dp))
+            }
+            if (!hasFullScreen) {
+                PermissionGateItem(
+                    icon = Icons.Default.Fullscreen,
+                    title = "Full-Screen Alarm Alerts",
+                    description = "Shows the ringing screen over your lock screen",
+                    onOpenSettings = {
+                        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                            Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, Uri.parse("package:${context.packageName}"))
+                        else Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
+                        context.startActivity(intent)
+                    }
+                )
+                Spacer(Modifier.height(12.dp))
+            }
+            if (!hasOverlay) {
+                PermissionGateItem(
+                    icon = Icons.Default.Layers,
+                    title = "Display Over Other Apps",
+                    description = "Needed for the lock screen alarm popup",
+                    onOpenSettings = {
+                        context.startActivity(
+                            Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
+                        )
+                    }
+                )
+            }
+        }
+        return
+    }
+
     Scaffold(
         containerColor = c.appBackground,
         floatingActionButton = {
@@ -273,7 +392,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                 if (currentTab == 0) {
                     IconButton(onClick = { showHistory = true }) {
                         Icon(
-                            Icons.AutoMirrored.Filled.List,
+                            Icons.Default.History,
                             contentDescription = "Alarm History",
                             tint = c.textSecondary,
                             modifier = Modifier.size(24.dp)
@@ -1171,11 +1290,19 @@ fun SettingsPageView(
     var overlayGranted    by remember { mutableStateOf(checkOverlay()) }
     var currentSubpage    by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(Unit) {
-        notifGranted      = checkNotif()
-        exactAlarmGranted = checkExactAlarm()
-        fullScreenGranted = checkFullScreenIntent()
-        overlayGranted    = checkOverlay()
+    // Re-check all permissions every time the user returns from system settings (ON_RESUME)
+    val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
+    androidx.compose.runtime.DisposableEffect(lifecycle) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                notifGranted      = checkNotif()
+                exactAlarmGranted = checkExactAlarm()
+                fullScreenGranted = checkFullScreenIntent()
+                overlayGranted    = checkOverlay()
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose { lifecycle.removeObserver(observer) }
     }
 
     if (currentSubpage == "About") {
@@ -1480,6 +1607,52 @@ private fun PermissionRowItem(
                     fontWeight = FontWeight.ExtraBold
                 )
             }
+        }
+    }
+}
+
+// ════════════════════════════════════════════════════════
+//  PERMISSION GATE ITEM  (used in blocking screen)
+// ════════════════════════════════════════════════════════
+@Composable
+private fun PermissionGateItem(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    description: String,
+    onOpenSettings: () -> Unit
+) {
+    val c = LocalAppColors.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .background(DeleteRed.copy(alpha = 0.10f))
+            .border(BorderStroke(1.dp, DeleteRed.copy(alpha = 0.45f)), RoundedCornerShape(14.dp))
+            .padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(44.dp)
+                .background(DeleteRed.copy(alpha = 0.15f), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(icon, contentDescription = null, tint = DeleteRed, modifier = Modifier.size(24.dp))
+        }
+        Spacer(Modifier.width(14.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, fontWeight = FontWeight.ExtraBold, fontSize = 14.sp, color = c.textPrimary)
+            Text(description, fontSize = 11.sp, color = c.textSecondary, lineHeight = 15.sp)
+        }
+        Spacer(Modifier.width(10.dp))
+        Button(
+            onClick = onOpenSettings,
+            shape = RoundedCornerShape(10.dp),
+            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = DeleteRed, contentColor = Color.White),
+            modifier = Modifier.height(38.dp)
+        ) {
+            Text("Grant", fontWeight = FontWeight.ExtraBold, fontSize = 12.sp)
         }
     }
 }
