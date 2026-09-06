@@ -36,6 +36,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.*
@@ -164,7 +165,6 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                     BottomTab("Timer",     Icons.Default.Timer,          currentTab == 1) { currentTab = 1 }
                     BottomTab("Stopwatch", Icons.Default.AccessTime,     currentTab == 2) { currentTab = 2 }
                     BottomTab("Settings",  Icons.Default.Settings,       currentTab == 3) { currentTab = 3 }
-                    BottomTab("About",     Icons.Default.Info,           currentTab == 4) { currentTab = 4 }
                 }
             }
         }
@@ -285,7 +285,6 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                             onTimeFormatChange = { viewModel.setTimeFormat(it) }
                         )
                     }
-                    4 -> { AboutPageView() }
                 }
             }
         }
@@ -994,6 +993,7 @@ fun SettingsPageView(
     var exactAlarmGranted by remember { mutableStateOf(checkExactAlarm()) }
     var fullScreenGranted by remember { mutableStateOf(checkFullScreenIntent()) }
     var overlayGranted    by remember { mutableStateOf(checkOverlay()) }
+    var currentSubpage    by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
         notifGranted      = checkNotif()
@@ -1002,16 +1002,62 @@ fun SettingsPageView(
         overlayGranted    = checkOverlay()
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = 80.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text("SETTINGS", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
+    if (currentSubpage == "About") {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 80.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable { currentSubpage = null }
+                    .padding(vertical = 8.dp, horizontal = 4.dp)
+            ) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = BrandBlue, modifier = Modifier.size(22.dp))
+                Spacer(Modifier.width(6.dp))
+                Text("Back to Settings", color = BrandBlue, fontWeight = FontWeight.ExtraBold, fontSize = 14.sp)
+            }
+            AboutPageView()
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 80.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text("SETTINGS", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
 
-        // ── APPEARANCE — Theme Mode ──
+            // ── ABOUT SUBPAGE NAVIGATION CARD ──
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(c.surfaceColor)
+                    .border(BorderStroke(1.dp, BrandBlue.copy(alpha = 0.4f)), RoundedCornerShape(14.dp))
+                    .clickable { currentSubpage = "About" }
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                    Box(modifier = Modifier.size(40.dp).background(BrandBlue.copy(alpha = 0.15f), CircleShape), contentAlignment = Alignment.Center) {
+                        Icon(Icons.Default.Info, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(22.dp))
+                    }
+                    Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text("About Cyclic Alarms", fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = c.textPrimary)
+                        Text("Version 1.3 • Release notes, support & creator info", fontSize = 12.sp, color = c.textSecondary)
+                    }
+                }
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
+            }
+
+            // ── APPEARANCE — Theme Mode ──
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1177,6 +1223,7 @@ fun SettingsPageView(
         }
     }
 }
+}
 
 @Composable
 private fun PermissionRowItem(
@@ -1270,6 +1317,7 @@ private fun PermissionRowItem(
 @Composable
 fun TimerScreen() {
     val c = LocalAppColors.current
+    val context = LocalContext.current
 
     // Input state (hours, minutes, seconds to count down from)
     var inputHours   by remember { mutableStateOf("00") }
@@ -1282,6 +1330,35 @@ fun TimerScreen() {
     var isRunning     by remember { mutableStateOf(false) }
     var isFinished    by remember { mutableStateOf(false) }
 
+    // Sound alert player for Timer completion
+    var ringtonePlayer by remember { mutableStateOf<android.media.Ringtone?>(null) }
+
+    fun playTimerAlarmSound() {
+        try {
+            val alertUri = android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_ALARM)
+                ?: android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION)
+            val ringtone = android.media.RingtoneManager.getRingtone(context, alertUri)
+            ringtonePlayer = ringtone
+            ringtone?.play()
+
+            // Vibrate if available
+            val vibrator = context.getSystemService(android.content.Context.VIBRATOR_SERVICE) as? android.os.Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator?.vibrate(android.os.VibrationEffect.createWaveform(longArrayOf(0, 500, 300, 500), -1))
+            } else {
+                @Suppress("DEPRECATION")
+                vibrator?.vibrate(longArrayOf(0, 500, 300, 500), -1)
+            }
+        } catch (_: Exception) {}
+    }
+
+    fun stopTimerAlarmSound() {
+        try {
+            ringtonePlayer?.stop()
+            ringtonePlayer = null
+        } catch (_: Exception) {}
+    }
+
     // Tick the timer
     LaunchedEffect(isRunning) {
         if (isRunning) {
@@ -1292,6 +1369,7 @@ fun TimerScreen() {
                 if (remainingMs == 0L) {
                     isRunning = false
                     isFinished = true
+                    playTimerAlarmSound()
                 }
             }
         }
@@ -1400,6 +1478,7 @@ fun TimerScreen() {
                 OutlinedButton(
                     onClick = {
                         isRunning = false
+                        stopTimerAlarmSound()
                         remainingMs = buildTotalMs()
                         totalSeconds = remainingMs / 1000L
                         isFinished = false
@@ -1413,7 +1492,8 @@ fun TimerScreen() {
             Button(
                 onClick = {
                     if (isFinished) {
-                        // Clear
+                        // Clear sound and reset
+                        stopTimerAlarmSound()
                         isFinished = false; isRunning = false; remainingMs = 0L; totalSeconds = 0L
                     } else if (!isRunning) {
                         val ms = buildTotalMs()
@@ -1478,11 +1558,19 @@ private fun TimerInputField(
 @Composable
 fun StopwatchScreen() {
     val c = LocalAppColors.current
+    val context = LocalContext.current
 
     var elapsedMs  by remember { mutableLongStateOf(0L) }
     var isRunning  by remember { mutableStateOf(false) }
     var laps       by remember { mutableStateOf(listOf<Long>()) }
     var lastLapMs  by remember { mutableLongStateOf(0L) }
+
+    fun playClickBeep() {
+        try {
+            val toneG = android.media.ToneGenerator(android.media.AudioManager.STREAM_NOTIFICATION, 60)
+            toneG.startTone(android.media.ToneGenerator.TONE_PROP_BEEP, 80)
+        } catch (_: Exception) {}
+    }
 
     // Tick
     LaunchedEffect(isRunning) {
@@ -1546,6 +1634,7 @@ fun StopwatchScreen() {
             // Lap / Reset button
             OutlinedButton(
                 onClick = {
+                    playClickBeep()
                     if (isRunning) {
                         laps = laps + lapMs
                         lastLapMs = elapsedMs
@@ -1568,7 +1657,10 @@ fun StopwatchScreen() {
 
             // Start / Stop button
             Button(
-                onClick = { isRunning = !isRunning },
+                onClick = {
+                    playClickBeep()
+                    isRunning = !isRunning
+                },
                 modifier = Modifier.weight(1f).height(54.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
