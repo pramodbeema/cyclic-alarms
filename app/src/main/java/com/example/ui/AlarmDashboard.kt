@@ -190,11 +190,14 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
-            // 1. Fetch remote announcement JSON
+            // 1. Fetch remote announcement JSON (cache-busted so GitHub CDN always returns fresh content)
             try {
-                val annUrl = java.net.URL("https://raw.githubusercontent.com/pramodbeema/cyclicalarms/main/announcement.json")
+                val cacheBust = System.currentTimeMillis() / 60_000  // changes every minute
+                val annUrl = java.net.URL("https://raw.githubusercontent.com/pramodbeema/cyclicalarms/main/announcement.json?t=$cacheBust")
                 val annConn = annUrl.openConnection() as java.net.HttpURLConnection
                 annConn.requestMethod = "GET"
+                annConn.setRequestProperty("Cache-Control", "no-cache, no-store")
+                annConn.setRequestProperty("Pragma", "no-cache")
                 annConn.connectTimeout = 4000
                 annConn.readTimeout = 4000
                 if (annConn.responseCode == 200) {
@@ -209,11 +212,37 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                     val lastSeenAnnId = prefs.getString("last_seen_announcement_id", "")
 
                     if (enabled && msg.isNotEmpty() && annId != lastSeenAnnId) {
+                        // Mark as seen NOW so we don't re-post the notification on next open,
+                        // but the in-app dialog will still show (prefs saved here is for the
+                        // notification dedup; dialog dedup uses showAnnouncementDialog state)
+                        prefs.edit().putString("last_seen_announcement_id", annId).apply()
+
+                        // Post a system status-bar notification so users see it even when app is closed
+                        val notifId = annId.hashCode()
+                        val tapIntent = android.content.Intent(context, com.example.MainActivity::class.java).apply {
+                            flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        }
+                        val pendingIntent = android.app.PendingIntent.getActivity(
+                            context, notifId, tapIntent,
+                            android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+                        )
+                        val notification = androidx.core.app.NotificationCompat.Builder(context, "announcements_channel")
+                            .setSmallIcon(android.R.drawable.ic_dialog_info)
+                            .setContentTitle(title)
+                            .setContentText(msg)
+                            .setStyle(androidx.core.app.NotificationCompat.BigTextStyle().bigText(msg))
+                            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
+                            .setAutoCancel(true)
+                            .setContentIntent(pendingIntent)
+                            .build()
+                        try {
+                            androidx.core.app.NotificationManagerCompat.from(context).notify(notifId, notification)
+                        } catch (_: SecurityException) {}
+
                         withContext(Dispatchers.Main) {
                             remoteAnnouncementTitle = title
                             remoteAnnouncementMessage = msg
                             showAnnouncementDialog = true
-                            prefs.edit().putString("last_seen_announcement_id", annId).apply()
                         }
                     }
                 }
