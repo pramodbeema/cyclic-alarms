@@ -91,11 +91,14 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 
 ## What's new — v1.3
 
-- ⏱ **Timer** — built-in countdown timer with circular progress ring, quick presets (1m, 5m, 10m, 15m, 30m), pause & reset
-- ⏱ **Stopwatch** — elapsed time display with lap tracking, fastest/slowest lap highlights, and reset
-- 🔒 **Lock Screen Return** — after dismissing or snoozing an alarm, the phone returns to the lock screen (or whatever was open before), matching native alarm app behaviour
-- 📱 **5-Tab Navigation** — Alarms, Timer, Stopwatch, Settings, About; History moved to a 📋 icon in the top-right of the Alarms tab
-- 🌀 **Default Cyclic** — new alarms now open on Cyclic Days tab by default
+- ⏱ **Timer** — built-in countdown timer with circular progress ring; time-set (HH:MM:SS) and quick presets (1m–30m) displayed **inside** the clock ring for a single-glance view; alert sound & vibration on completion
+- ⏱ **Stopwatch** — millisecond-precision elapsed time tracker with lap recording, fastest/slowest lap highlights, button audio feedback, and a scrollable lap list
+- 🔒 **Strict Lock Screen Security** — after dismissing or snoozing, the phone immediately returns to lock screen without exposing the main dashboard; keyguard access is scoped strictly to the ringing moment
+- 🚀 **Auto-Update Checker** — detects new GitHub releases on launch and prompts with a 1-tap APK download link
+- 🔔 **Welcome Notification** — first-launch welcome message shown to new installs
+- 🎵 **Timer & Stopwatch Sounds** — timer fires system alarm ringtone + vibration; stopwatch uses audio tones on lap/start for tactile feedback
+- 📱 **4-Tab Navigation + Embedded About** — Alarms, Timer, Stopwatch, Settings; About is a sub-page inside Settings
+- 🌀 **Default Cyclic Days** — new alarms open on Cyclic Days tab by default
 - 🖼 **Icon Fit Fix** — app icon no longer appears cropped or zoomed in on the launcher
 
 ## What's new — v1.2

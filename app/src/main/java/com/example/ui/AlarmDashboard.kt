@@ -1573,20 +1573,19 @@ fun TimerScreen() {
     val remH  = (remainingMs / 3_600_000L)
     val remM  = (remainingMs / 60_000L) % 60
     val remS  = (remainingMs / 1_000L) % 60
-    val remMs = (remainingMs % 1000L) / 10
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 80.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(4.dp))
         Text("TIMER", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
 
-        // Progress ring
-        Box(modifier = Modifier.size(240.dp), contentAlignment = Alignment.Center) {
+        // ── Clock ring — all time content lives INSIDE this box ──
+        Box(modifier = Modifier.size(290.dp), contentAlignment = Alignment.Center) {
             androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
-                val stroke = Stroke(width = 16f, cap = StrokeCap.Round)
+                val stroke = Stroke(width = 18f, cap = StrokeCap.Round)
                 drawArc(color = BrandBlue.copy(alpha = 0.12f), startAngle = -90f, sweepAngle = 360f, useCenter = false, style = stroke)
                 if (progress > 0f || isFinished) {
                     drawArc(
@@ -1597,53 +1596,65 @@ fun TimerScreen() {
                     )
                 }
             }
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = if (totalSeconds == 0L && !isRunning && !isFinished)
-                        "--:--:--"
-                    else
-                        String.format("%02d:%02d:%02d", remH, remM, remS),
-                    fontSize = 44.sp, fontWeight = FontWeight.Black,
-                    fontFamily = FontFamily.Monospace, color = (if (isFinished) DeleteRed else c.textPrimary).copy(alpha = displayAlpha)
-                )
-                if (isFinished) {
-                    Text("Time's Up!", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, color = DeleteRed.copy(alpha = displayAlpha))
-                }
-            }
-        }
 
-        // Input fields (only editable when not running)
-        if (!isRunning && !isFinished) {
-            val focusMgr = LocalFocusManager.current
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+            // Everything inside the ring
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                TimerInputField(value = inputHours, label = "HH", tag = "timer_hours",
-                    onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputHours = it })
-                Text(":", fontSize = 32.sp, fontWeight = FontWeight.Black, color = BrandBlue, modifier = Modifier.padding(horizontal = 6.dp))
-                TimerInputField(value = inputMinutes, label = "MM", tag = "timer_minutes",
-                    onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputMinutes = it })
-                Text(":", fontSize = 32.sp, fontWeight = FontWeight.Black, color = BrandBlue, modifier = Modifier.padding(horizontal = 6.dp))
-                TimerInputField(value = inputSeconds, label = "SS", tag = "timer_seconds",
-                    onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputSeconds = it },
-                    onDone = { focusMgr.clearFocus() })
-            }
-            Text("hours : minutes : seconds", fontSize = 11.sp, color = c.textSecondary)
-        }
-
-        // Quick preset chips
-        if (!isRunning && !isFinished) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf("1m" to Pair("00", "01"), "5m" to Pair("00", "05"), "10m" to Pair("00", "10"),
-                       "15m" to Pair("00", "15"), "30m" to Pair("00", "30")).forEach { (label, mins) ->
-                    Box(
-                        modifier = Modifier.clip(RoundedCornerShape(20.dp)).background(BrandBlue.copy(alpha = 0.12f))
-                            .border(BorderStroke(1.dp, BrandBlue.copy(alpha = 0.3f)), RoundedCornerShape(20.dp))
-                            .clickable { inputHours = "00"; inputMinutes = mins.second; inputSeconds = "00" }
-                            .padding(horizontal = 14.dp, vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) { Text(label, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = BrandBlue) }
+                if (!isRunning && !isFinished) {
+                    // ── SET-TIME mode: compact HH:MM:SS pickers inside ring ──
+                    val focusMgr = LocalFocusManager.current
+                    Text("Set time", fontSize = 11.sp, color = c.textSecondary, fontWeight = FontWeight.SemiBold)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TimerInputField(
+                            value = inputHours, label = "HH", tag = "timer_hours",
+                            onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputHours = it }
+                        )
+                        Text(":", fontSize = 30.sp, fontWeight = FontWeight.Black, color = BrandBlue,
+                            modifier = Modifier.padding(horizontal = 2.dp))
+                        TimerInputField(
+                            value = inputMinutes, label = "MM", tag = "timer_minutes",
+                            onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputMinutes = it }
+                        )
+                        Text(":", fontSize = 30.sp, fontWeight = FontWeight.Black, color = BrandBlue,
+                            modifier = Modifier.padding(horizontal = 2.dp))
+                        TimerInputField(
+                            value = inputSeconds, label = "SS", tag = "timer_seconds",
+                            onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputSeconds = it },
+                            onDone = { focusMgr.clearFocus() }
+                        )
+                    }
+                    // Quick preset chips — inside the ring, below HH:MM:SS
+                    Spacer(Modifier.height(2.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        listOf("1m" to "01", "5m" to "05", "10m" to "10", "15m" to "15", "30m" to "30").forEach { (label, min) ->
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(BrandBlue.copy(alpha = 0.14f))
+                                    .border(BorderStroke(1.dp, BrandBlue.copy(alpha = 0.3f)), RoundedCornerShape(16.dp))
+                                    .clickable { inputHours = "00"; inputMinutes = min; inputSeconds = "00" }
+                                    .padding(horizontal = 10.dp, vertical = 5.dp),
+                                contentAlignment = Alignment.Center
+                            ) { Text(label, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = BrandBlue) }
+                        }
+                    }
+                } else {
+                    // ── RUNNING / FINISHED mode: countdown display inside ring ──
+                    Text(
+                        text = String.format("%02d:%02d:%02d", remH, remM, remS),
+                        fontSize = 46.sp, fontWeight = FontWeight.Black,
+                        fontFamily = FontFamily.Monospace,
+                        color = (if (isFinished) DeleteRed else c.textPrimary).copy(alpha = displayAlpha)
+                    )
+                    if (isFinished) {
+                        Text("Time's Up!", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold,
+                            color = DeleteRed.copy(alpha = displayAlpha))
+                    }
                 }
             }
         }
@@ -1659,7 +1670,7 @@ fun TimerScreen() {
                         totalSeconds = remainingMs / 1000L
                         isFinished = false
                     },
-                    modifier = Modifier.weight(1f).height(54.dp),
+                    modifier = Modifier.weight(1f).height(50.dp),
                     shape = RoundedCornerShape(14.dp),
                     border = BorderStroke(1.dp, c.outlineColor),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = c.textSecondary)
@@ -1681,7 +1692,7 @@ fun TimerScreen() {
                         isRunning = false
                     }
                 },
-                modifier = Modifier.weight(if (isFinished) 2f else 1f).height(54.dp),
+                modifier = Modifier.weight(if (isFinished) 2f else 1f).height(50.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (isFinished) DeleteRed else if (isRunning) WarningAmber else BrandBlue,
