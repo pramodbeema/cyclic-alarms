@@ -236,7 +236,9 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                             .setContentIntent(pendingIntent)
                             .build()
                         try {
-                            androidx.core.app.NotificationManagerCompat.from(context).notify(notifId, notification)
+                            if (hasNotifPerm) {
+                                androidx.core.app.NotificationManagerCompat.from(context).notify(notifId, notification)
+                            }
                         } catch (_: SecurityException) {}
 
                         withContext(Dispatchers.Main) {
@@ -368,6 +370,27 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                     }
                 )
             }
+        }
+        // Show announcement dialog even on permission gate screen
+        if (showAnnouncementDialog && remoteAnnouncementMessage != null) {
+            AlertDialog(
+                onDismissRequest = { showAnnouncementDialog = false },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Info, contentDescription = null, tint = BrandBlue)
+                        Spacer(Modifier.width(8.dp))
+                        Text(remoteAnnouncementTitle ?: "Message from Developer", fontWeight = FontWeight.Bold, color = c.textPrimary)
+                    }
+                },
+                text = { Text(remoteAnnouncementMessage!!, fontSize = 13.sp, color = c.textPrimary, lineHeight = 18.sp) },
+                confirmButton = {
+                    Button(
+                        onClick = { showAnnouncementDialog = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166))
+                    ) { Text("Got It", fontWeight = FontWeight.Bold) }
+                },
+                containerColor = c.surfaceColor
+            )
         }
         return
     }
