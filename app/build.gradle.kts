@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -18,10 +20,29 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    val localProps = Properties()
+    val localPropsFile = rootProject.file("local.properties")
+    if (localPropsFile.exists()) {
+        localProps.load(localPropsFile.inputStream())
+    }
+
+    signingConfigs {
+        create("release") {
+            val kFile = localProps.getProperty("KEYSTORE_FILE")
+            if (kFile != null && file(kFile).exists()) {
+                storeFile = file(kFile)
+                storePassword = localProps.getProperty("KEYSTORE_PASSWORD")
+                keyAlias = localProps.getProperty("KEY_ALIAS")
+                keyPassword = localProps.getProperty("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
