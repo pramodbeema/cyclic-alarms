@@ -1299,7 +1299,7 @@ fun SettingsPageView(
                     Spacer(Modifier.width(12.dp))
                     Column {
                         Text("About Cyclic Alarms", fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = c.textPrimary)
-                        Text("Version 1.3 • Release notes, support & creator info", fontSize = 12.sp, color = c.textSecondary)
+                        Text("Version 1.4 • Release notes, support & creator info", fontSize = 12.sp, color = c.textSecondary)
                     }
                 }
                 Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
