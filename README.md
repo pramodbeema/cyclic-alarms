@@ -22,6 +22,7 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 - **Weekly alarms** — pick any combination of weekdays
 - **Default Cyclic Days** — new alarms open on the Cyclic Days tab by default
 - **Automatic Update Checker** — detects new GitHub release APKs on app launch & prompts user to download & update
+- **Firebase Cloud Messaging (FCM)** — broadcast push notifications and update announcements
 - **Timer** — built-in countdown timer with circular progress ring, 1m–30m quick presets, alert sound & vibration
 - **Stopwatch** — elapsed time tracker with lap recording, fastest/slowest lap highlights, and touch audio feedback
 - **Strict Lock Screen Security & Privacy** — app ONLY displays over keyguard while actively ringing; dismiss or snooze immediately locks device & returns to prior state without exposing main dashboard
@@ -42,9 +43,9 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 
 ## Screenshots
 
-| ⏰ Alarms & Cyclic Schedules | ⏳ Countdown Timer | ⏱ Stopwatch & Laps |
-|:---:|:---:|:---:|
-| <img src="screenshots/ChatGPT_mockup_all_tabs.jpg" width="280" alt="Alarms Tab" /> |
+<p align="center">
+  <img src="screenshots/ChatGPT_mockup_all_tabs.png" alt="Cyclic Alarms Features & Tabs Overview" width="100%" />
+</p>
 
 ---
 
@@ -154,4 +155,3 @@ Open the **About** page in the app and tap **"Feedbacks, Suggestions or Bugs Rep
 ## License
 
 This project has no formal license. Use it, fork it, do whatever you want with it.
-
