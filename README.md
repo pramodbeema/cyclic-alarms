@@ -100,6 +100,9 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 - 📱 **4-Tab Navigation + Embedded About** — Alarms, Timer, Stopwatch, Settings; About is a sub-page inside Settings
 - 🌀 **Default Cyclic Days** — new alarms open on Cyclic Days tab by default
 - 🖼 **Icon Fit Fix** — app icon no longer appears cropped or zoomed in on the launcher
+- 🛡 **Permission Gate** — if critical permissions (Exact Alarm, Full-Screen Intent, Overlay) are not granted, the app shows a clear blocking screen with one-tap "Grant" buttons for each missing permission; app is unusable until all are granted
+- ⚡ **Real-time Permission Status** — the Settings screen now re-reads all permission states the moment you return from system settings, no force-close needed
+- 📋 **History Icon** — the Alarm History button now uses the correct clock-history icon instead of a generic list icon
 
 ## What's new — v1.2
 
