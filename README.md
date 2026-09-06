@@ -24,7 +24,7 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 - **Automatic Update Checker** — detects new GitHub release APKs on app launch & prompts user to download & update
 - **Timer** — built-in countdown timer with circular progress ring, 1m–30m quick presets, alert sound & vibration
 - **Stopwatch** — elapsed time tracker with lap recording, fastest/slowest lap highlights, and touch audio feedback
-- **Embedded About & Release Notes** — About section moved into Settings as a clean sub-page
+- **Strict Lock Screen Security & Privacy** — app ONLY displays over keyguard while actively ringing; dismiss or snooze immediately locks device & returns to prior state without exposing main dashboard
 - **4-Tab Navigation** — Alarms, Timer, Stopwatch, Settings
 - **12H / 24H Clock Toggle** — clock toggle with capital "AM"/"PM" indicator and full year display on home screen date
 - **First-launch Theme Prompt & Light/Dark visibility** — select theme on install, with proper status bar icon contrast on devices like Galaxy S26

@@ -34,32 +34,25 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ── Lock screen: show activity above keyguard and turn screen on ──
-        applyAlarmWindowFlags()
-
         // ── Request all special permissions on first launch ──
         requestRequiredPermissions()
 
         enableEdgeToEdge()
         setContent {
             val themeMode by viewModel.themeMode.collectAsState()
-
-            // ── Return to lock screen / previous app after dismiss or snooze ──
-            // When RingingState transitions from ringing → idle, we move the task
-            // to background so the system restores the pre-alarm screen (lock screen
-            // or whichever app was open), matching native alarm app behaviour.
             val activeAlarm by RingingState.activeAlarm.collectAsState()
-            LaunchedEffect(Unit) {
-                RingingState.activeAlarm
-                    .map { it != null }
-                    .distinctUntilChanged()
-                    .filter { isRinging -> !isRinging } // fires only when alarm stops
-                    .collect {
-                        // Clear keep-screen-on; let Android manage the screen state
-                        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                        // Send app to background → returns user to lock screen or previous app
-                        moveTaskToBack(true)
-                    }
+
+            // ── Lock Screen Security & Return behavior ──
+            // Dynamic window flags: showWhenLocked is ONLY enabled when an alarm is actively ringing.
+            // When dismissed/snoozed (or when user locks screen), we clear flags and call moveTaskToBack(true)
+            // so the app NEVER leaks dashboard access while the device is locked!
+            LaunchedEffect(activeAlarm) {
+                if (activeAlarm != null) {
+                    applyAlarmWindowFlags(true)
+                } else {
+                    applyAlarmWindowFlags(false)
+                    moveTaskToBack(true)
+                }
             }
 
             MyApplicationTheme(themeMode = themeMode) {
@@ -73,19 +66,38 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** Apply window flags needed to show the ringing UI over the lock screen. */
-    private fun applyAlarmWindowFlags() {
+    override fun onPause() {
+        super.onPause()
+        // Security safeguard: If device is locked and alarm is NOT ringing, clear showWhenLocked
+        if (RingingState.activeAlarm.value == null) {
+            applyAlarmWindowFlags(false)
+        }
+    }
+
+    /** Apply or clear window flags needed to show the ringing UI over the lock screen. */
+    private fun applyAlarmWindowFlags(enable: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            setShowWhenLocked(true)
-            setTurnScreenOn(true)
+            setShowWhenLocked(enable)
+            setTurnScreenOn(enable)
         } else {
             @Suppress("DEPRECATION")
-            window.addFlags(
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-            )
+            if (enable) {
+                window.addFlags(
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                )
+            } else {
+                window.clearFlags(
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                )
+            }
         }
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        if (enable) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
     }
 
     private fun requestRequiredPermissions() {
@@ -129,7 +141,8 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        // Re-apply lock screen flags when woken via notification tap
-        applyAlarmWindowFlags()
+        if (RingingState.activeAlarm.value != null) {
+            applyAlarmWindowFlags(true)
+        }
     }
 }
