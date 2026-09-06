@@ -42,7 +42,9 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 
 ## Screenshots
 
-> *(Coming soon — feel free to add your own)*
+| ⏰ Alarms & Cyclic Schedules | ⏳ Countdown Timer | ⏱ Stopwatch & Laps |
+|:---:|:---:|:---:|
+| <img src="screenshots/mockup_alarms_tab.jpg" width="280" alt="Alarms Tab" /> | <img src="screenshots/mockup_timer_tab.jpg" width="280" alt="Timer Tab" /> | <img src="screenshots/mockup_stopwatch_tab.jpg" width="280" alt="Stopwatch Tab" /> |
 
 ---
 
