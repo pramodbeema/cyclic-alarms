@@ -1772,16 +1772,16 @@ fun StopwatchScreen() {
     val lapListState = rememberLazyListState()
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(bottom = 80.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 80.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(8.dp))
         Text("STOPWATCH", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(16.dp))
 
         // Main display
         Box(
-            modifier = Modifier.size(240.dp)
+            modifier = Modifier.size(200.dp)
                 .background(BrandBlue.copy(alpha = 0.07f), CircleShape)
                 .border(BorderStroke(2.dp, BrandBlue.copy(alpha = 0.18f)), CircleShape),
             contentAlignment = Alignment.Center
@@ -1789,7 +1789,7 @@ fun StopwatchScreen() {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = formatElapsed(elapsedMs),
-                    fontSize = if (elapsedMs >= 3_600_000L) 34.sp else 40.sp,
+                    fontSize = if (elapsedMs >= 3_600_000L) 30.sp else 36.sp,
                     fontWeight = FontWeight.Black, fontFamily = FontFamily.Monospace,
                     color = if (isRunning) CyclicAccent else c.textPrimary
                 )
@@ -1797,13 +1797,13 @@ fun StopwatchScreen() {
                     Spacer(Modifier.height(4.dp))
                     Text(
                         text = "Lap ${laps.size + 1}: ${formatElapsed(lapMs)}",
-                        fontSize = 13.sp, color = c.textSecondary, fontWeight = FontWeight.Bold
+                        fontSize = 12.sp, color = c.textSecondary, fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
 
-        Spacer(Modifier.height(28.dp))
+        Spacer(Modifier.height(20.dp))
 
         // Controls
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -1818,7 +1818,7 @@ fun StopwatchScreen() {
                         elapsedMs = 0L; laps = listOf(); lastLapMs = 0L
                     }
                 },
-                modifier = Modifier.weight(1f).height(54.dp),
+                modifier = Modifier.weight(1f).height(50.dp),
                 shape = RoundedCornerShape(14.dp),
                 border = BorderStroke(1.dp, c.outlineColor),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = c.textSecondary)
@@ -1837,7 +1837,7 @@ fun StopwatchScreen() {
                     playClickBeep()
                     isRunning = !isRunning
                 },
-                modifier = Modifier.weight(1f).height(54.dp),
+                modifier = Modifier.weight(1f).height(50.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (isRunning) DeleteRed else CyclicAccent,
@@ -1855,7 +1855,7 @@ fun StopwatchScreen() {
 
         // Lap list
         if (laps.isNotEmpty()) {
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(16.dp))
             HorizontalDivider(color = c.outlineColor, modifier = Modifier.padding(horizontal = 24.dp))
             Spacer(Modifier.height(8.dp))
             Row(
@@ -1867,15 +1867,14 @@ fun StopwatchScreen() {
                 Text("OVERALL", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 0.8.sp)
             }
             Spacer(Modifier.height(4.dp))
-            LazyColumn(
-                state = lapListState,
-                modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 val overallMs = laps.runningFold(0L) { acc, v -> acc + v }.drop(1)
                 val fastestLap = laps.minOrNull() ?: 0L
                 val slowestLap = laps.maxOrNull() ?: 0L
-                items(laps.indices.toList().reversed()) { i ->
+                laps.indices.toList().reversed().forEach { i ->
                     val lapTime = laps[i]
                     val overall = overallMs[i]
                     val isF = laps.size > 1 && lapTime == fastestLap
@@ -1885,7 +1884,7 @@ fun StopwatchScreen() {
                         modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp))
                             .background(accent.copy(alpha = 0.07f))
                             .border(BorderStroke(1.dp, accent.copy(alpha = 0.2f)), RoundedCornerShape(8.dp))
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
