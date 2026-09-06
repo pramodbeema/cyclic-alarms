@@ -1971,10 +1971,11 @@ fun AboutPageView() {
                 badgeText = "Latest",
                 isInitiallyExpanded = true,
                 items = listOf(
-                    "⏱" to "Timer — built-in countdown timer with progress ring, quick presets (1m–30m), pause & reset",
-                    "⏱" to "Stopwatch — elapsed time tracker with lap recording, fastest/slowest lap highlights, reset",
+                    "🚀" to "GitHub Auto-Update Checker — automatic update notification & 1-tap download prompt for new signed releases",
+                    "⏱" to "Timer — built-in countdown timer with progress ring, quick presets (1m–30m), sound & vibration alert",
+                    "⏱" to "Stopwatch — elapsed time tracker with lap recording, fastest/slowest lap highlights, touch audio tones",
                     "🔒" to "Lock Screen Return — phone goes back to lock screen (or previous app) after dismiss or snooze, matching native alarm behaviour",
-                    "📱" to "5-Tab Navigation — Alarms, Timer, Stopwatch, Settings, About; History accessible via top-right icon on Alarms",
+                    "📱" to "4-Tab Navigation — Alarms, Timer, Stopwatch, Settings (with embedded About sub-page)",
                     "🌀" to "Default Cyclic — new alarms open on Cyclic Days tab by default",
                     "🖼" to "Icon Fit Fix — app icon no longer appears cropped on launcher"
                 )

@@ -21,12 +21,11 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 - **Cyclic alarms** — repeat every N days from a start date (e.g. every 3 days, every 14 days)
 - **Weekly alarms** — pick any combination of weekdays
 - **Default Cyclic Days** — new alarms open on the Cyclic Days tab by default
-- **Timer** — built-in countdown timer with circular progress ring, 1m–30m quick presets, pause & reset
-- **Stopwatch** — elapsed time tracker with lap recording, fastest/slowest lap highlights, and reset
-- **Rings on lock screen** — native keyguard behavior, rings seamlessly over lock screen without PIN unlock prompt
-- **Lock screen return** — after dismiss or snooze, phone returns to lock screen (or previous app) — matching native alarm app behaviour
-- **Per-alarm customizable snooze** — set desired snooze minutes per alarm (preset chips or custom duration)
-- **5-Tab Navigation** — Alarms, Timer, Stopwatch, Settings, About; History accessible via top-right icon on the Alarms tab
+- **Automatic Update Checker** — detects new GitHub release APKs on app launch & prompts user to download & update
+- **Timer** — built-in countdown timer with circular progress ring, 1m–30m quick presets, alert sound & vibration
+- **Stopwatch** — elapsed time tracker with lap recording, fastest/slowest lap highlights, and touch audio feedback
+- **Embedded About & Release Notes** — About section moved into Settings as a clean sub-page
+- **4-Tab Navigation** — Alarms, Timer, Stopwatch, Settings
 - **12H / 24H Clock Toggle** — clock toggle with capital "AM"/"PM" indicator and full year display on home screen date
 - **First-launch Theme Prompt & Light/Dark visibility** — select theme on install, with proper status bar icon contrast on devices like Galaxy S26
 - **In-App Permissions & App Access Manager** — view and manage notification, exact alarm, full-screen alert, and overlay permissions live in Settings
