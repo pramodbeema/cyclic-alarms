@@ -72,7 +72,9 @@ import com.example.data.Alarm
 import com.example.data.AlarmLog
 import com.example.data.AlarmScheduler
 import com.example.ui.theme.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -133,6 +135,56 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                 "Next: ${SimpleDateFormat("E hh:mm a", Locale.getDefault()).format(Date(it.second))}  (${h}h ${m}m)"
             } else "Calculating…"
         } ?: "No active alarms"
+    }
+
+    var availableUpdateVersion by remember { mutableStateOf<String?>(null) }
+    var availableUpdateUrl     by remember { mutableStateOf<String?>(null) }
+    var availableUpdateNotes   by remember { mutableStateOf<String?>(null) }
+    var showUpdateDialog       by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            try {
+                val url = java.net.URL("https://api.github.com/repos/pramodbeema/cyclicalarms/releases/latest")
+                val conn = url.openConnection() as java.net.HttpURLConnection
+                conn.requestMethod = "GET"
+                conn.setRequestProperty("Accept", "application/json")
+                conn.setRequestProperty("User-Agent", "CyclicAlarms-App")
+                conn.connectTimeout = 5000
+                conn.readTimeout = 5000
+
+                if (conn.responseCode == 200) {
+                    val stream = conn.inputStream.bufferedReader().use { it.readText() }
+                    val json = org.json.JSONObject(stream)
+                    val tagName = json.optString("tag_name", "").replace("v", "").trim()
+                    val body = json.optString("body", "New version available!")
+                    val htmlUrl = json.optString("html_url", "https://github.com/pramodbeema/cyclicalarms/releases/latest")
+
+                    // Find app-release.apk download url if present
+                    var downloadUrl = htmlUrl
+                    val assets = json.optJSONArray("assets")
+                    if (assets != null) {
+                        for (i in 0 until assets.length()) {
+                            val asset = assets.getJSONObject(i)
+                            val name = asset.optString("name", "")
+                            if (name.endsWith(".apk") && !name.contains("unsigned")) {
+                                downloadUrl = asset.optString("browser_download_url", htmlUrl)
+                                break
+                            }
+                        }
+                    }
+
+                    val currentVersion = "1.3"
+                    if (tagName.isNotEmpty() && tagName != currentVersion) {
+                        withContext(Dispatchers.Main) {
+                            availableUpdateVersion = tagName
+                            availableUpdateUrl = downloadUrl
+                            availableUpdateNotes = body
+                        }
+                    }
+                }
+            } catch (_: Exception) {}
+        }
     }
 
     if (activeAlarm != null) { RingingScreen(activeAlarm = activeAlarm!!); return }
@@ -210,6 +262,32 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(nextAlarmText, fontSize = 12.sp, color = if (c.isDark) BrandCyan else BrandBlue, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     }
+                }
+            }
+
+            // Update Banner
+            if (availableUpdateVersion != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(BrandBlue.copy(alpha = 0.15f))
+                        .border(BorderStroke(1.dp, BrandBlue), RoundedCornerShape(10.dp))
+                        .clickable { showUpdateDialog = true }
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                        Icon(Icons.Default.ArrowUpward, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "New Update Available: v${availableUpdateVersion}!",
+                            color = c.textPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Text("Update", color = BrandBlue, fontWeight = FontWeight.ExtraBold, fontSize = 12.sp)
                 }
             }
 
@@ -297,6 +375,49 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             onSave = { a -> viewModel.stopPreview(); if (editTarget == null) viewModel.addAlarm(a) else viewModel.updateAlarm(a); showAddEdit = false },
             onPlayPreview = { s, v -> viewModel.previewSound(s, v) },
             onStopPreview = { viewModel.stopPreview() }
+        )
+    }
+
+    if (showUpdateDialog && availableUpdateVersion != null) {
+        AlertDialog(
+            onDismissRequest = { showUpdateDialog = false },
+            title = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.ArrowUpward, contentDescription = null, tint = BrandBlue)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Update Available: v${availableUpdateVersion}", fontWeight = FontWeight.Bold, color = c.textPrimary)
+                }
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("A new release of Cyclic Alarms is available on GitHub!", fontSize = 13.sp, color = c.textPrimary)
+                    if (!availableUpdateNotes.isNullOrEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(c.surfaceVariant)
+                                .padding(10.dp)
+                        ) {
+                            Text(availableUpdateNotes!!, fontSize = 11.sp, color = c.textSecondary, fontFamily = FontFamily.Monospace)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showUpdateDialog = false
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(availableUpdateUrl ?: "https://github.com/pramodbeema/cyclicalarms/releases/latest"))
+                        context.startActivity(intent)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166))
+                ) { Text("Download Latest APK", fontWeight = FontWeight.Bold) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showUpdateDialog = false }) { Text("Later", color = c.textSecondary) }
+            },
+            containerColor = c.surfaceColor
         )
     }
 
@@ -1768,6 +1889,20 @@ fun AboutPageView() {
             }
             Spacer(Modifier.height(8.dp))
             Text("Smart shift, roster & repeating cycle alarm app", fontSize = 12.sp, color = c.textSecondary, textAlign = TextAlign.Center)
+            Spacer(Modifier.height(12.dp))
+            OutlinedButton(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/pramodbeema/cyclicalarms/releases/latest"))
+                    context.startActivity(intent)
+                },
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(1.dp, BrandBlue),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = BrandBlue)
+            ) {
+                Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(6.dp))
+                Text("Check GitHub Releases", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+            }
         }
 
         // ── SUPPORT & COMMUNITY CARD ──
