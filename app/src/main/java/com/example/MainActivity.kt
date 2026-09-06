@@ -56,6 +56,9 @@ class MainActivity : ComponentActivity() {
         // ── Request all special permissions on first launch ──
         requestRequiredPermissions()
 
+        // ── Subscribe to Firebase Announcements & Updates topic ──
+        com.example.service.CyclicFirebaseMessagingService.subscribeToDefaultTopics()
+
         enableEdgeToEdge()
         setContent {
             val themeMode by viewModel.themeMode.collectAsState()

@@ -16,6 +16,6 @@
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Keep Firebase Messaging Service
+-keep class com.example.service.CyclicFirebaseMessagingService { *; }
+-keepclassmembers class * extends com.google.firebase.messaging.FirebaseMessagingService { <init>(); }

@@ -89,6 +89,13 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 
 ---
 
+## What's new — v1.4
+
+- 🔥 **Firebase Cloud Messaging (FCM)** — integrated real-time cloud push notifications and developer announcements; instant notification delivery when new updates or releases are ready
+- 🏷 **Official Package Name** — rebranded package identity to `com.beemasfincon.cyclicalarms`
+- 📡 **Instant Broadcast Topics** — app devices automatically subscribe to `announcements` and `all` topics for seamless broadcast messages directly from the Firebase Console
+- 🚀 **GitHub Auto-Update Checker** — detects new GitHub releases on launch and prompts with a 1-tap APK download link
+
 ## What's new — v1.3
 
 - ⏱ **Timer** — built-in countdown timer with circular progress ring; time-set (HH:MM:SS) and quick presets (1m–30m) displayed **inside** the clock ring for a single-glance view; alert sound & vibration on completion

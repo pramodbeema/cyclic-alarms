@@ -184,73 +184,9 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     var availableUpdateNotes   by remember { mutableStateOf<String?>(null) }
     var showUpdateDialog       by remember { mutableStateOf(false) }
 
-    var remoteAnnouncementTitle   by remember { mutableStateOf<String?>(null) }
-    var remoteAnnouncementMessage by remember { mutableStateOf<String?>(null) }
-    var showAnnouncementDialog    by remember { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
-            // 1. Fetch remote announcement JSON (cache-busted so GitHub CDN always returns fresh content)
-            try {
-                val cacheBust = System.currentTimeMillis() / 60_000  // changes every minute
-                val annUrl = java.net.URL("https://raw.githubusercontent.com/pramodbeema/cyclicalarms/main/announcement.json?t=$cacheBust")
-                val annConn = annUrl.openConnection() as java.net.HttpURLConnection
-                annConn.requestMethod = "GET"
-                annConn.setRequestProperty("Cache-Control", "no-cache, no-store")
-                annConn.setRequestProperty("Pragma", "no-cache")
-                annConn.connectTimeout = 4000
-                annConn.readTimeout = 4000
-                if (annConn.responseCode == 200) {
-                    val text = annConn.inputStream.bufferedReader().use { it.readText() }
-                    val json = org.json.JSONObject(text)
-                    val enabled = json.optBoolean("enabled", false)
-                    val annId = json.optString("id", "")
-                    val title = json.optString("title", "Announcement")
-                    val msg = json.optString("message", "")
-
-                    val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                    val lastSeenAnnId = prefs.getString("last_seen_announcement_id", "")
-
-                    if (enabled && msg.isNotEmpty() && annId != lastSeenAnnId) {
-                        // Mark as seen NOW so we don't re-post the notification on next open,
-                        // but the in-app dialog will still show (prefs saved here is for the
-                        // notification dedup; dialog dedup uses showAnnouncementDialog state)
-                        prefs.edit().putString("last_seen_announcement_id", annId).apply()
-
-                        // Post a system status-bar notification so users see it even when app is closed
-                        val notifId = annId.hashCode()
-                        val tapIntent = android.content.Intent(context, com.example.MainActivity::class.java).apply {
-                            flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        }
-                        val pendingIntent = android.app.PendingIntent.getActivity(
-                            context, notifId, tapIntent,
-                            android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
-                        )
-                        val notification = androidx.core.app.NotificationCompat.Builder(context, "announcements_channel")
-                            .setSmallIcon(android.R.drawable.ic_dialog_info)
-                            .setContentTitle(title)
-                            .setContentText(msg)
-                            .setStyle(androidx.core.app.NotificationCompat.BigTextStyle().bigText(msg))
-                            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
-                            .setAutoCancel(true)
-                            .setContentIntent(pendingIntent)
-                            .build()
-                        try {
-                            if (hasNotifPerm) {
-                                androidx.core.app.NotificationManagerCompat.from(context).notify(notifId, notification)
-                            }
-                        } catch (_: SecurityException) {}
-
-                        withContext(Dispatchers.Main) {
-                            remoteAnnouncementTitle = title
-                            remoteAnnouncementMessage = msg
-                            showAnnouncementDialog = true
-                        }
-                    }
-                }
-            } catch (_: Exception) {}
-
-            // 2. Fetch GitHub Update Check
+            // Fetch GitHub Update Check
             try {
                 val url = java.net.URL("https://api.github.com/repos/pramodbeema/cyclicalarms/releases/latest")
                 val conn = url.openConnection() as java.net.HttpURLConnection
@@ -280,7 +216,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         }
                     }
 
-                    val currentVersion = "1.3"
+                    val currentVersion = "1.4"
                     if (tagName.isNotEmpty() && tagName != currentVersion) {
                         withContext(Dispatchers.Main) {
                             availableUpdateVersion = tagName
@@ -370,27 +306,6 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                     }
                 )
             }
-        }
-        // Show announcement dialog even on permission gate screen
-        if (showAnnouncementDialog && remoteAnnouncementMessage != null) {
-            AlertDialog(
-                onDismissRequest = { showAnnouncementDialog = false },
-                title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Info, contentDescription = null, tint = BrandBlue)
-                        Spacer(Modifier.width(8.dp))
-                        Text(remoteAnnouncementTitle ?: "Message from Developer", fontWeight = FontWeight.Bold, color = c.textPrimary)
-                    }
-                },
-                text = { Text(remoteAnnouncementMessage!!, fontSize = 13.sp, color = c.textPrimary, lineHeight = 18.sp) },
-                confirmButton = {
-                    Button(
-                        onClick = { showAnnouncementDialog = false },
-                        colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166))
-                    ) { Text("Got It", fontWeight = FontWeight.Bold) }
-                },
-                containerColor = c.surfaceColor
-            )
         }
         return
     }
@@ -620,28 +535,6 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             },
             dismissButton = {
                 TextButton(onClick = { showUpdateDialog = false }) { Text("Later", color = c.textSecondary) }
-            },
-            containerColor = c.surfaceColor
-        )
-    }
-    if (showAnnouncementDialog && remoteAnnouncementMessage != null) {
-        AlertDialog(
-            onDismissRequest = { showAnnouncementDialog = false },
-            title = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Info, contentDescription = null, tint = BrandBlue)
-                    Spacer(Modifier.width(8.dp))
-                    Text(remoteAnnouncementTitle ?: "Message from Developer", fontWeight = FontWeight.Bold, color = c.textPrimary)
-                }
-            },
-            text = {
-                Text(remoteAnnouncementMessage!!, fontSize = 13.sp, color = c.textPrimary, lineHeight = 18.sp)
-            },
-            confirmButton = {
-                Button(
-                    onClick = { showAnnouncementDialog = false },
-                    colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166))
-                ) { Text("Got It", fontWeight = FontWeight.Bold) }
             },
             containerColor = c.surfaceColor
         )
@@ -2174,7 +2067,7 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.3", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.4", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
@@ -2255,11 +2148,24 @@ fun AboutPageView() {
             Text("Tap on any release version to expand or collapse notes", fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.3 — Expanded by default (current release)
+            // v1.4 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = "v1.3 (Current Release)",
+                version = "v1.4 (Current Release)",
                 badgeText = "Latest",
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "🔥" to "Firebase Cloud Messaging (FCM) — instant broadcast push notifications and update announcements direct to all users",
+                    "📦" to "Official Package Rebrand — package updated to com.beemasfincon.cyclicalarms",
+                    "⚡" to "Direct Broadcast Topics — automatic subscription to 'announcements' & 'all' topics for zero-token mass messaging",
+                    "🚀" to "GitHub Auto-Update Checker — fast releases checker and 1-tap download prompt"
+                )
+            )
+
+            // v1.3 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = "v1.3 Release Notes",
+                badgeText = "v1.3",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "🚀" to "GitHub Auto-Update Checker — automatic update notification & 1-tap download prompt for new signed releases",
                     "⏱" to "Timer — built-in countdown timer with progress ring, quick presets (1m–30m), sound & vibration alert",
