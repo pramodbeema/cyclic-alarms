@@ -242,9 +242,15 @@ class TimerStopwatchService : Service() {
     }
 
     private fun buildNotification(): android.app.Notification {
+        val isAnythingRunning = TimerStopwatchState.isAnythingRunning()
+
+        // Tap opens MainActivity and navigates straight to the Timer tab (index 1)
         val contentIntent = PendingIntent.getActivity(
             this, 0,
-            Intent(this, MainActivity::class.java).apply { flags = Intent.FLAG_ACTIVITY_SINGLE_TOP },
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("NAVIGATE_TO_TAB", 1)   // 1 = Timer tab
+            },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -267,35 +273,39 @@ class TimerStopwatchService : Service() {
             parts.add("Stopwatch: %02d:%02d.%02d".format(m, s, cs))
         }
 
-        val text = if (parts.isNotEmpty()) parts.joinToString("  •  ") else "Running in background"
+        val text = if (parts.isNotEmpty()) parts.joinToString("  •  ") else "Paused"
 
-        // Build a stop-all pending intent so user can tap a button to stop from the notification
-        val stopIntent = PendingIntent.getService(
-            this, 9999,
-            Intent(this, TimerStopwatchService::class.java).apply { action = ACTION_STOP_SELF },
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        return android.app.Notification.Builder(this, CHANNEL_ID)
+        val builder = android.app.Notification.Builder(this, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
             .setContentTitle("Timer & Stopwatch")
             .setContentText(text)
             .setStyle(android.app.Notification.BigTextStyle().bigText(text))
-            .setOngoing(true)                       // cannot be swiped away while running
-            .setOnlyAlertOnce(true)                 // no repeated sound on each update
+            .setOnlyAlertOnce(true)
             .setShowWhen(false)
-            .setForegroundServiceBehavior(
-                android.app.Notification.FOREGROUND_SERVICE_IMMEDIATE
-            )
+            .setForegroundServiceBehavior(android.app.Notification.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentIntent(contentIntent)
-            // "Stop All" action — gives user a way to dismiss from the notification
-            .addAction(
-                android.R.drawable.ic_menu_close_clear_cancel,
-                "Stop All",
-                stopIntent
+
+        if (isAnythingRunning) {
+            // Non-dismissible while actively running — add Stop All action
+            val stopIntent = PendingIntent.getService(
+                this, 9999,
+                Intent(this, TimerStopwatchService::class.java).apply { action = ACTION_STOP_SELF },
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
-            .build()
-            .also { it.flags = it.flags or android.app.Notification.FLAG_NO_CLEAR or android.app.Notification.FLAG_ONGOING_EVENT }
+            builder.setOngoing(true)
+                .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Stop All", stopIntent)
+        } else {
+            // Everything paused/stopped — notification is dismissible (user can swipe it away)
+            builder.setOngoing(false)
+        }
+
+        val notif = builder.build()
+        if (isAnythingRunning) {
+            notif.flags = notif.flags or
+                android.app.Notification.FLAG_NO_CLEAR or
+                android.app.Notification.FLAG_ONGOING_EVENT
+        }
+        return notif
     }
 
     private fun createNotificationChannel() {

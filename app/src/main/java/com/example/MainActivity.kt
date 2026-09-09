@@ -34,6 +34,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Handle tab navigation from notification tap (cold start)
+        intent?.getIntExtra("NAVIGATE_TO_TAB", -1)?.takeIf { it >= 0 }?.let {
+            viewModel.requestTab(it)
+        }
+
         // ── Create notification channels ──
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -164,6 +169,10 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        // Handle tab navigation from notification tap (app already running)
+        intent.getIntExtra("NAVIGATE_TO_TAB", -1).takeIf { it >= 0 }?.let {
+            viewModel.requestTab(it)
+        }
         if (RingingState.activeAlarm.value != null) {
             applyAlarmWindowFlags(true)
         }

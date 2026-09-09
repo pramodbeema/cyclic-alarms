@@ -101,6 +101,15 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     var showAddEdit   by remember { mutableStateOf(false) }
     var editTarget    by remember { mutableStateOf<Alarm?>(null) }
     var currentTab    by remember { mutableStateOf(0) }
+
+    // Handle navigation requests from notification taps
+    val requestedTab by viewModel.requestedTab.collectAsStateWithLifecycle()
+    LaunchedEffect(requestedTab) {
+        requestedTab?.let {
+            currentTab = it
+            viewModel.consumeRequestedTab()
+        }
+    }
     var selectedIds   by remember { mutableStateOf(setOf<Int>()) }
     var showHistory   by remember { mutableStateOf(false) }
     val selectionMode = selectedIds.isNotEmpty()
@@ -1176,23 +1185,95 @@ fun AlarmAddEditDialog(
                     // SOUND
                     item {
                         SectionCard("Alarm Sound") {
-                            Row(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(if (soundPreset == "Custom Track") BrandBlue.copy(alpha = 0.12f) else c.surfaceVariant).border(BorderStroke(1.dp, if (soundPreset == "Custom Track") BrandBlue else c.outlineColor), RoundedCornerShape(10.dp)).clickable { trackPicker.launch(arrayOf("audio/*")) }.padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                                    Icon(Icons.Default.Add, contentDescription = null, tint = if (soundPreset == "Custom Track") BrandBlue else c.textSecondary, modifier = Modifier.size(18.dp))
-                                    Spacer(Modifier.width(8.dp))
-                                    Column {
-                                        Text("Pick from device", color = if (soundPreset == "Custom Track") BrandBlue else c.textSecondary, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                                        if (customTrackUri.isNotEmpty()) Text(customTrackUri.substringAfterLast("/").take(28), color = c.textDisabled, fontSize = 10.sp)
+                            // ── Custom track row (always visible) ──
+                            // Shows the picked track filename as a selectable row when one is set,
+                            // and always shows a "Pick from device" / "Change track" button below it.
+                            if (customTrackUri.isNotEmpty()) {
+                                val trackName = run {
+                                    // Try to decode a human-readable filename from the URI
+                                    val raw = customTrackUri.substringAfterLast("/")
+                                    val decoded = try {
+                                        android.net.Uri.decode(raw)
+                                    } catch (_: Exception) { raw }
+                                    // Strip common percent-encoded noise and truncate
+                                    decoded.substringAfterLast("%2F").substringAfterLast("/")
+                                        .removeSuffix(".mp3").removeSuffix(".m4a")
+                                        .removeSuffix(".wav").removeSuffix(".ogg")
+                                        .take(36).ifBlank { "Custom Track" }
+                                }
+                                val selCustom = soundPreset == "Custom Track"
+                                val playCustom = isPreviewing == "Custom Track"
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(if (selCustom) BrandBlue.copy(alpha = 0.12f) else c.surfaceVariant)
+                                        .border(BorderStroke(1.dp, if (selCustom) BrandBlue else c.outlineColor), RoundedCornerShape(10.dp))
+                                        .clickable { soundPreset = "Custom Track" }
+                                        .padding(horizontal = 10.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                                        RadioButton(
+                                            selected = selCustom,
+                                            onClick = { soundPreset = "Custom Track" },
+                                            colors = RadioButtonDefaults.colors(selectedColor = BrandBlue, unselectedColor = c.textDisabled)
+                                        )
+                                        Spacer(Modifier.width(4.dp))
+                                        Column {
+                                            Text(
+                                                trackName,
+                                                color = if (selCustom) c.textPrimary else c.textSecondary,
+                                                fontWeight = if (selCustom) FontWeight.Bold else FontWeight.Normal,
+                                                fontSize = 13.sp,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                            Text("Custom track", color = c.textDisabled, fontSize = 10.sp)
+                                        }
+                                    }
+                                    IconButton(
+                                        onClick = {
+                                            if (playCustom) { onStopPreview(); isPreviewing = null }
+                                            else { onPlayPreview(customTrackUri, volume); isPreviewing = "Custom Track" }
+                                        },
+                                        modifier = Modifier.size(32.dp)
+                                    ) {
+                                        Icon(
+                                            if (playCustom) Icons.Default.Close else Icons.Default.PlayArrow,
+                                            contentDescription = null,
+                                            tint = if (playCustom) DeleteRed else BrandBlue
+                                        )
                                     }
                                 }
-                                if (soundPreset == "Custom Track" && customTrackUri.isNotEmpty()) {
-                                    IconButton(onClick = { if (isPreviewing == "Custom Track") { onStopPreview(); isPreviewing = null } else { onPlayPreview(customTrackUri, volume); isPreviewing = "Custom Track" } }, modifier = Modifier.size(32.dp)) {
-                                        Icon(if (isPreviewing == "Custom Track") Icons.Default.Close else Icons.Default.PlayArrow, contentDescription = null, tint = BrandBlue)
-                                    }
-                                }
+                                Spacer(Modifier.height(4.dp))
                             }
+
+                            // ── Pick / Change track button — always visible ──
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(c.surfaceVariant)
+                                    .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(10.dp))
+                                    .clickable { trackPicker.launch(arrayOf("audio/*")) }
+                                    .padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(Icons.Default.Add, contentDescription = null, tint = c.textSecondary, modifier = Modifier.size(18.dp))
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    if (customTrackUri.isNotEmpty()) "Change track" else "Pick from device",
+                                    color = c.textSecondary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp
+                                )
+                            }
+
                             Spacer(Modifier.height(8.dp))
+
+                            // ── Built-in preset rows ──
                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                 presets.forEach { preset ->
                                     val sel  = preset == soundPreset
@@ -2310,14 +2391,13 @@ fun AboutPageView() {
                     confirmButton = {
                         Button(
                             onClick = {
-                                val url = info.downloadUrl
-                                val ver = info.latestVersion
+                                val url = info.releasePageUrl
                                 updateDialogInfo = null
-                                com.example.util.AppUpdateManager.downloadAndInstall(context, url, ver)
+                                com.example.util.AppUpdateManager.openReleasePage(context, url)
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = BrandBlue)
                         ) {
-                            Text("Download & Install", fontWeight = FontWeight.Bold, color = Color(0xFF003166))
+                            Text("Download Latest APK", fontWeight = FontWeight.Bold, color = Color(0xFF003166))
                         }
                     },
                     dismissButton = {

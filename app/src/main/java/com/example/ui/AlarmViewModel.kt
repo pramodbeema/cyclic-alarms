@@ -109,6 +109,20 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
         prefs.edit().putBoolean("silent_banner_dismissed", true).apply()
     }
 
+    // Tab navigation request — set by MainActivity when notification tap carries NAVIGATE_TO_TAB extra
+    private val _requestedTab = MutableStateFlow<Int?>(null)
+    val requestedTab = _requestedTab.asStateFlow()
+
+    fun consumeRequestedTab(): Int? {
+        val tab = _requestedTab.value
+        _requestedTab.value = null
+        return tab
+    }
+
+    fun requestTab(index: Int) {
+        _requestedTab.value = index
+    }
+
     fun addAlarm(alarm: Alarm) {
         viewModelScope.launch {
             repository.insertAlarm(alarm)
