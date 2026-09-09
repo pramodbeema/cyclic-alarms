@@ -19,8 +19,8 @@ import java.net.URL
 
 object AppUpdateManager {
     private const val GITHUB_REPO = "pramodbeema/cyclicalarms"
-    private const val CURRENT_VERSION_CODE = 4
-    private const val CURRENT_VERSION_NAME = "1.5"
+    private const val CURRENT_VERSION_CODE = 5
+    private const val CURRENT_VERSION_NAME = "1.6"
 
     data class UpdateInfo(
         val isUpdateAvailable: Boolean,

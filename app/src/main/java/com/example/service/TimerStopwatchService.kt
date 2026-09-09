@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import androidx.core.app.NotificationCompat
 import com.example.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -197,6 +196,7 @@ class TimerStopwatchService : Service() {
     private fun startTicking() {
         tickJob?.cancel()
         tickJob = serviceScope.launch {
+            var notifTickCounter = 0
             while (true) {
                 delay(TICK_MS)
                 val finishedTimers = TimerStopwatchState.tickTimers(TICK_MS)
@@ -207,9 +207,13 @@ class TimerStopwatchService : Service() {
                     playTimerFinishSound()
                 }
 
-                // Update notification periodically (every 500ms)
-                val notifMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                notifMgr.notify(NOTIF_ID, buildNotification())
+                // Update notification every ~500ms (every 25 ticks at 20ms each)
+                notifTickCounter++
+                if (notifTickCounter >= 25 || finishedTimers.isNotEmpty()) {
+                    notifTickCounter = 0
+                    val notifMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                    notifMgr.notify(NOTIF_ID, buildNotification())
+                }
             }
         }
     }
@@ -265,16 +269,33 @@ class TimerStopwatchService : Service() {
 
         val text = if (parts.isNotEmpty()) parts.joinToString("  •  ") else "Running in background"
 
-        return NotificationCompat.Builder(this, CHANNEL_ID)
+        // Build a stop-all pending intent so user can tap a button to stop from the notification
+        val stopIntent = PendingIntent.getService(
+            this, 9999,
+            Intent(this, TimerStopwatchService::class.java).apply { action = ACTION_STOP_SELF },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        return android.app.Notification.Builder(this, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
             .setContentTitle("Timer & Stopwatch")
             .setContentText(text)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(true)
+            .setStyle(android.app.Notification.BigTextStyle().bigText(text))
+            .setOngoing(true)                       // cannot be swiped away while running
+            .setOnlyAlertOnce(true)                 // no repeated sound on each update
             .setShowWhen(false)
+            .setForegroundServiceBehavior(
+                android.app.Notification.FOREGROUND_SERVICE_IMMEDIATE
+            )
             .setContentIntent(contentIntent)
+            // "Stop All" action — gives user a way to dismiss from the notification
+            .addAction(
+                android.R.drawable.ic_menu_close_clear_cancel,
+                "Stop All",
+                stopIntent
+            )
             .build()
+            .also { it.flags = it.flags or android.app.Notification.FLAG_NO_CLEAR or android.app.Notification.FLAG_ONGOING_EVENT }
     }
 
     private fun createNotificationChannel() {
@@ -286,6 +307,8 @@ class TimerStopwatchService : Service() {
             ).apply {
                 description = "Shows running timers and stopwatch in background"
                 setShowBadge(false)
+                // Prevent user from changing importance to a level that allows dismissal
+                lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
             }
             val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)

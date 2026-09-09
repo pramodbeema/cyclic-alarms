@@ -20,23 +20,27 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 
 - **Cyclic alarms** — repeat every N days from a start date (e.g. every 3 days, every 14 days)
 - **Weekly alarms** — pick any combination of weekdays
-- **Default Cyclic Days** — new alarms open on the Cyclic Days tab by default
-- **Automatic Update Checker** — detects new GitHub release APKs on app launch & prompts user to download & update
-- **Firebase Cloud Messaging (FCM)** — broadcast push notifications and update announcements
-- **Timer** — built-in countdown timer with circular progress ring, 1m–30m quick presets, alert sound & vibration
+- **Multiple Timers** — run up to 5 independent countdown timers simultaneously, each with its own label and progress bar
 - **Stopwatch** — elapsed time tracker with lap recording, fastest/slowest lap highlights, and touch audio feedback
-- **Strict Lock Screen Security & Privacy** — app ONLY displays over keyguard while actively ringing; dismiss or snooze immediately locks device & returns to prior state without exposing main dashboard
+- **Background Timer & Stopwatch** — continue running when the app is backgrounded via a Foreground Service with a persistent, non-dismissible notification (like YouTube playback) — shows live countdown and a "Stop All" action
+- **Persistent Custom Track** — last-used audio file is automatically pre-applied to every new alarm; no need to re-pick each time
+- **Rings in Silent & DND Mode** — alarm stream volume is forced to maximum before playing, bypassing silent/vibrate mode
+- **Pure Dark Mode** — true AMOLED black theme for OLED screens (saves battery, looks sharp)
+- **Dark / Light / System themes** — with a brightness slider in Light mode to dial background from tinted grey to pure white
+- **In-App Auto-Update** — tap "Check for Updates" in About to fetch the latest GitHub release, download the APK, and launch the system installer
+- **Automatic Update Banner** — detects new GitHub releases on launch and shows a prompt at the top of the Alarms tab
+- **Firebase Cloud Messaging (FCM)** — broadcast push notifications and developer announcements
+- **Strict Lock Screen Security** — app ONLY displays over keyguard while actively ringing; dismiss/snooze immediately returns to lock screen
 - **4-Tab Navigation** — Alarms, Timer, Stopwatch, Settings
-- **12H / 24H Clock Toggle** — clock toggle with capital "AM"/"PM" indicator and full year display on home screen date
-- **First-launch Theme Prompt & Light/Dark visibility** — select theme on install, with proper status bar icon contrast on devices like Galaxy S26
-- **In-App Permissions & App Access Manager** — view and manage notification, exact alarm, full-screen alert, and overlay permissions live in Settings
-- **Expandable Release Notes** — interactive collapsible release notes accordions on the About page
-- **Support & Community Card** — dedicated feedback & bug reporting section on the About page (`bp.beema@outlook.com`)
+- **12H / 24H Clock Toggle** — with capital AM/PM and full year on the home screen date
+- **Per-Alarm Snooze Duration** — set snooze minutes per alarm (quick presets + custom input)
+- **First-launch Theme Prompt** — pick your theme on first install, with correct status bar contrast
+- **In-App Permissions Manager** — view and manage all critical permissions live in Settings
+- **Alarm history** — log of dismissed and snoozed alarms with clear option
 - **8 built-in alarm sounds** — High Pitch, Zen Bowl, Sunrise Chime, Digital Beeps, Morning Forest, Synth Wave Beat, Cyber Alert, Lofi Chord
-- **Pick your own audio** — use any audio file from your device
-- **Volume & Vibration control** — per-alarm controls, volume defaults to maximum
-- **Alarm history** — log of all dismissed and snoozed alarms with clear option (accessible via 📋 icon on the Alarms tab)
-- **Pencil-sketched spiral launcher icon** — clean, symmetrical alarm clock icon design
+- **Custom audio** — use any audio file from your device as an alarm sound
+- **Volume & vibration control** — per-alarm, volume defaults to maximum
+- **Expandable release notes** — collapsible version history on the About page
 - **Zero ads. Zero tracking. Zero sign-in.**
 
 ---
@@ -80,7 +84,7 @@ You can tap **"Install anyway"** safely.
 - **Data:** Room database (SQLite)
 - **Audio:** Android AudioTrack + MediaPlayer — all synth sounds are generated in code, no audio files bundled
 - **Scheduling:** AlarmManager with exact alarms
-- **Min SDK:** Android 8.0 (API 26)
+- **Min SDK:** Android 7.0 (API 24)
 
 ---
 
@@ -91,6 +95,22 @@ This app was built **100% using AI assistance** (Google Antigravity AI / Claude)
 I'm not a software developer. I'm just someone who needed a specific alarm app, couldn't find one that did exactly what I wanted, and used AI to build it. The ideas, requirements, and testing are mine — the code is the AI's.
 
 ---
+
+## What's new — v1.6
+
+- 🔔 **Non-dismissible background notification** — timer & stopwatch notification cannot be swiped away while running (just like a YouTube playback notification); includes a "Stop All" action button so you can still stop from the shade
+- 🎨 **Light mode alarm time fix** — cyclic and weekly alarm times now use deep, high-contrast colours (deep blue / deep purple) instead of the washed-out near-white tints that were invisible on a light background
+- 🌤 **Deeper light mode tint** — default background is a more noticeably grey-blue so the whiteness slider feels meaningful and usable across its full range
+
+## What's new — v1.5
+
+- 🎵 **Persistent Custom Track** — last-used music file auto-applied to every new alarm
+- ⏱ **Multiple Timers** — run up to 5 independent countdown timers simultaneously
+- 🌑 **Pure Dark Mode** — true AMOLED black theme for OLED screen battery savings
+- ☀️ **Light Mode Brightness Slider** — adjust background from tinted grey to pure white in Settings
+- 🔄 **Background Timer & Stopwatch** — continue running when app is backgrounded via Foreground Service
+- 🔔 **Rings in Silent & DND Mode** — alarms bypass ringer volume; one-time info banner confirms this
+- ⬆️ **In-App Auto-Update** — tap "Check for Updates" in About to download & install new releases directly
 
 ## What's new — v1.4
 

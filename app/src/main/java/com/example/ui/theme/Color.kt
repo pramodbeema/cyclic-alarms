@@ -33,18 +33,25 @@ val WeeklyAccent       = Color(0xFF9B72F5)
 val WeeklyTime         = Color(0xFFE2D9FF)
 
 // ── Light palette equivalents ──
-val LightAppBackground  = Color(0xFFF5F6FA)
-val LightSurfaceColor   = Color(0xFFFFFFFF)
-val LightSurfaceVariant = Color(0xFFE8EAF0)
-val LightOutlineColor   = Color(0xFFBEC2CC)
+// Background is a noticeably tinted blue-grey so the whiteness slider starts
+// from a clearly non-white point and the user can feel the full range.
+val LightAppBackground  = Color(0xFFE3E7F0)   // was 0xFFF5F6FA — more tinted
+val LightSurfaceColor   = Color(0xFFF5F7FC)   // was 0xFFFFFFFF — slight tint
+val LightSurfaceVariant = Color(0xFFD8DCE8)   // was 0xFFE8EAF0
+val LightOutlineColor   = Color(0xFFADB2BF)   // was 0xFFBEC2CC
 val LightTextPrimary    = Color(0xFF1A1C22)
 val LightTextSecondary  = Color(0xFF44474F)
 val LightTextDisabled   = Color(0xFFAAADB5)
 
-val LightCyclicCardBg      = Color(0xFFE8F1FF)
-val LightCyclicCardBorder  = Color(0xFFB0CAEE)
-val LightWeeklyCardBg      = Color(0xFFF3EEFF)
-val LightWeeklyCardBorder  = Color(0xFFCDB8F0)
+val LightCyclicCardBg      = Color(0xFFD6E6FF)   // was 0xFFE8F1FF — more vivid
+val LightCyclicCardBorder  = Color(0xFF8AAFE0)   // was 0xFFB0CAEE
+val LightWeeklyCardBg      = Color(0xFFEADEFF)   // was 0xFFF3EEFF
+val LightWeeklyCardBorder  = Color(0xFFB89AE8)   // was 0xFFCDB8F0
+
+// ── Light mode alarm-time colours — high-contrast so they read on light bg ──
+// Dark equivalent uses CyclicTime (0xFFCDE8FF) which is near-white — unusable in light.
+val LightCyclicTime     = Color(0xFF1A56A8)   // deep blue — readable on LightCyclicCardBg
+val LightWeeklyTime     = Color(0xFF5B25C4)   // deep purple — readable on LightWeeklyCardBg
 
 // ── Pure Dark (AMOLED Black) palette ──
 val PureDarkBackground     = Color(0xFF000000)
@@ -74,6 +81,9 @@ data class AppColors(
     val weeklyCardBg  : Color,
     val weeklyCardBorder: Color,
     val isDark        : Boolean,
+    // Alarm-time digit colours — dark mode uses near-white tints; light mode uses deep hues
+    val cyclicTimeColor: Color = CyclicTime,
+    val weeklyTimeColor: Color = WeeklyTime,
 )
 
 val DarkAppColors = AppColors(
@@ -104,6 +114,8 @@ val LightAppColors = AppColors(
     weeklyCardBg     = LightWeeklyCardBg,
     weeklyCardBorder = LightWeeklyCardBorder,
     isDark           = false,
+    cyclicTimeColor  = LightCyclicTime,
+    weeklyTimeColor  = LightWeeklyTime,
 )
 
 val PureDarkAppColors = AppColors(

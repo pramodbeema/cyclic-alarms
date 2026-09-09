@@ -228,7 +228,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         }
                     }
 
-                    val currentVersion = "1.5"
+                    val currentVersion = "1.6"
                     if (tagName.isNotEmpty() && tagName != currentVersion) {
                         withContext(Dispatchers.Main) {
                             availableUpdateVersion = tagName
@@ -738,7 +738,7 @@ fun AlarmCard(
     val cardBg     = if (isCyclic) c.cyclicCardBg else c.weeklyCardBg
     val cardBorder = if (isCyclic) c.cyclicCardBorder else c.weeklyCardBorder
     val accent     = if (isCyclic) CyclicAccent else WeeklyAccent
-    val timeCol    = if (isCyclic) CyclicTime else WeeklyTime
+    val timeCol    = if (isCyclic) c.cyclicTimeColor else c.weeklyTimeColor
     val alpha      = if (alarm.isEnabled) 1f else 0.4f
 
     val displayHour = when { alarm.hour == 0 -> 12; alarm.hour > 12 -> alarm.hour - 12; else -> alarm.hour }
@@ -1375,7 +1375,7 @@ fun SettingsPageView(
                     Spacer(Modifier.width(12.dp))
                     Column {
                         Text("About Cyclic Alarms", fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = c.textPrimary)
-                        Text("Version 1.5 • Release notes, support & creator info", fontSize = 12.sp, color = c.textSecondary)
+                        Text("Version 1.6 • Release notes, support & creator info", fontSize = 12.sp, color = c.textSecondary)
                     }
                 }
                 Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
@@ -2240,7 +2240,7 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.5", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.6", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
@@ -2263,7 +2263,7 @@ fun AboutPageView() {
                                 if (info.isUpdateAvailable) {
                                     updateDialogInfo = info
                                 } else {
-                                    android.widget.Toast.makeText(context, "You are on the latest version (v1.5)!", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(context, "You are on the latest version (v1.6)!", android.widget.Toast.LENGTH_SHORT).show()
                                 }
                             }.onFailure { err ->
                                 updateError = err.message
@@ -2389,11 +2389,23 @@ fun AboutPageView() {
             Text("Tap on any release version to expand or collapse notes", fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.5 — Expanded by default (current release)
+            // v1.6 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = "v1.5 (Current Release)",
+                version = "v1.6 (Current Release)",
                 badgeText = "Latest",
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "🔔" to "Non-dismissible background notification — timer & stopwatch notification cannot be swiped away while running (like YouTube), with a 'Stop All' action button",
+                    "🎨" to "Light mode alarm time fix — cyclic and weekly alarm times now use deep, high-contrast colours instead of washed-out light blue/purple",
+                    "🌤" to "Deeper light mode tint — default background is more noticeably grey-blue so the whiteness slider feels meaningful across its full range"
+                )
+            )
+
+            // v1.5 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = "v1.5 Release Notes",
+                badgeText = "v1.5",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "🎵" to "Persistent Custom Track — last-used music file auto-applied to every new alarm",
                     "⏱" to "Multiple Timers — run up to 5 independent countdown timers simultaneously",
