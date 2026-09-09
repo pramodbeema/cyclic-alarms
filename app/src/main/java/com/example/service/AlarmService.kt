@@ -8,6 +8,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.os.*
 import android.util.Log
 import android.view.WindowManager
@@ -55,6 +56,8 @@ class AlarmService : Service() {
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
     private lateinit var repository: AlarmRepository
+    private var savedAlarmVolume: Int = -1
+    private var savedRingerMode: Int = AudioManager.RINGER_MODE_NORMAL
 
     companion object {
         fun dismissAlarm(context: Context, alarmId: Int, label: String, hour: Int, minute: Int) {
@@ -148,6 +151,23 @@ class AlarmService : Service() {
             PowerManager.ON_AFTER_RELEASE,
             "com.example:AlarmServiceWakeLock"
         ).also { it.acquire(10 * 60 * 1000L /* 10 minutes max */) }
+
+        // Force alarm stream to maximum volume, bypassing silent/DND mode
+        try {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            savedRingerMode = audioManager.ringerMode
+            savedAlarmVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
+            val maxAlarmVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+            // Set ringer mode to NORMAL so alarm stream is audible even in silent/vibrate
+            audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL
+            audioManager.setStreamVolume(
+                AudioManager.STREAM_ALARM,
+                (maxAlarmVol * volume.coerceIn(0.1f, 1.0f)).toInt().coerceAtLeast(1),
+                0
+            )
+        } catch (e: Exception) {
+            Log.w("AlarmService", "Could not adjust alarm volume: ${e.message}")
+        }
 
         // Play custom track URI if set, otherwise fall back to synth preset
         val soundToPlay = if (customTrackUri.isNotEmpty()) customTrackUri else soundPreset
@@ -395,6 +415,17 @@ class AlarmService : Service() {
             vibrator?.cancel()
         } catch (e: Exception) {
             Log.e("AlarmService", "Error stopping vibrator", e)
+        }
+        // Restore audio manager to original state
+        try {
+            if (savedAlarmVolume >= 0) {
+                val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, savedAlarmVolume, 0)
+                audioManager.ringerMode = savedRingerMode
+                savedAlarmVolume = -1
+            }
+        } catch (e: Exception) {
+            Log.w("AlarmService", "Could not restore audio: ${e.message}")
         }
         // Release the WakeLock now that the alarm has been handled.
         try {

@@ -20,7 +20,7 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     val alarms: StateFlow<List<Alarm>>
     val logs: StateFlow<List<AlarmLog>>
 
-    // Theme mode: "Dark", "Light", or "System"
+    // Theme mode: "Pure Dark", "Dark", "Light", or "System"
     private val _themeMode = MutableStateFlow(prefs.getString("theme_mode", "Dark") ?: "Dark")
     val themeMode = _themeMode.asStateFlow()
 
@@ -38,16 +38,34 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     private val _snoozeMinutes = MutableStateFlow(prefs.getInt("snooze_minutes", 5))
     val snoozeMinutes = _snoozeMinutes.asStateFlow()
 
+    // Light mode whiteness (0.0 = default tinted bg, 1.0 = pure white)
+    private val _lightWhiteness = MutableStateFlow(
+        prefs.getFloat("light_whiteness", 0f)
+    )
+    val lightWhiteness = _lightWhiteness.asStateFlow()
+
+    // Last custom track URI — persisted so new alarms inherit it
+    private val _lastCustomTrackUri = MutableStateFlow(
+        prefs.getString("last_custom_track_uri", "") ?: ""
+    )
+    val lastCustomTrackUri = _lastCustomTrackUri.asStateFlow()
+
+    // Silent mode info banner — shown once, dismissed permanently
+    private val _silentBannerDismissed = MutableStateFlow(
+        prefs.getBoolean("silent_banner_dismissed", false)
+    )
+    val silentBannerDismissed = _silentBannerDismissed.asStateFlow()
+
     init {
         val database = AppDatabase.getDatabase(application)
         repository = AlarmRepository(database.alarmDao(), application)
-        
+
         alarms = repository.alarms.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
-        
+
         logs = repository.logs.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -74,6 +92,21 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     fun setSnoozeMinutes(minutes: Int) {
         _snoozeMinutes.value = minutes
         prefs.edit().putInt("snooze_minutes", minutes).apply()
+    }
+
+    fun setLightWhiteness(value: Float) {
+        _lightWhiteness.value = value
+        prefs.edit().putFloat("light_whiteness", value).apply()
+    }
+
+    fun setLastCustomTrackUri(uri: String) {
+        _lastCustomTrackUri.value = uri
+        prefs.edit().putString("last_custom_track_uri", uri).apply()
+    }
+
+    fun dismissSilentBanner() {
+        _silentBannerDismissed.value = true
+        prefs.edit().putBoolean("silent_banner_dismissed", true).apply()
     }
 
     fun addAlarm(alarm: Alarm) {

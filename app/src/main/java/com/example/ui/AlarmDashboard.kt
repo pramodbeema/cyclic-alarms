@@ -2,12 +2,16 @@ package com.example.ui
 
 import android.Manifest
 import android.app.AlarmManager
+import android.app.DownloadManager
 import android.app.NotificationManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -71,10 +75,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.Alarm
 import com.example.data.AlarmLog
 import com.example.data.AlarmScheduler
+import com.example.service.TimerStopwatchState
+import com.example.service.TimerStopwatchService
+import com.example.service.TimerInstance
 import com.example.ui.theme.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -99,6 +108,9 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     val themeMode        by viewModel.themeMode.collectAsStateWithLifecycle()
     val timeFormat       by viewModel.timeFormat.collectAsStateWithLifecycle()
     val isThemeSetupDone by viewModel.isThemeSetupDone.collectAsStateWithLifecycle()
+    val lightWhiteness   by viewModel.lightWhiteness.collectAsStateWithLifecycle()
+    val lastCustomTrackUri by viewModel.lastCustomTrackUri.collectAsStateWithLifecycle()
+    val silentBannerDismissed by viewModel.silentBannerDismissed.collectAsStateWithLifecycle()
     var selectedThemeForSetup by remember { mutableStateOf(themeMode) }
 
     var clock by remember { mutableStateOf("--:--:--") }
@@ -216,7 +228,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         }
                     }
 
-                    val currentVersion = "1.4"
+                    val currentVersion = "1.5"
                     if (tagName.isNotEmpty() && tagName != currentVersion) {
                         withContext(Dispatchers.Main) {
                             availableUpdateVersion = tagName
@@ -420,6 +432,33 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                 }
             }
 
+            // Silent mode info banner (one-time, only on Alarms tab)
+            if (!silentBannerDismissed && currentTab == 0) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(SuccessGreen.copy(alpha = 0.1f))
+                        .border(BorderStroke(1.dp, SuccessGreen.copy(alpha = 0.35f)), RoundedCornerShape(10.dp))
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.Top, modifier = Modifier.weight(1f)) {
+                        Icon(Icons.Default.VolumeOff, contentDescription = null, tint = SuccessGreen, modifier = Modifier.size(14.dp).padding(top = 1.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            text = "⚡ Alarms ring even in Silent & DND mode. Note: if phone is switched off, alarms cannot ring.",
+                            color = SuccessGreen, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, lineHeight = 16.sp
+                        )
+                    }
+                    IconButton(onClick = { viewModel.dismissSilentBanner() }, modifier = Modifier.size(28.dp)) {
+                        Icon(Icons.Default.Close, contentDescription = "Dismiss", tint = SuccessGreen, modifier = Modifier.size(14.dp))
+                    }
+                }
+            }
+
             // Selection bar
             AnimatedVisibility(visible = selectionMode && currentTab == 0, enter = fadeIn() + expandVertically(), exit = fadeOut() + shrinkVertically()) {
                 Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp).clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).padding(horizontal = 12.dp, vertical = 8.dp),
@@ -479,7 +518,9 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                             themeMode = themeMode,
                             onThemeModeChange = { viewModel.setThemeMode(it) },
                             timeFormat = timeFormat,
-                            onTimeFormatChange = { viewModel.setTimeFormat(it) }
+                            onTimeFormatChange = { viewModel.setTimeFormat(it) },
+                            lightWhiteness = lightWhiteness,
+                            onLightWhitenessChange = { viewModel.setLightWhiteness(it) }
                         )
                     }
                 }
@@ -490,10 +531,12 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     if (showAddEdit) {
         AlarmAddEditDialog(
             alarm = editTarget,
+            lastCustomTrackUri = if (editTarget == null) lastCustomTrackUri else "",
             onDismiss = { viewModel.stopPreview(); showAddEdit = false },
             onSave = { a -> viewModel.stopPreview(); if (editTarget == null) viewModel.addAlarm(a) else viewModel.updateAlarm(a); showAddEdit = false },
             onPlayPreview = { s, v -> viewModel.previewSound(s, v) },
-            onStopPreview = { viewModel.stopPreview() }
+            onStopPreview = { viewModel.stopPreview() },
+            onTrackPicked = { uri -> viewModel.setLastCustomTrackUri(uri) }
         )
     }
 
@@ -606,29 +649,45 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                     Text("Select your preferred theme. You can change this anytime in Settings.", fontSize = 13.sp, color = c.textSecondary, textAlign = TextAlign.Center, lineHeight = 18.sp)
                     Spacer(Modifier.height(20.dp))
 
+                    // Dark options row
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(c.surfaceVariant)
-                            .padding(4.dp),
+                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(c.surfaceVariant).padding(4.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        listOf("Dark", "System", "Light").forEach { mode ->
+                        listOf("Pure Dark" to "🌑", "Dark" to "🌙").forEach { (mode, emoji) ->
                             val isSel = selectedThemeForSetup == mode
                             Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(42.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (isSel) BrandBlue else Color.Transparent)
-                                    .clickable {
-                                        selectedThemeForSetup = mode
-                                        viewModel.setThemeMode(mode)
-                                    },
+                                modifier = Modifier.weight(1f).height(42.dp).clip(RoundedCornerShape(8.dp))
+                                    .background(if (isSel) Color(0xFF1A1A2E) else Color.Transparent)
+                                    .border(BorderStroke(if (isSel) 1.5.dp else 0.dp, if (isSel) BrandBlue else Color.Transparent), RoundedCornerShape(8.dp))
+                                    .clickable { selectedThemeForSetup = mode; viewModel.setThemeMode(mode) },
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(mode, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = if (isSel) Color(0xFF003166) else c.textSecondary)
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text(emoji, fontSize = 13.sp)
+                                    Text(mode, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = if (isSel) BrandBlue else c.textSecondary)
+                                }
+                            }
+                        }
+                    }
+                    Spacer(Modifier.height(4.dp))
+                    // Light options row
+                    Row(
+                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(c.surfaceVariant).padding(4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        listOf("System" to "⚙️", "Light" to "☀️").forEach { (mode, emoji) ->
+                            val isSel = selectedThemeForSetup == mode
+                            Box(
+                                modifier = Modifier.weight(1f).height(42.dp).clip(RoundedCornerShape(8.dp))
+                                    .background(if (isSel) BrandBlue else Color.Transparent)
+                                    .clickable { selectedThemeForSetup = mode; viewModel.setThemeMode(mode) },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text(emoji, fontSize = 13.sp)
+                                    Text(mode, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = if (isSel) Color(0xFF003166) else c.textSecondary)
+                                }
                             }
                         }
                     }
@@ -883,7 +942,9 @@ private fun TimeSpinner(
 @Composable
 fun AlarmAddEditDialog(
     alarm: Alarm?, onDismiss: () -> Unit, onSave: (Alarm) -> Unit,
-    onPlayPreview: (String, Float) -> Unit, onStopPreview: () -> Unit
+    onPlayPreview: (String, Float) -> Unit, onStopPreview: () -> Unit,
+    lastCustomTrackUri: String = "",
+    onTrackPicked: (String) -> Unit = {}
 ) {
     // Default to current time for new alarms
     val nowCal  = remember { java.util.Calendar.getInstance() }
@@ -908,7 +969,17 @@ fun AlarmAddEditDialog(
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = cyclicStart)
 
     var soundPreset    by remember { mutableStateOf(alarm?.soundPreset ?: "High Pitch") }
-    var customTrackUri by remember { mutableStateOf(alarm?.customTrackUri ?: "") }
+    // For new alarms, pre-fill from lastCustomTrackUri (persistent custom track feature)
+    var customTrackUri by remember {
+        mutableStateOf(
+            alarm?.customTrackUri
+                ?: if (lastCustomTrackUri.isNotEmpty()) lastCustomTrackUri else ""
+        )
+    }
+    // Auto-select Custom Track preset if pre-filled
+    LaunchedEffect(Unit) {
+        if (alarm == null && customTrackUri.isNotEmpty()) soundPreset = "Custom Track"
+    }
     var vibrate        by remember { mutableStateOf(alarm?.vibrate ?: true) }
     var volume         by remember { mutableFloatStateOf(alarm?.volume ?: 1.0f) }
     var isPreviewing   by remember { mutableStateOf<String?>(null) }
@@ -923,7 +994,10 @@ fun AlarmAddEditDialog(
     val trackPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
             try { context.contentResolver.takePersistableUriPermission(uri, android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION) } catch (_: Exception) {}
-            customTrackUri = uri.toString(); soundPreset = "Custom Track"
+            val uriStr = uri.toString()
+            customTrackUri = uriStr
+            soundPreset = "Custom Track"
+            onTrackPicked(uriStr)  // persist for future alarms
         }
     }
 
@@ -1197,7 +1271,9 @@ fun SettingsPageView(
     themeMode: String,
     onThemeModeChange: (String) -> Unit,
     timeFormat: String,
-    onTimeFormatChange: (String) -> Unit
+    onTimeFormatChange: (String) -> Unit,
+    lightWhiteness: Float = 0f,
+    onLightWhitenessChange: (Float) -> Unit = {}
 ) {
     val c = LocalAppColors.current
     val context = LocalContext.current
@@ -1299,7 +1375,7 @@ fun SettingsPageView(
                     Spacer(Modifier.width(12.dp))
                     Column {
                         Text("About Cyclic Alarms", fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = c.textPrimary)
-                        Text("Version 1.4 • Release notes, support & creator info", fontSize = 12.sp, color = c.textSecondary)
+                        Text("Version 1.5 • Release notes, support & creator info", fontSize = 12.sp, color = c.textSecondary)
                     }
                 }
                 Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
@@ -1320,35 +1396,73 @@ fun SettingsPageView(
                 Text("Theme", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = c.textPrimary)
             }
             Spacer(Modifier.height(12.dp))
+            // Dark row: Pure Dark + Dark
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(c.surfaceVariant)
-                    .padding(4.dp),
+                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                listOf("Dark", "System", "Light").forEach { mode ->
+                listOf("Pure Dark" to "🌑", "Dark" to "🌙").forEach { (mode, emoji) ->
                     val selected = themeMode == mode
                     Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(38.dp)
-                            .clip(RoundedCornerShape(8.dp))
+                        modifier = Modifier.weight(1f).height(40.dp).clip(RoundedCornerShape(8.dp))
+                            .background(if (selected) Color(0xFF1A1A2E) else Color.Transparent)
+                            .border(BorderStroke(if (selected) 1.5.dp else 0.dp, if (selected) BrandBlue else Color.Transparent), RoundedCornerShape(8.dp))
+                            .clickable { onThemeModeChange(mode) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(emoji, fontSize = 13.sp)
+                            Text(mode, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = if (selected) BrandBlue else c.textSecondary)
+                        }
+                    }
+                }
+            }
+            Spacer(Modifier.height(4.dp))
+            // Light row: System + Light
+            Row(
+                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).padding(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                listOf("System" to "⚙️", "Light" to "☀️").forEach { (mode, emoji) ->
+                    val selected = themeMode == mode
+                    Box(
+                        modifier = Modifier.weight(1f).height(40.dp).clip(RoundedCornerShape(8.dp))
                             .background(if (selected) BrandBlue else Color.Transparent)
                             .clickable { onThemeModeChange(mode) },
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = mode,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = if (selected) Color(0xFF003166) else c.textSecondary
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(emoji, fontSize = 13.sp)
+                            Text(mode, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = if (selected) Color(0xFF003166) else c.textSecondary)
+                        }
+                    }
+                }
+            }
+            // Whiteness slider — only shown when Light mode is active
+            AnimatedVisibility(visible = themeMode == "Light") {
+                Column {
+                    Spacer(Modifier.height(12.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.WbSunny, contentDescription = null, tint = WarningAmber, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text("Background Brightness", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = c.textPrimary, modifier = Modifier.weight(1f))
+                        Text("${(lightWhiteness * 100).toInt()}%", fontSize = 12.sp, color = WarningAmber, fontWeight = FontWeight.ExtraBold)
+                    }
+                    Spacer(Modifier.height(4.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Tinted", fontSize = 10.sp, color = c.textDisabled)
+                        Slider(
+                            value = lightWhiteness,
+                            onValueChange = { onLightWhitenessChange(it) },
+                            modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                            colors = SliderDefaults.colors(thumbColor = WarningAmber, activeTrackColor = WarningAmber, inactiveTrackColor = c.outlineColor)
                         )
+                        Text("Pure White", fontSize = 10.sp, color = c.textDisabled)
                     }
                 }
             }
         }
+
 
         // ── CLOCK DISPLAY FORMAT (12H / 24H) ──
         Column(
@@ -1470,8 +1584,8 @@ fun SettingsPageView(
             )
         }
     }
-}
-}
+} // end else block
+} // end SettingsPageView
 
 @Composable
 private fun PermissionRowItem(
@@ -1606,225 +1720,286 @@ private fun PermissionGateItem(
 //  ABOUT PAGE VIEW
 // ════════════════════════════════════════════════════════
 // ════════════════════════════════════════════════════════
-//  TIMER SCREEN
+//  MULTI-TIMER SCREEN (Supports up to 5 concurrent timers)
 // ════════════════════════════════════════════════════════
 @Composable
 fun TimerScreen() {
     val c = LocalAppColors.current
     val context = LocalContext.current
+    val timers by com.example.service.TimerStopwatchState.timers.collectAsStateWithLifecycle()
 
-    // Input state (hours, minutes, seconds to count down from)
-    var inputHours   by remember { mutableStateOf("00") }
-    var inputMinutes by remember { mutableStateOf("05") }
-    var inputSeconds by remember { mutableStateOf("00") }
-
-    // Runtime state
-    var totalSeconds  by remember { mutableLongStateOf(0L) }
-    var remainingMs   by remember { mutableLongStateOf(0L) }
-    var isRunning     by remember { mutableStateOf(false) }
-    var isFinished    by remember { mutableStateOf(false) }
-
-    // Sound alert player for Timer completion
-    var ringtonePlayer by remember { mutableStateOf<android.media.Ringtone?>(null) }
-
-    fun playTimerAlarmSound() {
-        try {
-            val alertUri = android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_ALARM)
-                ?: android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION)
-            val ringtone = android.media.RingtoneManager.getRingtone(context, alertUri)
-            ringtonePlayer = ringtone
-            ringtone?.play()
-
-            // Vibrate if available
-            val vibrator = context.getSystemService(android.content.Context.VIBRATOR_SERVICE) as? android.os.Vibrator
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator?.vibrate(android.os.VibrationEffect.createWaveform(longArrayOf(0, 500, 300, 500), -1))
-            } else {
-                @Suppress("DEPRECATION")
-                vibrator?.vibrate(longArrayOf(0, 500, 300, 500), -1)
-            }
-        } catch (_: Exception) {}
-    }
-
-    fun stopTimerAlarmSound() {
-        try {
-            ringtonePlayer?.stop()
-            ringtonePlayer = null
-        } catch (_: Exception) {}
-    }
-
-    // Tick the timer
-    LaunchedEffect(isRunning) {
-        if (isRunning) {
-            val tickMs = 50L
-            while (isRunning && remainingMs > 0L) {
-                delay(tickMs)
-                remainingMs = (remainingMs - tickMs).coerceAtLeast(0L)
-                if (remainingMs == 0L) {
-                    isRunning = false
-                    isFinished = true
-                    playTimerAlarmSound()
-                }
-            }
+    // Ensure at least one timer exists initially
+    LaunchedEffect(Unit) {
+        if (timers.isEmpty()) {
+            val id = com.example.service.TimerStopwatchState.addTimer()
+            com.example.service.TimerStopwatchState.setTimerDuration(id, 5 * 60 * 1000L)
         }
     }
 
-    // Flashing animation when finished
-    val infiniteTransition = rememberInfiniteTransition(label = "timerFlash")
-    val flashAlpha by infiniteTransition.animateFloat(
-        initialValue = 1f, targetValue = 0.1f,
-        animationSpec = infiniteRepeatable(tween(500, easing = LinearEasing)), label = "flash"
-    )
-
-    val displayAlpha = if (isFinished) flashAlpha else 1f
-
-    fun buildTotalMs(): Long {
-        val h = inputHours.toLongOrNull() ?: 0L
-        val m = inputMinutes.toLongOrNull() ?: 0L
-        val s = inputSeconds.toLongOrNull() ?: 0L
-        return (h * 3600 + m * 60 + s) * 1000L
+    // Auto-start foreground service whenever any timer or stopwatch is running
+    val anyRunning = timers.any { it.isRunning }
+    LaunchedEffect(anyRunning) {
+        if (anyRunning) {
+            com.example.service.TimerStopwatchService.start(context)
+        }
     }
-
-    val progress = if (totalSeconds == 0L) 0f
-    else (remainingMs / 1000f) / totalSeconds.toFloat()
-
-    val remH  = (remainingMs / 3_600_000L)
-    val remM  = (remainingMs / 60_000L) % 60
-    val remS  = (remainingMs / 1_000L) % 60
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 80.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 80.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Spacer(Modifier.height(4.dp))
-        Text("TIMER", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
-
-        // ── Clock ring — all time content lives INSIDE this box ──
-        Box(modifier = Modifier.size(290.dp), contentAlignment = Alignment.Center) {
-            androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
-                val stroke = Stroke(width = 18f, cap = StrokeCap.Round)
-                drawArc(color = BrandBlue.copy(alpha = 0.12f), startAngle = -90f, sweepAngle = 360f, useCenter = false, style = stroke)
-                if (progress > 0f || isFinished) {
-                    drawArc(
-                        color = if (isFinished) DeleteRed else BrandBlue,
-                        startAngle = -90f,
-                        sweepAngle = 360f * progress,
-                        useCenter = false, style = stroke
-                    )
-                }
-            }
-
-            // Everything inside the ring
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                if (!isRunning && !isFinished) {
-                    // ── SET-TIME mode: compact HH:MM:SS pickers inside ring ──
-                    val focusMgr = LocalFocusManager.current
-                    Text("Set time", fontSize = 11.sp, color = c.textSecondary, fontWeight = FontWeight.SemiBold)
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        TimerInputField(
-                            value = inputHours, label = "HH", tag = "timer_hours",
-                            onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputHours = it }
-                        )
-                        Text(":", fontSize = 30.sp, fontWeight = FontWeight.Black, color = BrandBlue,
-                            modifier = Modifier.padding(horizontal = 2.dp))
-                        TimerInputField(
-                            value = inputMinutes, label = "MM", tag = "timer_minutes",
-                            onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputMinutes = it }
-                        )
-                        Text(":", fontSize = 30.sp, fontWeight = FontWeight.Black, color = BrandBlue,
-                            modifier = Modifier.padding(horizontal = 2.dp))
-                        TimerInputField(
-                            value = inputSeconds, label = "SS", tag = "timer_seconds",
-                            onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) inputSeconds = it },
-                            onDone = { focusMgr.clearFocus() }
-                        )
-                    }
-                    // Quick preset chips — inside the ring, below HH:MM:SS
-                    Spacer(Modifier.height(2.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        listOf("1m" to "01", "5m" to "05", "10m" to "10", "15m" to "15", "30m" to "30").forEach { (label, min) ->
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(BrandBlue.copy(alpha = 0.14f))
-                                    .border(BorderStroke(1.dp, BrandBlue.copy(alpha = 0.3f)), RoundedCornerShape(16.dp))
-                                    .clickable { inputHours = "00"; inputMinutes = min; inputSeconds = "00" }
-                                    .padding(horizontal = 10.dp, vertical = 5.dp),
-                                contentAlignment = Alignment.Center
-                            ) { Text(label, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = BrandBlue) }
-                        }
-                    }
-                } else {
-                    // ── RUNNING / FINISHED mode: countdown display inside ring ──
-                    Text(
-                        text = String.format("%02d:%02d:%02d", remH, remM, remS),
-                        fontSize = 46.sp, fontWeight = FontWeight.Black,
-                        fontFamily = FontFamily.Monospace,
-                        color = (if (isFinished) DeleteRed else c.textPrimary).copy(alpha = displayAlpha)
-                    )
-                    if (isFinished) {
-                        Text("Time's Up!", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold,
-                            color = DeleteRed.copy(alpha = displayAlpha))
-                    }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "TIMERS (${timers.size}/5)",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = c.textSecondary,
+                letterSpacing = 1.2.sp
+            )
+            if (timers.size < 5) {
+                Button(
+                    onClick = {
+                        val newId = com.example.service.TimerStopwatchState.addTimer()
+                        com.example.service.TimerStopwatchState.setTimerDuration(newId, 5 * 60 * 1000L)
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = BrandBlue),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("Add Timer", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
 
-        // Control buttons
-        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            if (!isFinished) {
-                OutlinedButton(
-                    onClick = {
-                        isRunning = false
-                        stopTimerAlarmSound()
-                        remainingMs = buildTotalMs()
-                        totalSeconds = remainingMs / 1000L
-                        isFinished = false
-                    },
-                    modifier = Modifier.weight(1f).height(50.dp),
-                    shape = RoundedCornerShape(14.dp),
-                    border = BorderStroke(1.dp, c.outlineColor),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = c.textSecondary)
-                ) { Text("Reset", fontWeight = FontWeight.ExtraBold) }
+        timers.forEach { timer ->
+            MultiTimerCard(
+                timer = timer,
+                canRemove = timers.size > 1,
+                onStart = {
+                    com.example.service.TimerStopwatchState.startTimer(timer.id)
+                    com.example.service.TimerStopwatchService.start(context)
+                },
+                onPause = {
+                    com.example.service.TimerStopwatchState.pauseTimer(timer.id)
+                },
+                onReset = {
+                    com.example.service.TimerStopwatchState.resetTimer(timer.id)
+                },
+                onRemove = {
+                    com.example.service.TimerStopwatchState.removeTimer(timer.id)
+                },
+                onSetDuration = { ms ->
+                    com.example.service.TimerStopwatchState.setTimerDuration(timer.id, ms)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun MultiTimerCard(
+    timer: com.example.service.TimerInstance,
+    canRemove: Boolean,
+    onStart: () -> Unit,
+    onPause: () -> Unit,
+    onReset: () -> Unit,
+    onRemove: () -> Unit,
+    onSetDuration: (Long) -> Unit
+) {
+    val c = LocalAppColors.current
+    var inputHours by remember(timer.id) { mutableStateOf("%02d".format(timer.totalMs / 3_600_000L)) }
+    var inputMinutes by remember(timer.id) { mutableStateOf("%02d".format((timer.totalMs / 60_000L) % 60)) }
+    var inputSeconds by remember(timer.id) { mutableStateOf("%02d".format((timer.totalMs / 1_000L) % 60)) }
+
+    val progress = if (timer.totalMs == 0L) 0f else (timer.remainingMs.toFloat() / timer.totalMs.toFloat())
+    val remH = timer.remainingMs / 3_600_000L
+    val remM = (timer.remainingMs / 60_000L) % 60
+    val remS = (timer.remainingMs / 1_000L) % 60
+
+    val infiniteTransition = rememberInfiniteTransition(label = "flash_${timer.id}")
+    val flashAlpha by infiniteTransition.animateFloat(
+        initialValue = 1f, targetValue = 0.2f,
+        animationSpec = infiniteRepeatable(tween(500, easing = LinearEasing)), label = "flash"
+    )
+    val displayAlpha = if (timer.isFinished) flashAlpha else 1f
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(c.surfaceColor)
+            .border(
+                BorderStroke(
+                    1.dp,
+                    if (timer.isFinished) DeleteRed else if (timer.isRunning) BrandBlue else c.outlineColor
+                ),
+                RoundedCornerShape(16.dp)
+            )
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = timer.label,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = if (timer.isRunning) CyclicAccent else c.textPrimary
+            )
+            if (canRemove) {
+                IconButton(onClick = onRemove, modifier = Modifier.size(28.dp)) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete Timer", tint = DeleteRed, modifier = Modifier.size(16.dp))
+                }
             }
+        }
+
+        if (!timer.isRunning && timer.remainingMs == timer.totalMs && !timer.isFinished) {
+            // Edit duration mode
+            val focusMgr = LocalFocusManager.current
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                TimerInputField(
+                    value = inputHours, label = "HH", tag = "h_${timer.id}",
+                    onValueChange = {
+                        if (it.length <= 2 && it.all(Char::isDigit)) {
+                            inputHours = it
+                            val ms = ((inputHours.toLongOrNull() ?: 0L) * 3600 + (inputMinutes.toLongOrNull() ?: 0L) * 60 + (inputSeconds.toLongOrNull() ?: 0L)) * 1000L
+                            onSetDuration(ms)
+                        }
+                    }
+                )
+                Text(":", fontSize = 24.sp, fontWeight = FontWeight.Black, color = BrandBlue, modifier = Modifier.padding(horizontal = 2.dp))
+                TimerInputField(
+                    value = inputMinutes, label = "MM", tag = "m_${timer.id}",
+                    onValueChange = {
+                        if (it.length <= 2 && it.all(Char::isDigit)) {
+                            inputMinutes = it
+                            val ms = ((inputHours.toLongOrNull() ?: 0L) * 3600 + (inputMinutes.toLongOrNull() ?: 0L) * 60 + (inputSeconds.toLongOrNull() ?: 0L)) * 1000L
+                            onSetDuration(ms)
+                        }
+                    }
+                )
+                Text(":", fontSize = 24.sp, fontWeight = FontWeight.Black, color = BrandBlue, modifier = Modifier.padding(horizontal = 2.dp))
+                TimerInputField(
+                    value = inputSeconds, label = "SS", tag = "s_${timer.id}",
+                    onValueChange = {
+                        if (it.length <= 2 && it.all(Char::isDigit)) {
+                            inputSeconds = it
+                            val ms = ((inputHours.toLongOrNull() ?: 0L) * 3600 + (inputMinutes.toLongOrNull() ?: 0L) * 60 + (inputSeconds.toLongOrNull() ?: 0L)) * 1000L
+                            onSetDuration(ms)
+                        }
+                    },
+                    onDone = { focusMgr.clearFocus() }
+                )
+            }
+
+            // Quick presets
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                listOf("1m" to 60_000L, "5m" to 300_000L, "10m" to 600_000L, "15m" to 900_000L, "30m" to 1_800_000L).forEach { (lbl, ms) ->
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(BrandBlue.copy(alpha = 0.12f))
+                            .border(BorderStroke(1.dp, BrandBlue.copy(alpha = 0.3f)), RoundedCornerShape(12.dp))
+                            .clickable {
+                                inputHours = "%02d".format(ms / 3_600_000L)
+                                inputMinutes = "%02d".format((ms / 60_000L) % 60)
+                                inputSeconds = "00"
+                                onSetDuration(ms)
+                            }
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(lbl, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
+                    }
+                }
+            }
+        } else {
+            // Running or Paused / Finished
+            Text(
+                text = String.format("%02d:%02d:%02d", remH, remM, remS),
+                fontSize = 38.sp,
+                fontWeight = FontWeight.Black,
+                fontFamily = FontFamily.Monospace,
+                color = (if (timer.isFinished) DeleteRed else c.textPrimary).copy(alpha = displayAlpha)
+            )
+            if (timer.isFinished) {
+                Text(
+                    "Time's Up!",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = DeleteRed.copy(alpha = displayAlpha)
+                )
+            }
+        }
+
+        // Progress line
+        LinearProgressIndicator(
+            progress = { progress },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp)
+                .clip(RoundedCornerShape(3.dp)),
+            color = if (timer.isFinished) DeleteRed else BrandBlue,
+            trackColor = c.surfaceVariant,
+        )
+
+        // Actions
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedButton(
+                onClick = onReset,
+                modifier = Modifier.weight(1f).height(44.dp),
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(1.dp, c.outlineColor),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = c.textSecondary)
+            ) {
+                Text("Reset", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+            }
+
             Button(
                 onClick = {
-                    if (isFinished) {
-                        // Clear sound and reset
-                        stopTimerAlarmSound()
-                        isFinished = false; isRunning = false; remainingMs = 0L; totalSeconds = 0L
-                    } else if (!isRunning) {
-                        val ms = buildTotalMs()
-                        if (ms > 0L) {
-                            if (remainingMs == 0L) { remainingMs = ms; totalSeconds = ms / 1000L }
-                            isRunning = true
-                        }
-                    } else {
-                        isRunning = false
-                    }
+                    if (timer.isRunning) onPause() else onStart()
                 },
-                modifier = Modifier.weight(if (isFinished) 2f else 1f).height(50.dp),
-                shape = RoundedCornerShape(14.dp),
+                modifier = Modifier.weight(1.5f).height(44.dp),
+                shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isFinished) DeleteRed else if (isRunning) WarningAmber else BrandBlue,
-                    contentColor = if (isFinished) Color.White else Color(0xFF003166)
+                    containerColor = if (timer.isFinished) DeleteRed else if (timer.isRunning) WarningAmber else BrandBlue,
+                    contentColor = if (timer.isFinished) Color.White else Color(0xFF003166)
                 )
             ) {
                 Icon(
-                    imageVector = if (isFinished) Icons.Default.Close else if (isRunning) Icons.Default.Pause else Icons.Default.PlayArrow,
-                    contentDescription = null
+                    imageVector = if (timer.isFinished) Icons.Default.Close else if (timer.isRunning) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
                 )
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(4.dp))
                 Text(
-                    text = if (isFinished) "Clear" else if (isRunning) "Pause" else "Start",
-                    fontWeight = FontWeight.ExtraBold, fontSize = 16.sp
+                    text = if (timer.isFinished) "Clear" else if (timer.isRunning) "Pause" else "Start",
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 13.sp
                 )
             }
         }
@@ -1840,12 +2015,12 @@ private fun TimerInputField(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         OutlinedTextField(
             value = value, onValueChange = onValueChange,
-            textStyle = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace,
+            textStyle = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace,
                 textAlign = TextAlign.Center, color = c.textPrimary),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number,
                 imeAction = if (onDone != null) ImeAction.Done else ImeAction.Next),
             keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
-            modifier = Modifier.width(72.dp).testTag(tag),
+            modifier = Modifier.width(62.dp).testTag(tag),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = BrandBlue, unfocusedBorderColor = c.outlineColor,
                 focusedContainerColor = c.surfaceVariant, unfocusedContainerColor = c.surfaceVariant,
@@ -1858,17 +2033,17 @@ private fun TimerInputField(
 }
 
 // ════════════════════════════════════════════════════════
-//  STOPWATCH SCREEN
+//  STOPWATCH SCREEN (Foreground Service Synced)
 // ════════════════════════════════════════════════════════
 @Composable
 fun StopwatchScreen() {
     val c = LocalAppColors.current
     val context = LocalContext.current
 
-    var elapsedMs  by remember { mutableLongStateOf(0L) }
-    var isRunning  by remember { mutableStateOf(false) }
-    var laps       by remember { mutableStateOf(listOf<Long>()) }
-    var lastLapMs  by remember { mutableLongStateOf(0L) }
+    val elapsedMs by com.example.service.TimerStopwatchState.swElapsedMs.collectAsStateWithLifecycle()
+    val isRunning by com.example.service.TimerStopwatchState.swRunning.collectAsStateWithLifecycle()
+    val laps by com.example.service.TimerStopwatchState.swLaps.collectAsStateWithLifecycle()
+    val lastLapMs by com.example.service.TimerStopwatchState.swLastLapMs.collectAsStateWithLifecycle()
 
     fun playClickBeep() {
         try {
@@ -1877,14 +2052,9 @@ fun StopwatchScreen() {
         } catch (_: Exception) {}
     }
 
-    // Tick
     LaunchedEffect(isRunning) {
         if (isRunning) {
-            val tickMs = 20L
-            while (isRunning) {
-                delay(tickMs)
-                elapsedMs += tickMs
-            }
+            com.example.service.TimerStopwatchService.start(context)
         }
     }
 
@@ -1898,7 +2068,6 @@ fun StopwatchScreen() {
     }
 
     val lapMs = elapsedMs - lastLapMs
-    val lapListState = rememberLazyListState()
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 80.dp),
@@ -1941,10 +2110,9 @@ fun StopwatchScreen() {
                 onClick = {
                     playClickBeep()
                     if (isRunning) {
-                        laps = laps + lapMs
-                        lastLapMs = elapsedMs
+                        com.example.service.TimerStopwatchState.lapStopwatch()
                     } else {
-                        elapsedMs = 0L; laps = listOf(); lastLapMs = 0L
+                        com.example.service.TimerStopwatchState.resetStopwatch()
                     }
                 },
                 modifier = Modifier.weight(1f).height(50.dp),
@@ -1964,7 +2132,12 @@ fun StopwatchScreen() {
             Button(
                 onClick = {
                     playClickBeep()
-                    isRunning = !isRunning
+                    if (isRunning) {
+                        com.example.service.TimerStopwatchState.pauseStopwatch()
+                    } else {
+                        com.example.service.TimerStopwatchState.startStopwatch()
+                        com.example.service.TimerStopwatchService.start(context)
+                    }
                 },
                 modifier = Modifier.weight(1f).height(50.dp),
                 shape = RoundedCornerShape(14.dp),
@@ -2004,10 +2177,10 @@ fun StopwatchScreen() {
                 val fastestLap = laps.minOrNull() ?: 0L
                 val slowestLap = laps.maxOrNull() ?: 0L
                 laps.indices.toList().reversed().forEach { i ->
-                    val lapTime = laps[i]
+                    val curLapTime = laps[i]
                     val overall = overallMs[i]
-                    val isF = laps.size > 1 && lapTime == fastestLap
-                    val isS = laps.size > 1 && lapTime == slowestLap
+                    val isF = laps.size > 1 && curLapTime == fastestLap
+                    val isS = laps.size > 1 && curLapTime == slowestLap
                     val accent = when { isF -> CyclicAccent; isS -> DeleteRed; else -> c.textSecondary }
                     Row(
                         modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp))
@@ -2018,7 +2191,7 @@ fun StopwatchScreen() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("${i + 1}", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = accent, modifier = Modifier.width(32.dp))
-                        Text(formatElapsed(lapTime), fontSize = 13.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = c.textPrimary)
+                        Text(formatElapsed(curLapTime), fontSize = 13.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = c.textPrimary)
                         Text(formatElapsed(overall), fontSize = 12.sp, fontFamily = FontFamily.Monospace, color = c.textSecondary)
                     }
                 }
@@ -2067,24 +2240,92 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.4", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.5", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
             Text("Smart shift, roster & repeating cycle alarm app", fontSize = 12.sp, color = c.textSecondary, textAlign = TextAlign.Center)
             Spacer(Modifier.height(12.dp))
-            OutlinedButton(
+            var isCheckingUpdate by remember { mutableStateOf(false) }
+            var updateDialogInfo by remember { mutableStateOf<com.example.util.AppUpdateManager.UpdateInfo?>(null) }
+            var updateError by remember { mutableStateOf<String?>(null) }
+            val coroutineScope = rememberCoroutineScope()
+
+            Button(
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/pramodbeema/cyclicalarms/releases/latest"))
-                    context.startActivity(intent)
+                    if (!isCheckingUpdate) {
+                        isCheckingUpdate = true
+                        updateError = null
+                        coroutineScope.launch {
+                            val result = com.example.util.AppUpdateManager.checkForUpdates()
+                            isCheckingUpdate = false
+                            result.onSuccess { info ->
+                                if (info.isUpdateAvailable) {
+                                    updateDialogInfo = info
+                                } else {
+                                    android.widget.Toast.makeText(context, "You are on the latest version (v1.5)!", android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            }.onFailure { err ->
+                                updateError = err.message
+                                android.widget.Toast.makeText(context, "Check failed: ${err.message}", android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
                 },
                 shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(1.dp, BrandBlue),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = BrandBlue)
+                colors = ButtonDefaults.buttonColors(containerColor = BrandBlue)
             ) {
-                Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
-                Spacer(Modifier.width(6.dp))
-                Text("Check GitHub Releases", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                if (isCheckingUpdate) {
+                    CircularProgressIndicator(color = Color(0xFF003166), strokeWidth = 2.dp, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text("Checking...", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFF003166))
+                } else {
+                    Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color(0xFF003166))
+                    Spacer(Modifier.width(6.dp))
+                    Text("Check for Updates", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFF003166))
+                }
+            }
+
+            if (updateDialogInfo != null) {
+                val info = updateDialogInfo!!
+                AlertDialog(
+                    onDismissRequest = { updateDialogInfo = null },
+                    containerColor = c.surfaceColor,
+                    title = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.ArrowCircleDown, contentDescription = null, tint = BrandBlue)
+                            Spacer(Modifier.width(8.dp))
+                            Text("Update Available (v${info.latestVersion})", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = c.textPrimary)
+                        }
+                    },
+                    text = {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("A new version of Cyclic Alarms is available to download and install.", fontSize = 13.sp, color = c.textSecondary)
+                            if (info.releaseNotes.isNotBlank()) {
+                                Text("Release notes:", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = c.textPrimary)
+                                Text(info.releaseNotes.take(300), fontSize = 11.sp, color = c.textSecondary)
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                val url = info.downloadUrl
+                                val ver = info.latestVersion
+                                updateDialogInfo = null
+                                com.example.util.AppUpdateManager.downloadAndInstall(context, url, ver)
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = BrandBlue)
+                        ) {
+                            Text("Download & Install", fontWeight = FontWeight.Bold, color = Color(0xFF003166))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { updateDialogInfo = null }) {
+                            Text("Later", color = c.textSecondary)
+                        }
+                    }
+                )
             }
         }
 
@@ -2148,11 +2389,27 @@ fun AboutPageView() {
             Text("Tap on any release version to expand or collapse notes", fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.4 — Expanded by default (current release)
+            // v1.5 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = "v1.4 (Current Release)",
+                version = "v1.5 (Current Release)",
                 badgeText = "Latest",
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "🎵" to "Persistent Custom Track — last-used music file auto-applied to every new alarm",
+                    "⏱" to "Multiple Timers — run up to 5 independent countdown timers simultaneously",
+                    "🌑" to "Pure Dark Mode — true AMOLED black theme for OLED screen battery savings",
+                    "☀️" to "Light Mode Brightness Slider — adjust background brightness from tinted to pure white",
+                    "🔄" to "Background Timer & Stopwatch — continue running when app is backgrounded via Foreground Service",
+                    "🔔" to "Rings in Silent & DND Mode — alarms bypass ringer volume, no more missed alarms",
+                    "⬆️" to "In-App Auto-Update — tap 'Check for Updates' to download & install new releases directly"
+                )
+            )
+
+            // v1.4 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = "v1.4 Release Notes",
+                badgeText = "v1.4",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "🔥" to "Firebase Cloud Messaging (FCM) — instant broadcast push notifications and update announcements direct to all users",
                     "📦" to "Official Package Rebrand — package updated to com.beemasfincon.cyclicalarms",

@@ -62,6 +62,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val themeMode by viewModel.themeMode.collectAsState()
+            val lightWhiteness by viewModel.lightWhiteness.collectAsState()
             val activeAlarm by RingingState.activeAlarm.collectAsState()
 
             // ── Lock Screen Security & Return behavior ──
@@ -77,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            MyApplicationTheme(themeMode = themeMode) {
+            MyApplicationTheme(themeMode = themeMode, lightWhiteness = lightWhiteness) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

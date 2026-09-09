@@ -46,6 +46,17 @@ val LightCyclicCardBorder  = Color(0xFFB0CAEE)
 val LightWeeklyCardBg      = Color(0xFFF3EEFF)
 val LightWeeklyCardBorder  = Color(0xFFCDB8F0)
 
+// ── Pure Dark (AMOLED Black) palette ──
+val PureDarkBackground     = Color(0xFF000000)
+val PureDarkSurface        = Color(0xFF0A0A0A)
+val PureDarkSurfaceVariant = Color(0xFF141414)
+val PureDarkOutline        = Color(0xFF222222)
+val PureDarkCyclicCardBg   = Color(0xFF0A0F1A)
+val PureDarkCyclicBorder   = Color(0xFF1A2035)
+val PureDarkWeeklyCardBg   = Color(0xFF0A0814)
+val PureDarkWeeklyBorder   = Color(0xFF1E1432)
+
+
 // ─────────────────────────────────────────────────────────
 //  AppColors — runtime-swappable color set
 // ─────────────────────────────────────────────────────────
@@ -94,6 +105,22 @@ val LightAppColors = AppColors(
     weeklyCardBorder = LightWeeklyCardBorder,
     isDark           = false,
 )
+
+val PureDarkAppColors = AppColors(
+    appBackground    = PureDarkBackground,
+    surfaceColor     = PureDarkSurface,
+    surfaceVariant   = PureDarkSurfaceVariant,
+    outlineColor     = PureDarkOutline,
+    textPrimary      = TextPrimary,
+    textSecondary    = TextSecondary,
+    textDisabled     = TextDisabled,
+    cyclicCardBg     = PureDarkCyclicCardBg,
+    cyclicCardBorder = PureDarkCyclicBorder,
+    weeklyCardBg     = PureDarkWeeklyCardBg,
+    weeklyCardBorder = PureDarkWeeklyBorder,
+    isDark           = true,
+)
+
 
 /** Access the current theme's color set anywhere in the composition tree. */
 val LocalAppColors = staticCompositionLocalOf { DarkAppColors }
