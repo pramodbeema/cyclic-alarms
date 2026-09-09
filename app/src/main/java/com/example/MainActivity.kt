@@ -39,30 +39,8 @@ class MainActivity : ComponentActivity() {
             viewModel.requestTab(it)
         }
 
-        // ── Create notification channels ──
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            // Announcements channel (for developer broadcast messages)
-            if (nm.getNotificationChannel("announcements_channel") == null) {
-                nm.createNotificationChannel(
-                    android.app.NotificationChannel(
-                        "announcements_channel",
-                        "Announcements & Updates",
-                        NotificationManager.IMPORTANCE_DEFAULT
-                    ).apply {
-                        description = "Messages from the developer about updates and announcements"
-                        enableVibration(false)
-                        setShowBadge(true)
-                    }
-                )
-            }
-        }
-
         // ── Request all special permissions on first launch ──
         requestRequiredPermissions()
-
-        // ── Subscribe to Firebase Announcements & Updates topic ──
-        com.example.service.CyclicFirebaseMessagingService.subscribeToDefaultTopics()
 
         enableEdgeToEdge()
         setContent {

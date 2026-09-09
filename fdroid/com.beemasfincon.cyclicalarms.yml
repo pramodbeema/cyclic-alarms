@@ -1,0 +1,55 @@
+Categories:
+  - Time
+License: Apache-2.0
+AuthorName: Pramod Beema
+AuthorEmail: bp.beema@outlook.com
+SourceCode: https://github.com/YOUR_GITHUB_USERNAME/cyclic-alarms
+IssueTracker: https://github.com/YOUR_GITHUB_USERNAME/cyclic-alarms/issues
+
+AutoName: Cyclic Alarms
+
+Summary: Alarm app for shift schedules — repeats every N days, not just weekly
+
+Description: |-
+  A simple, 100% ad-free alarm app built for people who work shift schedules,
+  rotating rosters, or any repeating cycle that does not fit a standard Mon-Fri
+  pattern.
+
+  Most alarm apps only support weekly repeats. If your work schedule repeats
+  every 3 days, every 5 days, or any other interval, you are stuck setting
+  alarms manually each time. Cyclic Alarms solves exactly that. Pick a start
+  date and an interval, and the alarm fires on that cycle forever — no manual
+  resetting needed. It also supports regular weekly alarms.
+
+  Features:
+
+  * Cyclic alarms — repeat every N days from a start date
+  * Weekly alarms — pick any combination of weekdays
+  * Multiple Timers — run up to 5 independent countdown timers simultaneously
+  * Stopwatch — elapsed time tracker with lap recording
+  * Background Timer and Stopwatch via Foreground Service
+  * 8 built-in synth alarm sounds (generated in code, no audio files bundled)
+  * Custom audio — use any audio file from your device
+  * Rings in Silent and DND mode
+  * Pure dark mode (true AMOLED black)
+  * Dark / Light / System themes with brightness slider
+  * Per-alarm snooze duration
+  * Strict lock screen security — only shows over keyguard while ringing
+  * Alarm history log
+  * Zero ads. Zero tracking. Zero sign-in.
+
+RepoType: git
+Repo: https://github.com/YOUR_GITHUB_USERNAME/cyclic-alarms
+
+Builds:
+  - versionName: '1.6'
+    versionCode: 5
+    commit: v1.6
+    subdir: app
+    gradle:
+      - release
+
+AutoUpdateMode: Version v%v
+UpdateCheckMode: Tags
+CurrentVersion: '1.6'
+CurrentVersionCode: 5
