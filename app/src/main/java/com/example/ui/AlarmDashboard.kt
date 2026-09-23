@@ -2692,19 +2692,106 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
                 Text(activeAlarm.label.ifEmpty { "Cyclic Alarm" }, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = TextSecondary, textAlign = TextAlign.Center)
             }
 
-            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Button(onClick = { com.example.service.AlarmService.snoozeAlarm(context, activeAlarm.alarmId, activeAlarm.label, activeAlarm.hour, activeAlarm.minute, activeAlarm.soundPreset, activeAlarm.vibrate, activeAlarm.volume, activeAlarm.snoozeMinutes) },
+            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                var selectedSnoozeMins by remember(activeAlarm.snoozeMinutes) {
+                    mutableIntStateOf(activeAlarm.snoozeMinutes.coerceIn(1, 180))
+                }
+
+                // Stepper Row for Snooze Duration
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White.copy(alpha = 0.08f), RoundedCornerShape(20.dp))
+                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Snooze Duration",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TextSecondary
+                    )
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(
+                            onClick = {
+                                if (selectedSnoozeMins > 1) {
+                                    val step = if (selectedSnoozeMins <= 5) 1 else 5
+                                    selectedSnoozeMins = (selectedSnoozeMins - step).coerceAtLeast(1)
+                                }
+                            },
+                            modifier = Modifier
+                                .size(38.dp)
+                                .background(BrandBlue.copy(alpha = 0.2f), CircleShape)
+                        ) {
+                            Icon(Icons.Default.Remove, contentDescription = "Decrease Snooze", tint = BrandBlue, modifier = Modifier.size(20.dp))
+                        }
+
+                        Spacer(Modifier.width(12.dp))
+
+                        Text(
+                            "${selectedSnoozeMins}m",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Black,
+                            color = TextPrimary,
+                            fontFamily = FontFamily.Monospace
+                        )
+
+                        Spacer(Modifier.width(12.dp))
+
+                        IconButton(
+                            onClick = {
+                                val step = if (selectedSnoozeMins < 5) 1 else 5
+                                selectedSnoozeMins = (selectedSnoozeMins + step).coerceAtMost(180)
+                            },
+                            modifier = Modifier
+                                .size(38.dp)
+                                .background(BrandBlue.copy(alpha = 0.2f), CircleShape)
+                        ) {
+                            Icon(Icons.Default.Add, contentDescription = "Increase Snooze", tint = BrandBlue, modifier = Modifier.size(20.dp))
+                        }
+                    }
+                }
+
+                Button(
+                    onClick = {
+                        com.example.service.AlarmService.snoozeAlarm(
+                            context,
+                            activeAlarm.alarmId,
+                            activeAlarm.label,
+                            activeAlarm.hour,
+                            activeAlarm.minute,
+                            activeAlarm.soundPreset,
+                            activeAlarm.vibrate,
+                            activeAlarm.volume,
+                            selectedSnoozeMins
+                        )
+                    },
                     modifier = Modifier.fillMaxWidth().height(60.dp).testTag("snooze_active_button"),
                     colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166)),
-                    shape = RoundedCornerShape(30.dp)) {
+                    shape = RoundedCornerShape(30.dp)
+                ) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Snooze (${activeAlarm.snoozeMinutes}m)", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Snooze (${selectedSnoozeMins}m)", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                 }
-                OutlinedButton(onClick = { com.example.service.AlarmService.dismissAlarm(context, activeAlarm.alarmId, activeAlarm.label, activeAlarm.hour, activeAlarm.minute) },
+
+                OutlinedButton(
+                    onClick = {
+                        com.example.service.AlarmService.dismissAlarm(
+                            context,
+                            activeAlarm.alarmId,
+                            activeAlarm.label,
+                            activeAlarm.hour,
+                            activeAlarm.minute
+                        )
+                    },
                     modifier = Modifier.fillMaxWidth().height(60.dp).testTag("dismiss_active_button"),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = TextPrimary),
-                    border = BorderStroke(2.dp, OutlineColor), shape = RoundedCornerShape(30.dp)) {
+                    border = BorderStroke(2.dp, OutlineColor),
+                    shape = RoundedCornerShape(30.dp)
+                ) {
                     Icon(Icons.Default.Close, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
                     Text("Dismiss", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)

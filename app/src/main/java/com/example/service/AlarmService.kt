@@ -345,7 +345,7 @@ class AlarmService : Service() {
             )
 
             val alarm = if (alarmId != -1) repository.getAlarmById(alarmId) else null
-            val effectiveSnoozeMins = alarm?.snoozeMinutes ?: snoozeMinutes
+            val effectiveSnoozeMins = if (snoozeMinutes > 0) snoozeMinutes else (alarm?.snoozeMinutes ?: 5)
             val snoozeTimeMs = System.currentTimeMillis() + effectiveSnoozeMins * 60 * 1000
 
             val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager

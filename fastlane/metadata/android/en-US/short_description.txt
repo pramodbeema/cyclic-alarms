@@ -1,0 +1,1 @@
+Alarm app for shift schedules — repeats every N days, not just weekly
