@@ -6,6 +6,8 @@ AuthorEmail: bp.beema@outlook.com
 SourceCode: https://github.com/pramodbeema/cyclic-alarms
 IssueTracker: https://github.com/pramodbeema/cyclic-alarms/issues
 
+AutoName: Cyclic Alarms
+
 RepoType: git
 Repo: https://github.com/pramodbeema/cyclic-alarms
 
@@ -15,9 +17,9 @@ Builds:
     commit: v1.6
     subdir: app
     gradle:
-      - release
+      - yes
 
-AutoUpdateMode: Version %v
+AutoUpdateMode: Version
 UpdateCheckMode: Tags
 CurrentVersion: '1.6'
 CurrentVersionCode: 5

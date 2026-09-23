@@ -27,9 +27,6 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 - **Rings in Silent & DND Mode** — alarm stream volume is forced to maximum before playing, bypassing silent/vibrate mode
 - **Pure Dark Mode** — true AMOLED black theme for OLED screens (saves battery, looks sharp)
 - **Dark / Light / System themes** — with a brightness slider in Light mode to dial background from tinted grey to pure white
-- **In-App Auto-Update** — tap "Check for Updates" in About to fetch the latest GitHub release, download the APK, and launch the system installer
-- **Automatic Update Banner** — detects new GitHub releases on launch and shows a prompt at the top of the Alarms tab
-- **Firebase Cloud Messaging (FCM)** — broadcast push notifications and developer announcements
 - **Strict Lock Screen Security** — app ONLY displays over keyguard while actively ringing; dismiss/snooze immediately returns to lock screen
 - **4-Tab Navigation** — Alarms, Timer, Stopwatch, Settings
 - **12H / 24H Clock Toggle** — with capital AM/PM and full year on the home screen date
