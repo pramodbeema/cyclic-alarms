@@ -1,5 +1,5 @@
 Categories:
-  - Time
+  - System
 License: Apache-2.0
 AuthorName: Pramod Beema
 AuthorEmail: bp.beema@outlook.com
@@ -17,7 +17,7 @@ Builds:
     gradle:
       - release
 
-AutoUpdateMode: Version v%v
+AutoUpdateMode: Version %v
 UpdateCheckMode: Tags
 CurrentVersion: '1.6'
 CurrentVersionCode: 5
