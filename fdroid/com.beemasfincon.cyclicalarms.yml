@@ -14,7 +14,7 @@ Repo: https://github.com/pramodbeema/cyclic-alarms
 Builds:
   - versionName: 1.6.2
     versionCode: 7
-    commit: e6bbacf0b9d800903de69f7a9f2ab33a5ee9f307
+    commit: 45ffd897bfa492c0a2ed995b3074c50532597828
     subdir: app
     gradle:
       - yes
