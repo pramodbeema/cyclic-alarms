@@ -12,14 +12,14 @@ RepoType: git
 Repo: https://github.com/pramodbeema/cyclic-alarms
 
 Builds:
-  - versionName: 1.6.1
-    versionCode: 6
-    commit: 6b0cef41c1a91ea47b0f02e4b7749dffc5dde198
+  - versionName: 1.6.2
+    versionCode: 7
+    commit: e6bbacf0b9d800903de69f7a9f2ab33a5ee9f307
     subdir: app
     gradle:
       - yes
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.6.1
-CurrentVersionCode: 6
+CurrentVersion: 1.6.2
+CurrentVersionCode: 7
