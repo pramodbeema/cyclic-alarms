@@ -147,6 +147,14 @@ object TimerStopwatchState {
         val hasStopwatch = _swRunning.value || _swElapsedMs.value > 0L
         return hasTimers || hasStopwatch
     }
+
+    /** Explicitly stop and reset all running or finished timers and the stopwatch. */
+    fun stopAll() {
+        _timers.value = _timers.value.map { t ->
+            t.copy(remainingMs = t.totalMs, isRunning = false, isFinished = false)
+        }
+        resetStopwatch()
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -206,6 +214,7 @@ class TimerStopwatchService : Service() {
         when (intent?.action) {
             ACTION_STOP_SELF -> {
                 stopAlertSound()
+                TimerStopwatchState.stopAll()
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
                 return START_NOT_STICKY
