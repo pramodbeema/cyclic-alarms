@@ -38,17 +38,20 @@ class MainActivity : ComponentActivity() {
             val themeMode by viewModel.themeMode.collectAsState()
             val lightWhiteness by viewModel.lightWhiteness.collectAsState()
             val activeAlarm by RingingState.activeAlarm.collectAsState()
+            val timers by com.example.service.TimerStopwatchState.timers.collectAsState()
+            val hasFinishedTimer = timers.any { it.isFinished }
+            val isAlertActive = activeAlarm != null || hasFinishedTimer
 
             // ── Lock Screen Security & Return behavior ──
-            // Dynamic window flags: showWhenLocked is ONLY enabled when an alarm is actively ringing.
-            // When dismissed/snoozed (or when user locks screen), we clear flags and call moveTaskToBack(true)
+            // Dynamic window flags: showWhenLocked is ONLY enabled when an alarm or finished timer is actively alerting.
+            // When dismissed/snoozed/cleared (or when user locks screen), we clear flags and call moveTaskToBack(true)
             // so the app NEVER leaks dashboard access while the device is locked!
-            // Track whether an alarm was actively ringing during this session.
-            // On cold launch, activeAlarm is null; we MUST NOT call moveTaskToBack(true) on launch!
+            // Track whether an alarm/timer alert was actively ringing during this session.
+            // On cold launch, isAlertActive is false; we MUST NOT call moveTaskToBack(true) on launch!
             var wasRinging by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
 
-            LaunchedEffect(activeAlarm) {
-                if (activeAlarm != null) {
+            LaunchedEffect(isAlertActive) {
+                if (isAlertActive) {
                     wasRinging = true
                     applyAlarmWindowFlags(true)
                 } else {
@@ -73,8 +76,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-        // Security safeguard: If device is locked and alarm is NOT ringing, clear showWhenLocked
-        if (RingingState.activeAlarm.value == null) {
+        // Security safeguard: If device is locked and neither alarm nor timer is ringing, clear showWhenLocked
+        val hasFinishedTimer = com.example.service.TimerStopwatchState.timers.value.any { it.isFinished }
+        if (RingingState.activeAlarm.value == null && !hasFinishedTimer) {
             applyAlarmWindowFlags(false)
         }
     }
@@ -112,7 +116,8 @@ class MainActivity : ComponentActivity() {
         intent.getIntExtra("NAVIGATE_TO_TAB", -1).takeIf { it >= 0 }?.let {
             viewModel.requestTab(it)
         }
-        if (RingingState.activeAlarm.value != null) {
+        val hasFinishedTimer = com.example.service.TimerStopwatchState.timers.value.any { it.isFinished }
+        if (RingingState.activeAlarm.value != null || hasFinishedTimer) {
             applyAlarmWindowFlags(true)
         }
     }

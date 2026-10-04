@@ -8,7 +8,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
+import androidx.core.app.NotificationCompat
 import com.example.MainActivity
+import com.example.audio.SynthPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -241,7 +244,7 @@ class TimerStopwatchService : Service() {
                 }
 
                 // If nothing is running or paused, and no finished timer alert is ringing, shut down service cleanly
-                if (!TimerStopwatchState.hasActiveOrPausedSession() && activeRingtone == null) {
+                if (!TimerStopwatchState.hasActiveOrPausedSession() && !isPlayingAlert) {
                     stopForeground(STOP_FOREGROUND_REMOVE)
                     stopSelf()
                     break
@@ -258,23 +261,38 @@ class TimerStopwatchService : Service() {
         }
     }
 
-    private var activeRingtone: android.media.Ringtone? = null
+    private var alertWakeLock: PowerManager.WakeLock? = null
+    private var isPlayingAlert = false
 
     private fun stopAlertSound() {
         try {
-            activeRingtone?.stop()
-            activeRingtone = null
+            SynthPlayer.stop()
+            isPlayingAlert = false
+            alertWakeLock?.let {
+                if (it.isHeld) it.release()
+            }
+            alertWakeLock = null
         } catch (_: Exception) {}
     }
 
     private fun playTimerFinishSound() {
         try {
             stopAlertSound()
-            val alertUri = android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_ALARM)
-                ?: android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION)
-            val ringtone = android.media.RingtoneManager.getRingtone(this, alertUri)
-            activeRingtone = ringtone
-            ringtone?.play()
+
+            // Acquire FULL WakeLock to turn on the screen when timer goes off on locked device
+            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+            @Suppress("DEPRECATION")
+            alertWakeLock = pm.newWakeLock(
+                PowerManager.FULL_WAKE_LOCK or
+                PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                PowerManager.ON_AFTER_RELEASE,
+                "com.example:TimerFinishWakeLock"
+            ).also { it.acquire(5 * 60 * 1000L /* 5 min max */) }
+
+            isPlayingAlert = true
+            // Play "High Pitch" synth preset in a loop
+            SynthPlayer.playPreset(this, "High Pitch", loop = true, volume = 1.0f)
+
             // Vibrate
             val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val vm = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as android.os.VibratorManager
@@ -289,20 +307,31 @@ class TimerStopwatchService : Service() {
                 @Suppress("DEPRECATION")
                 vibrator.vibrate(longArrayOf(0, 500, 300, 500), -1)
             }
+
+            // Launch MainActivity to show timer on lock screen
+            val launchIntent = Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP
+                action = "SHOW_TIMER_FINISH"
+                putExtra("NAVIGATE_TO_TAB", 1)
+            }
+            startActivity(launchIntent)
         } catch (_: Exception) {}
     }
 
     private fun buildNotification(): android.app.Notification {
-        val isAnythingRunning = TimerStopwatchState.isAnythingRunning()
-
         val state = TimerStopwatchState
         val runningTimers = state.timers.value.filter { it.isRunning }
+        val finishedTimers = state.timers.value.filter { it.isFinished }
         val swRunning = state.swRunning.value
+        val hasFinished = finishedTimers.isNotEmpty() || isPlayingAlert
 
-        // Target tab: 2 (Stopwatch) if stopwatch is running and no timer is running, otherwise 1 (Timer)
-        val targetTab = if (swRunning && runningTimers.isEmpty()) 2 else 1
+        // Target tab: 1 (Timer) if any timer is running or finished, else 2 (Stopwatch) if swRunning, else 1
+        val targetTab = if (swRunning && runningTimers.isEmpty() && !hasFinished) 2 else 1
 
         val notifTitle = when {
+            hasFinished -> "Timer Finished!"
             runningTimers.isNotEmpty() && swRunning -> "Timer & Stopwatch"
             runningTimers.isNotEmpty() -> "Timer"
             swRunning -> "Stopwatch"
@@ -310,24 +339,40 @@ class TimerStopwatchService : Service() {
             else -> "Timer (Paused)"
         }
 
+        val launchIntent = Intent(this, MainActivity::class.java).apply {
+            action = if (hasFinished) "SHOW_TIMER_FINISH" else "NAVIGATE_TAB_$targetTab"
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra("NAVIGATE_TO_TAB", targetTab)
+        }
+
         val contentIntent = PendingIntent.getActivity(
             this, targetTab + 8000,
-            Intent(this, MainActivity::class.java).apply {
-                action = "NAVIGATE_TAB_$targetTab"
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                putExtra("NAVIGATE_TO_TAB", targetTab)
-            },
+            launchIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val fullScreenIntent = if (hasFinished) {
+            PendingIntent.getActivity(
+                this, 8888,
+                launchIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        } else null
+
         val parts = mutableListOf<String>()
+        if (hasFinished) {
+            val names = finishedTimers.map { it.label }.ifEmpty { listOf("Timer") }
+            parts.add("Time's up for ${names.joinToString(", ")}")
+        }
         runningTimers.forEach { t ->
             val h = t.remainingMs / 3_600_000L
             val m = (t.remainingMs / 60_000L) % 60
             val s = (t.remainingMs / 1_000L) % 60
             parts.add("${t.label}: ${if (h > 0) "%02d:%02d:%02d".format(h, m, s) else "%02d:%02d".format(m, s)}")
         }
-        if (swRunning || (runningTimers.isEmpty() && state.swElapsedMs.value > 0L)) {
+        if (swRunning || (!hasFinished && runningTimers.isEmpty() && state.swElapsedMs.value > 0L)) {
             val e = state.swElapsedMs.value
             val m = (e / 60_000L) % 60
             val s = (e / 1_000L) % 60
@@ -337,21 +382,33 @@ class TimerStopwatchService : Service() {
 
         val text = if (parts.isNotEmpty()) parts.joinToString("  •  ") else "Paused"
 
-        val builder = android.app.Notification.Builder(this, CHANNEL_ID)
+        val channelToUse = if (hasFinished) ALERT_CHANNEL_ID else CHANNEL_ID
+
+        val builder = NotificationCompat.Builder(this, channelToUse)
             .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
             .setContentTitle(notifTitle)
             .setContentText(text)
-            .setStyle(android.app.Notification.BigTextStyle().bigText(text))
-            .setOnlyAlertOnce(true)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            .setOnlyAlertOnce(!hasFinished)
             .setShowWhen(false)
             .setContentIntent(contentIntent)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            builder.setForegroundServiceBehavior(android.app.Notification.FOREGROUND_SERVICE_IMMEDIATE)
+        if (hasFinished) {
+            builder.setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setFullScreenIntent(fullScreenIntent, true)
+        } else {
+            builder.setPriority(NotificationCompat.PRIORITY_LOW)
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            builder.setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
+        }
+
+        val isAnythingRunning = TimerStopwatchState.isAnythingRunning() || hasFinished
         if (isAnythingRunning) {
-            // Non-dismissible while actively running — add Stop All action
+            // Non-dismissible while actively running or finished — add Stop All action
             val stopIntent = PendingIntent.getService(
                 this, 9999,
                 Intent(this, TimerStopwatchService::class.java).apply { action = ACTION_STOP_SELF },
@@ -360,7 +417,6 @@ class TimerStopwatchService : Service() {
             builder.setOngoing(true)
                 .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Stop All", stopIntent)
         } else {
-            // Everything paused/stopped — notification is dismissible (user can swipe it away)
             builder.setOngoing(false)
         }
 
@@ -373,24 +429,38 @@ class TimerStopwatchService : Service() {
         return notif
     }
 
+    private val ALERT_CHANNEL_ID = "timer_alert_channel"
+
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
+            val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+            val standardChannel = NotificationChannel(
                 CHANNEL_ID,
                 "Timer & Stopwatch",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
                 description = "Shows running timers and stopwatch in background"
                 setShowBadge(false)
-                // Prevent user from changing importance to a level that allows dismissal
                 lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
             }
-            val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(channel)
+            manager.createNotificationChannel(standardChannel)
+
+            val alertChannel = NotificationChannel(
+                ALERT_CHANNEL_ID,
+                "Timer Finish Alert",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Alerts and shows lock screen popup when timer finishes"
+                setShowBadge(true)
+                lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
+            }
+            manager.createNotificationChannel(alertChannel)
         }
     }
 
     override fun onDestroy() {
+        stopAlertSound()
         tickJob?.cancel()
         serviceJob.cancel()
         super.onDestroy()
