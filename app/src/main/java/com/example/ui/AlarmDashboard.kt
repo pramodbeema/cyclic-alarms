@@ -2202,7 +2202,7 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.6", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.6.1", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
