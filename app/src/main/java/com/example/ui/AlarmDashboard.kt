@@ -2202,7 +2202,7 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.6.1", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.6.2", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
@@ -2269,11 +2269,34 @@ fun AboutPageView() {
             Text("Tap on any release version to expand or collapse notes", fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.6 — Expanded by default (current release)
+            // v1.6.2 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = "v1.6 (Current Release)",
+                version = "v1.6.2 (Current Release)",
                 badgeText = "Latest",
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "🛡" to "Android 9 Compatibility Fix — eliminated cold-launch abrupt quits on Android 9 and older versions",
+                    "⏱" to "Timer & Stopwatch API Guard — guarded API 31 foreground service notifications to ensure flawless background tracking on all Android versions",
+                    "🔒" to "Clean Alarm Lifecycle — guaranteed immediate dismiss & lock screen restore without background leakage"
+                )
+            )
+
+            // v1.6.1 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = "v1.6.1 Release Notes",
+                badgeText = "v1.6.1",
+                isInitiallyExpanded = false,
+                items = listOf(
+                    "📦" to "F-Droid Compliance — clean open-source metadata, Apache-2.0 license, removed network update checkers",
+                    "🔑" to "Permission Streamlining — streamlined permission gate for modern and legacy Android systems"
+                )
+            )
+
+            // v1.6 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = "v1.6 Release Notes",
+                badgeText = "v1.6",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "🔔" to "Non-dismissible background notification — timer & stopwatch notification cannot be swiped away while running (like YouTube), with a 'Stop All' action button",
                     "🎨" to "Light mode alarm time fix — cyclic and weekly alarm times now use deep, high-contrast colours instead of washed-out light blue/purple",

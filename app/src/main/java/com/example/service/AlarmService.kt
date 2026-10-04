@@ -412,6 +412,9 @@ class AlarmService : Service() {
     }
 
     private fun stopAlarmResources() {
+        try {
+            stopForeground(true)
+        } catch (_: Exception) {}
         SynthPlayer.stop()
         RingingState.stopRinging()
         try {

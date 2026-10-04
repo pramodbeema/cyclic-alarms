@@ -15,6 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.service.RingingState
 import com.example.ui.AlarmDashboard
@@ -42,12 +43,20 @@ class MainActivity : ComponentActivity() {
             // Dynamic window flags: showWhenLocked is ONLY enabled when an alarm is actively ringing.
             // When dismissed/snoozed (or when user locks screen), we clear flags and call moveTaskToBack(true)
             // so the app NEVER leaks dashboard access while the device is locked!
+            // Track whether an alarm was actively ringing during this session.
+            // On cold launch, activeAlarm is null; we MUST NOT call moveTaskToBack(true) on launch!
+            var wasRinging by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+
             LaunchedEffect(activeAlarm) {
                 if (activeAlarm != null) {
+                    wasRinging = true
                     applyAlarmWindowFlags(true)
                 } else {
                     applyAlarmWindowFlags(false)
-                    moveTaskToBack(true)
+                    if (wasRinging) {
+                        wasRinging = false
+                        moveTaskToBack(true)
+                    }
                 }
             }
 

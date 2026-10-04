@@ -282,8 +282,11 @@ class TimerStopwatchService : Service() {
             .setStyle(android.app.Notification.BigTextStyle().bigText(text))
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
-            .setForegroundServiceBehavior(android.app.Notification.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentIntent(contentIntent)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            builder.setForegroundServiceBehavior(android.app.Notification.FOREGROUND_SERVICE_IMMEDIATE)
+        }
 
         if (isAnythingRunning) {
             // Non-dismissible while actively running — add Stop All action
