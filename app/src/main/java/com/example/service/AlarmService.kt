@@ -279,15 +279,18 @@ class AlarmService : Service() {
         startForeground(1001, notification)
 
         // Directly launch MainActivity over the lock screen so the ringing UI shows immediately
-        // without the user having to tap the notification.
-        val launchIntent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_SINGLE_TOP or
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP
-            action = "SHOW_RINGING_SCREEN"
-            putExtra("ALARM_ID", alarmId)
-        }
-        startActivity(launchIntent)
+        // without the user having to tap the notification. If background launch is restricted,
+        // the fullScreenIntent on the notification acts as the primary system fallback.
+        try {
+            val launchIntent = Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP
+                action = "SHOW_RINGING_SCREEN"
+                putExtra("ALARM_ID", alarmId)
+            }
+            startActivity(launchIntent)
+        } catch (_: Exception) {}
     }
 
     private fun dismissAlarmMode(alarmId: Int, label: String, hour: Int, minute: Int) {

@@ -107,21 +107,17 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 - ☀️ **Light Mode Brightness Slider** — adjust background from tinted grey to pure white in Settings
 - 🔄 **Background Timer & Stopwatch** — continue running when app is backgrounded via Foreground Service
 - 🔔 **Rings in Silent & DND Mode** — alarms bypass ringer volume; one-time info banner confirms this
-- ⬆️ **In-App Auto-Update** — tap "Check for Updates" in About to download & install new releases directly
 
 ## What's new — v1.4
 
-- 🔥 **Firebase Cloud Messaging (FCM)** — integrated real-time cloud push notifications and developer announcements; instant notification delivery when new updates or releases are ready
 - 🏷 **Official Package Name** — rebranded package identity to `com.beemasfincon.cyclicalarms`
-- 📡 **Instant Broadcast Topics** — app devices automatically subscribe to `announcements` and `all` topics for seamless broadcast messages directly from the Firebase Console
-- 🚀 **GitHub Auto-Update Checker** — detects new GitHub releases on launch and prompts with a 1-tap APK download link
+- 🎯 **Reliability Improvements** — upgraded alarm scheduling and foreground service lifecycle handling
 
 ## What's new — v1.3
 
 - ⏱ **Timer** — built-in countdown timer with circular progress ring; time-set (HH:MM:SS) and quick presets (1m–30m) displayed **inside** the clock ring for a single-glance view; alert sound & vibration on completion
 - ⏱ **Stopwatch** — millisecond-precision elapsed time tracker with lap recording, fastest/slowest lap highlights, button audio feedback, and a scrollable lap list
 - 🔒 **Strict Lock Screen Security** — after dismissing or snoozing, the phone immediately returns to lock screen without exposing the main dashboard; keyguard access is scoped strictly to the ringing moment
-- 🚀 **Auto-Update Checker** — detects new GitHub releases on launch and prompts with a 1-tap APK download link
 - 🔔 **Welcome Notification** — first-launch welcome message shown to new installs
 - 🎵 **Timer & Stopwatch Sounds** — timer fires system alarm ringtone + vibration; stopwatch uses audio tones on lap/start for tactile feedback
 - 📱 **4-Tab Navigation + Embedded About** — Alarms, Timer, Stopwatch, Settings; About is a sub-page inside Settings
@@ -171,4 +167,5 @@ Open the **About** page in the app and tap **"Feedbacks, Suggestions or Bugs Rep
 
 ## License
 
-This project has no formal license. Use it, fork it, do whatever you want with it.
+This project is open source and available under the [Apache License 2.0](LICENSE).
+

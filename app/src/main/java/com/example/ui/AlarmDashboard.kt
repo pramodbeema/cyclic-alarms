@@ -200,56 +200,6 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
         } ?: "No active alarms"
     }
 
-    var availableUpdateVersion by remember { mutableStateOf<String?>(null) }
-    var availableUpdateUrl     by remember { mutableStateOf<String?>(null) }
-    var availableUpdateNotes   by remember { mutableStateOf<String?>(null) }
-    var showUpdateDialog       by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        withContext(Dispatchers.IO) {
-            // Fetch GitHub Update Check
-            try {
-                val url = java.net.URL("https://api.github.com/repos/pramodbeema/cyclicalarms/releases/latest")
-                val conn = url.openConnection() as java.net.HttpURLConnection
-                conn.requestMethod = "GET"
-                conn.setRequestProperty("Accept", "application/json")
-                conn.setRequestProperty("User-Agent", "CyclicAlarms-App")
-                conn.connectTimeout = 5000
-                conn.readTimeout = 5000
-
-                if (conn.responseCode == 200) {
-                    val stream = conn.inputStream.bufferedReader().use { it.readText() }
-                    val json = org.json.JSONObject(stream)
-                    val tagName = json.optString("tag_name", "").replace("v", "").trim()
-                    val body = json.optString("body", "New version available!")
-                    val htmlUrl = json.optString("html_url", "https://github.com/pramodbeema/cyclicalarms/releases/latest")
-
-                    var downloadUrl = htmlUrl
-                    val assets = json.optJSONArray("assets")
-                    if (assets != null) {
-                        for (i in 0 until assets.length()) {
-                            val asset = assets.getJSONObject(i)
-                            val name = asset.optString("name", "")
-                            if (name.endsWith(".apk") && !name.contains("unsigned")) {
-                                downloadUrl = asset.optString("browser_download_url", htmlUrl)
-                                break
-                            }
-                        }
-                    }
-
-                    val currentVersion = "1.6"
-                    if (tagName.isNotEmpty() && tagName != currentVersion) {
-                        withContext(Dispatchers.Main) {
-                            availableUpdateVersion = tagName
-                            availableUpdateUrl = downloadUrl
-                            availableUpdateNotes = body
-                        }
-                    }
-                }
-            } catch (_: Exception) {}
-        }
-    }
-
     if (activeAlarm != null) { RingingScreen(activeAlarm = activeAlarm!!); return }
 
     val c = LocalAppColors.current
@@ -405,32 +355,6 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                 }
             }
 
-            // Update Banner
-            if (availableUpdateVersion != null) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(BrandBlue.copy(alpha = 0.15f))
-                        .border(BorderStroke(1.dp, BrandBlue), RoundedCornerShape(10.dp))
-                        .clickable { showUpdateDialog = true }
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                        Icon(Icons.Default.ArrowUpward, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "New Update Available: v${availableUpdateVersion}!",
-                            color = c.textPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Text("Update", color = BrandBlue, fontWeight = FontWeight.ExtraBold, fontSize = 12.sp)
-                }
-            }
-
             // Notification banner
             if (!hasNotifPerm && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -546,49 +470,6 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             onPlayPreview = { s, v -> viewModel.previewSound(s, v) },
             onStopPreview = { viewModel.stopPreview() },
             onTrackPicked = { uri -> viewModel.setLastCustomTrackUri(uri) }
-        )
-    }
-
-    if (showUpdateDialog && availableUpdateVersion != null) {
-        AlertDialog(
-            onDismissRequest = { showUpdateDialog = false },
-            title = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.ArrowUpward, contentDescription = null, tint = BrandBlue)
-                    Spacer(Modifier.width(8.dp))
-                    Text("Update Available: v${availableUpdateVersion}", fontWeight = FontWeight.Bold, color = c.textPrimary)
-                }
-            },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("A new release of Cyclic Alarms is available on GitHub!", fontSize = 13.sp, color = c.textPrimary)
-                    if (!availableUpdateNotes.isNullOrEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(c.surfaceVariant)
-                                .padding(10.dp)
-                        ) {
-                            Text(availableUpdateNotes!!, fontSize = 11.sp, color = c.textSecondary, fontFamily = FontFamily.Monospace)
-                        }
-                    }
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        showUpdateDialog = false
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(availableUpdateUrl ?: "https://github.com/pramodbeema/cyclicalarms/releases/latest"))
-                        context.startActivity(intent)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166))
-                ) { Text("Download Latest APK", fontWeight = FontWeight.Bold) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showUpdateDialog = false }) { Text("Later", color = c.textSecondary) }
-            },
-            containerColor = c.surfaceColor
         )
     }
 
@@ -2411,8 +2292,7 @@ fun AboutPageView() {
                     "🌑" to "Pure Dark Mode — true AMOLED black theme for OLED screen battery savings",
                     "☀️" to "Light Mode Brightness Slider — adjust background brightness from tinted to pure white",
                     "🔄" to "Background Timer & Stopwatch — continue running when app is backgrounded via Foreground Service",
-                    "🔔" to "Rings in Silent & DND Mode — alarms bypass ringer volume, no more missed alarms",
-                    "⬆️" to "In-App Auto-Update — tap 'Check for Updates' to download & install new releases directly"
+                    "🔔" to "Rings in Silent & DND Mode — alarms bypass ringer volume, no more missed alarms"
                 )
             )
 
@@ -2422,10 +2302,8 @@ fun AboutPageView() {
                 badgeText = "v1.4",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "🔥" to "Firebase Cloud Messaging (FCM) — instant broadcast push notifications and update announcements direct to all users",
                     "📦" to "Official Package Rebrand — package updated to com.beemasfincon.cyclicalarms",
-                    "⚡" to "Direct Broadcast Topics — automatic subscription to 'announcements' & 'all' topics for zero-token mass messaging",
-                    "🚀" to "GitHub Auto-Update Checker — fast releases checker and 1-tap download prompt"
+                    "🎯" to "Reliability Improvements — upgraded alarm scheduling and foreground service lifecycle handling"
                 )
             )
 
@@ -2435,7 +2313,6 @@ fun AboutPageView() {
                 badgeText = "v1.3",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "🚀" to "GitHub Auto-Update Checker — automatic update notification & 1-tap download prompt for new signed releases",
                     "⏱" to "Timer — built-in countdown timer with progress ring, quick presets (1m–30m), sound & vibration alert",
                     "⏱" to "Stopwatch — elapsed time tracker with lap recording, fastest/slowest lap highlights, touch audio tones",
                     "🔒" to "Strict Lock Screen Privacy — app only shows over keyguard while actively ringing; dismiss/snooze immediately locks & returns to prior screen without exposing dashboard",
