@@ -138,6 +138,12 @@ object TimerStopwatchState {
     fun isAnythingRunning(): Boolean {
         return _timers.value.any { it.isRunning } || _swRunning.value
     }
+
+    fun hasActiveOrPausedSession(): Boolean {
+        val hasTimers = _timers.value.any { it.isRunning || (it.remainingMs < it.totalMs && !it.isFinished) }
+        val hasStopwatch = _swRunning.value || _swElapsedMs.value > 0L
+        return hasTimers || hasStopwatch
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -154,6 +160,7 @@ class TimerStopwatchService : Service() {
     companion object {
         const val ACTION_START = "TS_START"
         const val ACTION_STOP_SELF = "TS_STOP_SELF"
+        const val ACTION_STOP_ALERT = "TS_STOP_ALERT"
 
         fun start(context: Context) {
             val intent = Intent(context, TimerStopwatchService::class.java).apply {
@@ -172,6 +179,19 @@ class TimerStopwatchService : Service() {
             }
             context.startService(intent)
         }
+
+        fun stopAlert(context: Context) {
+            val intent = Intent(context, TimerStopwatchService::class.java).apply {
+                action = ACTION_STOP_ALERT
+            }
+            context.startService(intent)
+        }
+
+        fun stopIfIdle(context: Context) {
+            if (!TimerStopwatchState.hasActiveOrPausedSession()) {
+                stop(context)
+            }
+        }
     }
 
     override fun onCreate() {
@@ -182,9 +202,22 @@ class TimerStopwatchService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_STOP_SELF -> {
+                stopAlertSound()
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
                 return START_NOT_STICKY
+            }
+            ACTION_STOP_ALERT -> {
+                stopAlertSound()
+                if (!TimerStopwatchState.hasActiveOrPausedSession()) {
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                    stopSelf()
+                    return START_NOT_STICKY
+                } else if (!TimerStopwatchState.isAnythingRunning()) {
+                    val notifMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                    notifMgr.notify(NOTIF_ID, buildNotification())
+                }
+                return START_STICKY
             }
         }
 
@@ -207,6 +240,13 @@ class TimerStopwatchService : Service() {
                     playTimerFinishSound()
                 }
 
+                // If nothing is running or paused, and no finished timer alert is ringing, shut down service cleanly
+                if (!TimerStopwatchState.hasActiveOrPausedSession() && activeRingtone == null) {
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                    stopSelf()
+                    break
+                }
+
                 // Update notification every ~500ms (every 25 ticks at 20ms each)
                 notifTickCounter++
                 if (notifTickCounter >= 25 || finishedTimers.isNotEmpty()) {
@@ -218,11 +258,22 @@ class TimerStopwatchService : Service() {
         }
     }
 
+    private var activeRingtone: android.media.Ringtone? = null
+
+    private fun stopAlertSound() {
+        try {
+            activeRingtone?.stop()
+            activeRingtone = null
+        } catch (_: Exception) {}
+    }
+
     private fun playTimerFinishSound() {
         try {
+            stopAlertSound()
             val alertUri = android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_ALARM)
                 ?: android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION)
             val ringtone = android.media.RingtoneManager.getRingtone(this, alertUri)
+            activeRingtone = ringtone
             ringtone?.play()
             // Vibrate
             val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -244,19 +295,30 @@ class TimerStopwatchService : Service() {
     private fun buildNotification(): android.app.Notification {
         val isAnythingRunning = TimerStopwatchState.isAnythingRunning()
 
-        // Tap opens MainActivity and navigates straight to the Timer tab (index 1)
-        val contentIntent = PendingIntent.getActivity(
-            this, 0,
-            Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                putExtra("NAVIGATE_TO_TAB", 1)   // 1 = Timer tab
-            },
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         val state = TimerStopwatchState
         val runningTimers = state.timers.value.filter { it.isRunning }
         val swRunning = state.swRunning.value
+
+        // Target tab: 2 (Stopwatch) if stopwatch is running and no timer is running, otherwise 1 (Timer)
+        val targetTab = if (swRunning && runningTimers.isEmpty()) 2 else 1
+
+        val notifTitle = when {
+            runningTimers.isNotEmpty() && swRunning -> "Timer & Stopwatch"
+            runningTimers.isNotEmpty() -> "Timer"
+            swRunning -> "Stopwatch"
+            state.swElapsedMs.value > 0L -> "Stopwatch (Paused)"
+            else -> "Timer (Paused)"
+        }
+
+        val contentIntent = PendingIntent.getActivity(
+            this, targetTab + 8000,
+            Intent(this, MainActivity::class.java).apply {
+                action = "NAVIGATE_TAB_$targetTab"
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("NAVIGATE_TO_TAB", targetTab)
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         val parts = mutableListOf<String>()
         runningTimers.forEach { t ->
@@ -265,7 +327,7 @@ class TimerStopwatchService : Service() {
             val s = (t.remainingMs / 1_000L) % 60
             parts.add("${t.label}: ${if (h > 0) "%02d:%02d:%02d".format(h, m, s) else "%02d:%02d".format(m, s)}")
         }
-        if (swRunning) {
+        if (swRunning || (runningTimers.isEmpty() && state.swElapsedMs.value > 0L)) {
             val e = state.swElapsedMs.value
             val m = (e / 60_000L) % 60
             val s = (e / 1_000L) % 60
@@ -277,7 +339,7 @@ class TimerStopwatchService : Service() {
 
         val builder = android.app.Notification.Builder(this, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
-            .setContentTitle("Timer & Stopwatch")
+            .setContentTitle(notifTitle)
             .setContentText(text)
             .setStyle(android.app.Notification.BigTextStyle().bigText(text))
             .setOnlyAlertOnce(true)

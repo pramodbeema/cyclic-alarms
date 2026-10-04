@@ -1758,10 +1758,19 @@ fun TimerScreen() {
                     com.example.service.TimerStopwatchState.pauseTimer(timer.id)
                 },
                 onReset = {
+                    com.example.service.TimerStopwatchService.stopAlert(context)
                     com.example.service.TimerStopwatchState.resetTimer(timer.id)
+                    com.example.service.TimerStopwatchService.stopIfIdle(context)
+                },
+                onClear = {
+                    com.example.service.TimerStopwatchService.stopAlert(context)
+                    com.example.service.TimerStopwatchState.resetTimer(timer.id)
+                    com.example.service.TimerStopwatchService.stopIfIdle(context)
                 },
                 onRemove = {
+                    com.example.service.TimerStopwatchService.stopAlert(context)
                     com.example.service.TimerStopwatchState.removeTimer(timer.id)
+                    com.example.service.TimerStopwatchService.stopIfIdle(context)
                 },
                 onSetDuration = { ms ->
                     com.example.service.TimerStopwatchState.setTimerDuration(timer.id, ms)
@@ -1778,6 +1787,7 @@ private fun MultiTimerCard(
     onStart: () -> Unit,
     onPause: () -> Unit,
     onReset: () -> Unit,
+    onClear: () -> Unit,
     onRemove: () -> Unit,
     onSetDuration: (Long) -> Unit
 ) {
@@ -1943,7 +1953,9 @@ private fun MultiTimerCard(
 
             Button(
                 onClick = {
-                    if (timer.isRunning) onPause() else onStart()
+                    if (timer.isFinished) onClear()
+                    else if (timer.isRunning) onPause()
+                    else onStart()
                 },
                 modifier = Modifier.weight(1.5f).height(44.dp),
                 shape = RoundedCornerShape(10.dp),
@@ -2075,6 +2087,7 @@ fun StopwatchScreen() {
                         com.example.service.TimerStopwatchState.lapStopwatch()
                     } else {
                         com.example.service.TimerStopwatchState.resetStopwatch()
+                        com.example.service.TimerStopwatchService.stopIfIdle(context)
                     }
                 },
                 modifier = Modifier.weight(1f).height(50.dp),
@@ -2277,6 +2290,8 @@ fun AboutPageView() {
                 items = listOf(
                     "🛡" to "Android 9 Compatibility Fix — eliminated cold-launch abrupt quits on Android 9 and older versions",
                     "⏱" to "Timer & Stopwatch API Guard — guarded API 31 foreground service notifications to ensure flawless background tracking on all Android versions",
+                    "🔇" to "Timer Alert Stop on Clear/Reset — tapping Clear or Reset now immediately silences the ringing sound",
+                    "🧭" to "Smart Notification Navigation & Title — notification title dynamically reflects Timer vs Stopwatch and tap opens the exact active tab",
                     "🔒" to "Clean Alarm Lifecycle — guaranteed immediate dismiss & lock screen restore without background leakage"
                 )
             )
