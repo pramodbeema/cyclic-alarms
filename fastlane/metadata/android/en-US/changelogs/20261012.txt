@@ -1,0 +1,3 @@
+- Added full offline multilingual localization for 11 global languages (English, Turkish, Spanish, German, French, Hindi, Portuguese, Russian, Chinese, Japanese, Arabic) plus System Default.
+- Added first-run onboarding setup dialog allowing users to choose their preferred language and theme on initial app launch.
+- Added in-app language switching directly within Settings without requiring an internet connection.
