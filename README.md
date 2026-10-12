@@ -52,25 +52,15 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 
 ## Installation
 
-This app is **not on the Play Store**. Install it by sideloading the APK:
+### 📲 Install via F-Droid (Recommended)
+Cyclic Alarms is an official open-source package published on **F-Droid**:
+- Search for **Cyclic Alarms** directly in the [F-Droid app](https://f-droid.org/) or install via the official F-Droid repository.
+- Built from source and signed directly by F-Droid's trusted build infrastructure.
 
+### 📦 Direct APK Installation (GitHub Releases)
+You can also download and sideload the release APK directly:
 1. Download `app-release.apk` from the [Releases](../../releases) page
-2. On your Android phone, go to **Settings → Apps → Special app access → Install unknown apps**
-3. Allow installs from your browser or file manager
-4. Open the downloaded APK and tap Install
-
-### ⚠️ Google Play Protect warning
-
-When you install this APK, Google Play Protect may show a warning saying the app is unrecognized. This is **normal and expected** for any APK that isn't distributed through the Play Store.
-
-The app is completely safe. Here's the honest context:
-
-- I'm not a professional developer — I'm an amateur who built this for my own use
-- The app is not signed with a Play Store key, which triggers the warning automatically
-- There is no malware, no tracking, no network calls of any kind — it's a local alarm app
-- You're welcome to read the full source code in this repository
-
-You can tap **"Install anyway"** safely.
+2. Open the downloaded APK on your Android device and tap **Install**
 
 ---
 
@@ -92,6 +82,25 @@ This app was built **100% using AI assistance** (Google Antigravity AI / Claude)
 I'm not a software developer. I'm just someone who needed a specific alarm app, couldn't find one that did exactly what I wanted, and used AI to build it. The ideas, requirements, and testing are mine — the code is the AI's.
 
 ---
+
+## What's new — v1.6.3
+
+- 🌐 **Full Offline Multilingual Localization** — complete offline UI translations for 11 global languages (English, Turkish, Spanish, German, French, Hindi, Portuguese, Russian, Chinese, Japanese, Arabic) plus System Default. No internet or external APIs required.
+- 🚀 **First-Run Onboarding Setup** — select both your preferred language and theme on initial app launch.
+- ⚙️ **In-App Language Settings** — change the application display language anytime in Settings without leaving the app.
+
+## What's new — v1.6.2
+
+- 🛡 **Android 9 Compatibility Fix** — fixed cold-launch abrupt quits on Android 9 and older legacy devices.
+- ⏱ **Timer & Stopwatch API Guard** — guarded API 31 foreground service notification methods to ensure reliable background tracking on all Android versions.
+- 🔇 **Timer Alert Stop on Clear/Reset** — tapping Clear or Reset now immediately silences finished timer ringing.
+- 🧭 **Smart Notification Navigation** — notification title dynamically reflects Timer vs Stopwatch and notification taps bring you straight to the active tab.
+- 🔒 **Clean Alarm Lifecycle** — guaranteed immediate dismiss & lock screen restore without background dashboard leakage.
+
+## What's new — v1.6.1
+
+- 📦 **F-Droid Compliance** — clean open-source metadata, Apache-2.0 license, and removed proprietary network update checkers.
+- 🔑 **Permission Streamlining** — refined permission cards and setup flow for modern and legacy Android systems.
 
 ## What's new — v1.6
 
