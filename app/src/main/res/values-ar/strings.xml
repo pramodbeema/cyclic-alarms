@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Cyclic Alarms</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_alarms">المنبهات</string>
+    <string name="nav_timer">المؤقت</string>
+    <string name="nav_stopwatch">ساعة الإيقاف</string>
+    <string name="nav_settings">الإعدادات</string>
+
+    <!-- First Run Setup -->
+    <string name="welcome_title">مرحبًا بك في Cyclic Alarms</string>
+    <string name="first_run_subtitle">اختر لغتك والمظهر المفضل للبدء. يمكنك تغيير ذلك في أي وقت من الإعدادات.</string>
+    <string name="select_language">اللغة</string>
+    <string name="select_theme">المظهر</string>
+    <string name="save_and_continue">حفظ ومتابعة</string>
+
+    <!-- Settings Page -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="setting_language_title">لغة التطبيق</string>
+    <string name="setting_language_subtitle">تغيير لغة التطبيق بالكامل بدون إنترنت</string>
+    <string name="setting_theme_title">المظهر</string>
+    <string name="setting_clock_format_title">تنسيق عرض الساعة</string>
+    <string name="setting_clock_format_subtitle">اختر طريقة عرض الوقت في الشاشة الرئيسية</string>
+    <string name="setting_permissions_title">الأذونات والوصول إلى النظام</string>
+    <string name="setting_permissions_subtitle">إدارة الأذونات لضمان رنين المنبه بدقة على شاشة القفل</string>
+
+    <string name="theme_pure_dark">أسود نقي</string>
+    <string name="theme_dark">داكن</string>
+    <string name="theme_system">النظام</string>
+    <string name="theme_light">فاتح</string>
+    <string name="background_brightness">سطوع الخلفية</string>
+
+    <string name="time_format_12h">12 ساعة (ص/م)</string>
+    <string name="time_format_24h">24 ساعة</string>
+
+    <!-- Permissions -->
+    <string name="perm_notifications">الإشعارات</string>
+    <string name="perm_notifications_sub">مطلوب لإصدار صوت التنبيه واللافتات</string>
+    <string name="perm_exact_alarm">جدولة دقيقة للمنبه</string>
+    <string name="perm_exact_alarm_sub">يسمح للمنبه بالرنين في الثانية المحددة بدقة</string>
+    <string name="perm_fullscreen">تنبيهات المنبه بملء الشاشة</string>
+    <string name="perm_fullscreen_sub">يعرض شاشة المنبه فوق شاشة القفل عند قفل الجهاز</string>
+    <string name="perm_overlay">الظهور فوق التطبيقات الأخرى</string>
+    <string name="perm_overlay_sub">يسمح بنوافذ المنبه المنبثقة فوق التطبيقات</string>
+
+    <!-- Permission Gate Screen -->
+    <string name="perm_gate_title">الأذونات مطلوبة</string>
+    <string name="perm_gate_desc">يحتاج التطبيق إلى هذه الأذونات ليعمل المنبه بدقة. يرجى منحها للمتابعة.</string>
+
+    <!-- Common Actions & Alerts -->
+    <string name="next_alarm_prefix">التالي:</string>
+    <string name="no_active_alarms">لا توجد منبهات نشطة</string>
+    <string name="calculating">جارٍ الحساب…</string>
+    <string name="no_alarms_yet">لا توجد منبهات حتى الآن</string>
+    <string name="no_alarms_hint">انقر فوق + لإنشاء أول منبه دوري أو أسبوعي.</string>
+    <string name="silent_banner_text">⚡ ترن المنبهات حتى في وضع الصامت وعدم الإزعاج. ملاحظة: إذا كان الهاتف مغلقًا فلن يرن المنبه.</string>
+    <string name="delete">حذف</string>
+    <string name="cancel">إلغاء</string>
+    <string name="save">حفظ</string>
+    <string name="select_all">الكل</string>
+    <string name="select_none">لا شيء</string>
+    <string name="selected_count">تم تحديد %d</string>
+    <string name="back_to_settings">العودة إلى الإعدادات</string>
+</resources>

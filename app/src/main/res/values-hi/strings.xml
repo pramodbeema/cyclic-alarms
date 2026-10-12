@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Cyclic Alarms</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_alarms">अलार्म</string>
+    <string name="nav_timer">टाइमर</string>
+    <string name="nav_stopwatch">स्टॉपवॉच</string>
+    <string name="nav_settings">सेटिंग्स</string>
+
+    <!-- First Run Setup -->
+    <string name="welcome_title">Cyclic Alarms में आपका स्वागत है</string>
+    <string name="first_run_subtitle">शुरू करने के लिए अपनी भाषा और थीम चुनें। आप इन्हें कभी भी सेटिंग्स में बदल सकते हैं।</string>
+    <string name="select_language">भाषा</string>
+    <string name="select_theme">थीम</string>
+    <string name="save_and_continue">सहेजें और आगे बढ़ें</string>
+
+    <!-- Settings Page -->
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="setting_language_title">ऐप भाषा</string>
+    <string name="setting_language_subtitle">इंटरनेट के बिना ऑफ़लाइन भाषा बदलें</string>
+    <string name="setting_theme_title">थीम</string>
+    <string name="setting_clock_format_title">घड़ी प्रदर्शन प्रारूप</string>
+    <string name="setting_clock_format_subtitle">होम स्क्रीन पर समय का प्रारूप चुनें</string>
+    <string name="setting_permissions_title">अनुमतियाँ और सिस्टम एक्सेस</string>
+    <string name="setting_permissions_subtitle">विश्वसनीय अलार्म बजने के लिए आवश्यक अनुमतियों को प्रबंधित करें</string>
+
+    <string name="theme_pure_dark">गहरा काला</string>
+    <string name="theme_dark">डार्क</string>
+    <string name="theme_system">सिस्टम</string>
+    <string name="theme_light">लाइट</string>
+    <string name="background_brightness">पृष्ठभूमि चमक</string>
+
+    <string name="time_format_12h">12-घंटे (AM/PM)</string>
+    <string name="time_format_24h">24-घंटे</string>
+
+    <!-- Permissions -->
+    <string name="perm_notifications">सूचनाएँ</string>
+    <string name="perm_notifications_sub">तेज अलार्म ध्वनि और बैनर के लिए आवश्यक</string>
+    <string name="perm_exact_alarm">सटीक समय अलार्म</string>
+    <string name="perm_exact_alarm_sub">अलार्म को बिल्कुल सही सेकंड पर बजने की अनुमति देता है</string>
+    <string name="perm_fullscreen">पूर्ण-स्क्रीन अलार्म अलर्ट</string>
+    <string name="perm_fullscreen_sub">फ़ोन लॉक होने पर स्क्रीन पर अलार्म दिखाता है</string>
+    <string name="perm_overlay">अन्य ऐप्स के ऊपर दिखाएँ</string>
+    <string name="perm_overlay_sub">अन्य ऐप्स के ऊपर अलार्म पॉपअप विंडो की अनुमति देता है</string>
+
+    <!-- Permission Gate Screen -->
+    <string name="perm_gate_title">अनुमतियाँ आवश्यक हैं</string>
+    <string name="perm_gate_desc">अलार्म सही समय पर बजने के लिए इन अनुमतियों की आवश्यकता है। कृपया जारी रखने के लिए सभी अनुमतियाँ दें।</string>
+
+    <!-- Common Actions & Alerts -->
+    <string name="next_alarm_prefix">अगला:</string>
+    <string name="no_active_alarms">कोई सक्रिय अलार्म नहीं</string>
+    <string name="calculating">गणना की जा रही है…</string>
+    <string name="no_alarms_yet">अभी कोई अलार्म नहीं है</string>
+    <string name="no_alarms_hint">अपना पहला चक्रीय या साप्ताहिक अलार्म बनाने के लिए + पर टैप करें।</string>
+    <string name="silent_banner_text">⚡ अलार्म साइलेंट और DND मोड में भी बजता है। ध्यान दें: फ़ोन स्विच ऑफ़ होने पर अलार्म नहीं बज सकता।</string>
+    <string name="delete">हटाएं</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="save">सहेजें</string>
+    <string name="select_all">सभी</string>
+    <string name="select_none">कोई नहीं</string>
+    <string name="selected_count">%d चयनित</string>
+    <string name="back_to_settings">सेटिंग्स पर वापस जाएं</string>
+</resources>

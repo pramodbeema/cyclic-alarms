@@ -32,6 +32,10 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     private val _isThemeSetupDone = MutableStateFlow(prefs.getBoolean("theme_setup_done", false))
     val isThemeSetupDone = _isThemeSetupDone.asStateFlow()
 
+    // App language code (e.g. "", "en", "tr", "es", etc.)
+    private val _appLanguage = MutableStateFlow(prefs.getString("app_language", "") ?: "")
+    val appLanguage = _appLanguage.asStateFlow()
+
     // Keep for legacy compatibility — always false now
     val isDynamicColor = MutableStateFlow(false).asStateFlow()
 
@@ -80,6 +84,18 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
 
     fun completeThemeSetup(mode: String) {
         setThemeMode(mode)
+        _isThemeSetupDone.value = true
+        prefs.edit().putBoolean("theme_setup_done", true).apply()
+    }
+
+    fun setAppLanguage(languageCode: String) {
+        _appLanguage.value = languageCode
+        prefs.edit().putString("app_language", languageCode).apply()
+    }
+
+    fun completeFirstRunSetup(mode: String, languageCode: String) {
+        setThemeMode(mode)
+        setAppLanguage(languageCode)
         _isThemeSetupDone.value = true
         prefs.edit().putBoolean("theme_setup_done", true).apply()
     }

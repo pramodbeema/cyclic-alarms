@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Cyclic Alarms</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_alarms">Alarmes</string>
+    <string name="nav_timer">Temporizador</string>
+    <string name="nav_stopwatch">Cronômetro</string>
+    <string name="nav_settings">Configurações</string>
+
+    <!-- First Run Setup -->
+    <string name="welcome_title">Bem-vindo ao Cyclic Alarms</string>
+    <string name="first_run_subtitle">Escolha seu idioma e tema para começar. Você pode alterá-los a qualquer momento nas Configurações.</string>
+    <string name="select_language">Idioma</string>
+    <string name="select_theme">Tema</string>
+    <string name="save_and_continue">Salvar e Continuar</string>
+
+    <!-- Settings Page -->
+    <string name="settings_title">CONFIGURAÇÕES</string>
+    <string name="setting_language_title">Idioma do Aplicativo</string>
+    <string name="setting_language_subtitle">Altere o idioma do app totalmente offline</string>
+    <string name="setting_theme_title">Tema</string>
+    <string name="setting_clock_format_title">Formato de Exibição do Relógio</string>
+    <string name="setting_clock_format_subtitle">Escolha como a hora é exibida no relógio principal</string>
+    <string name="setting_permissions_title">Permissões e Acesso ao Sistema</string>
+    <string name="setting_permissions_subtitle">Gerencie o acesso do sistema para garantir o toque pontual dos alarmes</string>
+
+    <string name="theme_pure_dark">Preto Puro</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="background_brightness">Brilho do Fundo</string>
+
+    <string name="time_format_12h">12 Horas (AM/PM)</string>
+    <string name="time_format_24h">24 Horas</string>
+
+    <!-- Permissions -->
+    <string name="perm_notifications">Notificações</string>
+    <string name="perm_notifications_sub">Necessário para som e avisos de alarme</string>
+    <string name="perm_exact_alarm">Alarmes Exatos</string>
+    <string name="perm_exact_alarm_sub">Permite que os alarmes toquem no segundo exato</string>
+    <string name="perm_fullscreen">Alertas em Tela Cheia</string>
+    <string name="perm_fullscreen_sub">Exibe a tela de alarme sobre a tela bloqueada</string>
+    <string name="perm_overlay">Sobrepor a outros aplicativos</string>
+    <string name="perm_overlay_sub">Permite janelas pop-up de alarme sobre outros apps</string>
+
+    <!-- Permission Gate Screen -->
+    <string name="perm_gate_title">Permissões Necessárias</string>
+    <string name="perm_gate_desc">Cyclic Alarms precisa dessas permissões para tocar alarmes com segurança. Conceda todas para continuar.</string>
+
+    <!-- Common Actions & Alerts -->
+    <string name="next_alarm_prefix">Próximo:</string>
+    <string name="no_active_alarms">Sem alarmes ativos</string>
+    <string name="calculating">Calculando…</string>
+    <string name="no_alarms_yet">Nenhum Alarme Ainda</string>
+    <string name="no_alarms_hint">Toque em + para criar seu primeiro alarme cíclico ou semanal.</string>
+    <string name="silent_banner_text">⚡ Os alarmes tocam mesmo nos modos Silencioso e Não Perturbe. Nota: se o aparelho estiver desligado, não tocará.</string>
+    <string name="delete">Excluir</string>
+    <string name="cancel">Cancelar</string>
+    <string name="save">Salvar</string>
+    <string name="select_all">Todos</string>
+    <string name="select_none">Nenhum</string>
+    <string name="selected_count">%d selecionados</string>
+    <string name="back_to_settings">Voltar às Configurações</string>
+</resources>

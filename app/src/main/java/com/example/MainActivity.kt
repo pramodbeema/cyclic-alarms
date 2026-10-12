@@ -25,6 +25,12 @@ import com.example.ui.theme.MyApplicationTheme
 class MainActivity : ComponentActivity() {
     private val viewModel: AlarmViewModel by viewModels()
 
+    override fun attachBaseContext(newBase: Context) {
+        val lang = com.example.util.LocaleManager.getLanguageTag(newBase)
+        val context = com.example.util.LocaleManager.applyLocaleToContext(newBase, lang)
+        super.attachBaseContext(context)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Cyclic Alarms</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_alarms">Alarmlar</string>
+    <string name="nav_timer">Zamanlayıcı</string>
+    <string name="nav_stopwatch">Kronometre</string>
+    <string name="nav_settings">Ayarlar</string>
+
+    <!-- First Run Setup -->
+    <string name="welcome_title">Cyclic Alarms\'a Hoş Geldiniz</string>
+    <string name="first_run_subtitle">Başlamak için dil ve tema seçin. Bunları daha sonra Ayarlar\'dan değiştirebilirsiniz.</string>
+    <string name="select_language">Dil</string>
+    <string name="select_theme">Tema</string>
+    <string name="save_and_continue">Kaydet ve Devam Et</string>
+
+    <!-- Settings Page -->
+    <string name="settings_title">AYARLAR</string>
+    <string name="setting_language_title">Uygulama Dili</string>
+    <string name="setting_language_subtitle">Uygulama dilini tamamen çevrimdışı değiştirin</string>
+    <string name="setting_theme_title">Tema</string>
+    <string name="setting_clock_format_title">Saat Görüntüleme Biçimi</string>
+    <string name="setting_clock_format_subtitle">Ana ekranda saatin nasıl görüntüleneceğini seçin</string>
+    <string name="setting_permissions_title">İzinler ve Sistem Erişimi</string>
+    <string name="setting_permissions_subtitle">Güvenilir alarm çalması ve kilit ekranı pencereleri için gereken izinleri yönetin</string>
+
+    <string name="theme_pure_dark">Tam Karanlık</string>
+    <string name="theme_dark">Karanlık</string>
+    <string name="theme_system">Sistem</string>
+    <string name="theme_light">Aydınlık</string>
+    <string name="background_brightness">Arka Plan Parlaklığı</string>
+
+    <string name="time_format_12h">12-Saat (ÖÖ/ÖS)</string>
+    <string name="time_format_24h">24-Saat</string>
+
+    <!-- Permissions -->
+    <string name="perm_notifications">Bildirimler</string>
+    <string name="perm_notifications_sub">Yüksek sesli alarm ve başlıklar için gereklidir</string>
+    <string name="perm_exact_alarm">Tam Zamanlı Alarm Planlama</string>
+    <string name="perm_exact_alarm_sub">Alarmın tam ayarlanan saniyede çalmasını sağlar</string>
+    <string name="perm_fullscreen">Tam Ekran Alarm Uyarıları</string>
+    <string name="perm_fullscreen_sub">Cihaz kilitliyken kilit ekranında tam ekran alarmı gösterir</string>
+    <string name="perm_overlay">Diğer Uygulamaların Üzerinde Göster</string>
+    <string name="perm_overlay_sub">Açılır pencerenin diğer uygulamaların üzerinde görünmesini sağlar</string>
+
+    <!-- Permission Gate Screen -->
+    <string name="perm_gate_title">İzinler Gerekli</string>
+    <string name="perm_gate_desc">Cyclic Alarms alarmları güvenilir şekilde çalmak için bu sistem izinlerine ihtiyaç duyar. Devam etmek için lütfen tümünü verin.</string>
+
+    <!-- Common Actions & Alerts -->
+    <string name="next_alarm_prefix">Sonraki:</string>
+    <string name="no_active_alarms">Aktif alarm yok</string>
+    <string name="calculating">Hesaplanıyor…</string>
+    <string name="no_alarms_yet">Henüz Alarm Yok</string>
+    <string name="no_alarms_hint">İlk döngüsel veya haftalık alarmınızı oluşturmak için + düğmesine dokunun.</string>
+    <string name="silent_banner_text">⚡ Alarmlar Sessiz ve Rahatsız Etmeyin modunda bile çalar. Not: Telefon kapalıysa alarmlar çalamaz.</string>
+    <string name="delete">Sil</string>
+    <string name="cancel">İptal</string>
+    <string name="save">Kaydet</string>
+    <string name="select_all">Tümü</string>
+    <string name="select_none">Hiçbiri</string>
+    <string name="selected_count">%d seçildi</string>
+    <string name="back_to_settings">Ayarlara Geri Dön</string>
+</resources>

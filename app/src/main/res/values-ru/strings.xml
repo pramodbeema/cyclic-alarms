@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Cyclic Alarms</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_alarms">Будильники</string>
+    <string name="nav_timer">Таймер</string>
+    <string name="nav_stopwatch">Секундомер</string>
+    <string name="nav_settings">Настройки</string>
+
+    <!-- First Run Setup -->
+    <string name="welcome_title">Добро пожаловать в Cyclic Alarms</string>
+    <string name="first_run_subtitle">Выберите язык и тему для начала. Вы сможете изменить их в любое время в Настройках.</string>
+    <string name="select_language">Язык</string>
+    <string name="select_theme">Тема</string>
+    <string name="save_and_continue">Сохранить и продолжить</string>
+
+    <!-- Settings Page -->
+    <string name="settings_title">НАСТРОЙКИ</string>
+    <string name="setting_language_title">Язык приложения</string>
+    <string name="setting_language_subtitle">Изменение языка полностью офлайн</string>
+    <string name="setting_theme_title">Тема</string>
+    <string name="setting_clock_format_title">Формат отображения времени</string>
+    <string name="setting_clock_format_subtitle">Формат часов на главном экране</string>
+    <string name="setting_permissions_title">Разрешения и доступ к системе</string>
+    <string name="setting_permissions_subtitle">Управление системным доступом для гарантированного срабатывания будильника</string>
+
+    <string name="theme_pure_dark">Глубокий черный</string>
+    <string name="theme_dark">Темная</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="background_brightness">Яркость фона</string>
+
+    <string name="time_format_12h">12-часовой (AM/PM)</string>
+    <string name="time_format_24h">24-часовой</string>
+
+    <!-- Permissions -->
+    <string name="perm_notifications">Уведомления</string>
+    <string name="perm_notifications_sub">Необходимо для звука будильника и баннеров</string>
+    <string name="perm_exact_alarm">Точное расписание будильников</string>
+    <string name="perm_exact_alarm_sub">Позволяет будильнику звучать секунда в секунду</string>
+    <string name="perm_fullscreen">Полноэкранные оповещения</string>
+    <string name="perm_fullscreen_sub">Отображает экран будильника поверх экрана блокировки</string>
+    <string name="perm_overlay">Поверх других приложений</string>
+    <string name="perm_overlay_sub">Разрешает всплывающее окно будильника поверх других приложений</string>
+
+    <!-- Permission Gate Screen -->
+    <string name="perm_gate_title">Требуются разрешения</string>
+    <string name="perm_gate_desc">Cyclic Alarms необходимы эти разрешения для надежной работы будильника. Пожалуйста, предоставьте их все.</string>
+
+    <!-- Common Actions & Alerts -->
+    <string name="next_alarm_prefix">Следующий:</string>
+    <string name="no_active_alarms">Нет активных будильников</string>
+    <string name="calculating">Вычисление…</string>
+    <string name="no_alarms_yet">Будильников пока нет</string>
+    <string name="no_alarms_hint">Нажмите +, чтобы создать циклический или еженедельный будильник.</string>
+    <string name="silent_banner_text">⚡ Будильники звонят даже в беззвучном режиме и «Не беспокоить». Примечание: если телефон выключен, будильник не сработает.</string>
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="select_all">Все</string>
+    <string name="select_none">Снять</string>
+    <string name="selected_count">Выбрано: %d</string>
+    <string name="back_to_settings">Назад в настройки</string>
+</resources>

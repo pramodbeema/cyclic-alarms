@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Cyclic Alarms</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_alarms">アラーム</string>
+    <string name="nav_timer">タイマー</string>
+    <string name="nav_stopwatch">ストップウォッチ</string>
+    <string name="nav_settings">設定</string>
+
+    <!-- First Run Setup -->
+    <string name="welcome_title">Cyclic Alarms へようこそ</string>
+    <string name="first_run_subtitle">言語とテーマを選択してください。後から「設定」でいつでも変更できます。</string>
+    <string name="select_language">言語</string>
+    <string name="select_theme">テーマ</string>
+    <string name="save_and_continue">保存して続行</string>
+
+    <!-- Settings Page -->
+    <string name="settings_title">設定</string>
+    <string name="setting_language_title">アプリ言語</string>
+    <string name="setting_language_subtitle">完全オフラインで言語を変更します</string>
+    <string name="setting_theme_title">テーマ</string>
+    <string name="setting_clock_format_title">時計表示フォーマット</string>
+    <string name="setting_clock_format_subtitle">ホーム画面の時計表示形式を選択します</string>
+    <string name="setting_permissions_title">権限とシステムアクセス</string>
+    <string name="setting_permissions_subtitle">確実にアラームを鳴らすために必要な権限を管理します</string>
+
+    <string name="theme_pure_dark">ピュアブラック</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_system">システム</string>
+    <string name="theme_light">ライト</string>
+    <string name="background_brightness">背景の明るさ</string>
+
+    <string name="time_format_12h">12時間表示 (AM/PM)</string>
+    <string name="time_format_24h">24時間表示</string>
+
+    <!-- Permissions -->
+    <string name="perm_notifications">通知</string>
+    <string name="perm_notifications_sub">アラーム音やバナー表示に必要です</string>
+    <string name="perm_exact_alarm">正確なアラームのスケジュール</string>
+    <string name="perm_exact_alarm_sub">設定した正確な秒数でアラームを鳴らします</string>
+    <string name="perm_fullscreen">全画面アラーム通知</string>
+    <string name="perm_fullscreen_sub">端末ロック時にロック画面上にアラームを表示します</string>
+    <string name="perm_overlay">他のアプリの上に重ねて表示</string>
+    <string name="perm_overlay_sub">他のアプリ起動中にアラームポップアップを表示します</string>
+
+    <!-- Permission Gate Screen -->
+    <string name="perm_gate_title">権限が必要です</string>
+    <string name="perm_gate_desc">Cyclic Alarms が確実に動作するためにこれらの権限が必要です。続行するには許可してください。</string>
+
+    <!-- Common Actions & Alerts -->
+    <string name="next_alarm_prefix">次回:</string>
+    <string name="no_active_alarms">有効なアラームはありません</string>
+    <string name="calculating">計算中…</string>
+    <string name="no_alarms_yet">アラームがありません</string>
+    <string name="no_alarms_hint">+ をタップして最初のアラームを作成してください。</string>
+    <string name="silent_banner_text">⚡ サイレントモードやマナーモードでもアラームは鳴ります。注意: 電源OFF時は鳴りません。</string>
+    <string name="delete">削除</string>
+    <string name="cancel">キャンセル</string>
+    <string name="save">保存</string>
+    <string name="select_all">すべて</string>
+    <string name="select_none">解除</string>
+    <string name="selected_count">%d 件選択中</string>
+    <string name="back_to_settings">設定に戻る</string>
+</resources>

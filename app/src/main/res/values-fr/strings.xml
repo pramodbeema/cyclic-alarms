@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Cyclic Alarms</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_alarms">Alarmes</string>
+    <string name="nav_timer">Minuteur</string>
+    <string name="nav_stopwatch">Chronomètre</string>
+    <string name="nav_settings">Paramètres</string>
+
+    <!-- First Run Setup -->
+    <string name="welcome_title">Bienvenue sur Cyclic Alarms</string>
+    <string name="first_run_subtitle">Choisissez votre langue et thème pour commencer. Vous pourrez les modifier dans Paramètres.</string>
+    <string name="select_language">Langue</string>
+    <string name="select_theme">Thème</string>
+    <string name="save_and_continue">Enregistrer et Continuer</string>
+
+    <!-- Settings Page -->
+    <string name="settings_title">PARAMÈTRES</string>
+    <string name="setting_language_title">Langue de l\'application</string>
+    <string name="setting_language_subtitle">Changez la langue entièrement hors ligne</string>
+    <string name="setting_theme_title">Thème</string>
+    <string name="setting_clock_format_title">Format de l\'horloge</string>
+    <string name="setting_clock_format_subtitle">Choisissez l\'affichage de l\'heure sur l\'écran d\'accueil</string>
+    <string name="setting_permissions_title">Autorisations &amp; Accès système</string>
+    <string name="setting_permissions_subtitle">Gérez les autorisations pour garantir la sonnerie fiable des alarmes</string>
+
+    <string name="theme_pure_dark">Noir Pur</string>
+    <string name="theme_dark">Sombre</string>
+    <string name="theme_system">Système</string>
+    <string name="theme_light">Clair</string>
+    <string name="background_brightness">Luminosité de l\'arrière-plan</string>
+
+    <string name="time_format_12h">12 heures (AM/PM)</string>
+    <string name="time_format_24h">24 heures</string>
+
+    <!-- Permissions -->
+    <string name="perm_notifications">Notifications</string>
+    <string name="perm_notifications_sub">Requis pour la sonnerie et les bannières d\'alarme</string>
+    <string name="perm_exact_alarm">Alarmes exactes</string>
+    <string name="perm_exact_alarm_sub">Permet aux alarmes de sonner à la seconde exacte</string>
+    <string name="perm_fullscreen">Alertes en plein écran</string>
+    <string name="perm_fullscreen_sub">Affiche l\'alarme au-dessus de l\'écran de verrouillage</string>
+    <string name="perm_overlay">Afficher par-dessus d\'autres applications</string>
+    <string name="perm_overlay_sub">Permet d\'afficher la fenêtre d\'alarme par-dessus les applications</string>
+
+    <!-- Permission Gate Screen -->
+    <string name="perm_gate_title">Autorisations requises</string>
+    <string name="perm_gate_desc">Cyclic Alarms nécessite ces autorisations pour fonctionner. Veuillez les accorder pour continuer.</string>
+
+    <!-- Common Actions & Alerts -->
+    <string name="next_alarm_prefix">Prochaine :</string>
+    <string name="no_active_alarms">Aucune alarme active</string>
+    <string name="calculating">Calcul en cours…</string>
+    <string name="no_alarms_yet">Aucune alarme pour le moment</string>
+    <string name="no_alarms_hint">Appuyez sur + pour créer votre première alarme cyclique ou hebdomadaire.</string>
+    <string name="silent_banner_text">⚡ Les alarmes sonnent même en mode Silencieux &amp; Ne pas déranger. Remarque : téléphone éteint, les alarmes ne sonnent pas.</string>
+    <string name="delete">Supprimer</string>
+    <string name="cancel">Annuler</string>
+    <string name="save">Enregistrer</string>
+    <string name="select_all">Tout</string>
+    <string name="select_none">Aucun</string>
+    <string name="selected_count">%d sélectionnés</string>
+    <string name="back_to_settings">Retour aux paramètres</string>
+</resources>

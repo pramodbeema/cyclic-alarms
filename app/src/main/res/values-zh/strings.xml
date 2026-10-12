@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Cyclic Alarms</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_alarms">闹钟</string>
+    <string name="nav_timer">计时器</string>
+    <string name="nav_stopwatch">秒表</string>
+    <string name="nav_settings">设置</string>
+
+    <!-- First Run Setup -->
+    <string name="welcome_title">欢迎使用 Cyclic Alarms</string>
+    <string name="first_run_subtitle">请选择您的偏好语言和主题。您可以随时在设置中更改它们。</string>
+    <string name="select_language">语言</string>
+    <string name="select_theme">主题</string>
+    <string name="save_and_continue">保存并继续</string>
+
+    <!-- Settings Page -->
+    <string name="settings_title">设置</string>
+    <string name="setting_language_title">应用语言</string>
+    <string name="setting_language_subtitle">完全离线更改应用语言</string>
+    <string name="setting_theme_title">主题</string>
+    <string name="setting_clock_format_title">时钟显示格式</string>
+    <string name="setting_clock_format_subtitle">选择主屏幕时钟的显示方式</string>
+    <string name="setting_permissions_title">权限与系统访问</string>
+    <string name="setting_permissions_subtitle">管理确保闹钟准时响铃和锁屏弹出所需的权限</string>
+
+    <string name="theme_pure_dark">纯黑</string>
+    <string name="theme_dark">深色</string>
+    <string name="theme_system">系统跟随</string>
+    <string name="theme_light">浅色</string>
+    <string name="background_brightness">背景亮度</string>
+
+    <string name="time_format_12h">12小时制 (上午/下午)</string>
+    <string name="time_format_24h">24小时制</string>
+
+    <!-- Permissions -->
+    <string name="perm_notifications">通知权限</string>
+    <string name="perm_notifications_sub">用于响铃声音和通知横幅</string>
+    <string name="perm_exact_alarm">精确闹钟调度</string>
+    <string name="perm_exact_alarm_sub">允许闹钟在设定的精确秒数响铃</string>
+    <string name="perm_fullscreen">全屏闹钟提醒</string>
+    <string name="perm_fullscreen_sub">在设备锁定时于锁屏上显示全屏闹钟界面</string>
+    <string name="perm_overlay">显示在其他应用上层</string>
+    <string name="perm_overlay_sub">允许在其他应用上显示闹钟弹窗</string>
+
+    <!-- Permission Gate Screen -->
+    <string name="perm_gate_title">需要权限</string>
+    <string name="perm_gate_desc">Cyclic Alarms 需要这些系统权限才能稳定响铃。请授予所有权限以继续。</string>
+
+    <!-- Common Actions & Alerts -->
+    <string name="next_alarm_prefix">下次响铃：</string>
+    <string name="no_active_alarms">暂无已开启闹钟</string>
+    <string name="calculating">计算中…</string>
+    <string name="no_alarms_yet">暂无闹钟</string>
+    <string name="no_alarms_hint">点击 + 创建您的第一个周期或每周闹钟。</string>
+    <string name="silent_banner_text">⚡ 即使在静音和勿扰模式下闹钟也会响铃。注意：若手机关机则无法响铃。</string>
+    <string name="delete">删除</string>
+    <string name="cancel">取消</string>
+    <string name="save">保存</string>
+    <string name="select_all">全选</string>
+    <string name="select_none">取消</string>
+    <string name="selected_count">已选 %d 个</string>
+    <string name="back_to_settings">返回设置</string>
+</resources>

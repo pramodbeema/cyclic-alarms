@@ -1,3 +1,64 @@
 <resources>
     <string name="app_name">Cyclic Alarms</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_alarms">Alarms</string>
+    <string name="nav_timer">Timer</string>
+    <string name="nav_stopwatch">Stopwatch</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- First Run Setup -->
+    <string name="welcome_title">Welcome to Cyclic Alarms</string>
+    <string name="first_run_subtitle">Select your language and theme to get started. You can change these anytime in Settings.</string>
+    <string name="select_language">Language</string>
+    <string name="select_theme">Theme</string>
+    <string name="save_and_continue">Save &amp; Continue</string>
+
+    <!-- Settings Page -->
+    <string name="settings_title">SETTINGS</string>
+    <string name="setting_language_title">App Language</string>
+    <string name="setting_language_subtitle">Change application language completely offline</string>
+    <string name="setting_theme_title">Theme</string>
+    <string name="setting_clock_format_title">Clock Display Format</string>
+    <string name="setting_clock_format_subtitle">Choose how time is displayed on the home screen clock</string>
+    <string name="setting_permissions_title">Permissions &amp; App Access</string>
+    <string name="setting_permissions_subtitle">Manage system access required for reliable alarm ringing and lock-screen popups</string>
+
+    <string name="theme_pure_dark">Pure Dark</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="background_brightness">Background Brightness</string>
+
+    <string name="time_format_12h">12-Hour (AM/PM)</string>
+    <string name="time_format_24h">24-Hour</string>
+
+    <!-- Permissions -->
+    <string name="perm_notifications">Notifications</string>
+    <string name="perm_notifications_sub">Required to trigger loud alarm sounds and banners</string>
+    <string name="perm_exact_alarm">Exact Alarm Scheduling</string>
+    <string name="perm_exact_alarm_sub">Allows alarm to fire at the exact second requested</string>
+    <string name="perm_fullscreen">Full-Screen Alarm Alerts</string>
+    <string name="perm_fullscreen_sub">Displays full-screen ringing UI over keyguard when device is locked</string>
+    <string name="perm_overlay">Display Over Other Apps</string>
+    <string name="perm_overlay_sub">Allows popup window display on top of other running applications</string>
+
+    <!-- Permission Gate Screen -->
+    <string name="perm_gate_title">Permissions Required</string>
+    <string name="perm_gate_desc">Cyclic Alarms needs these system permissions to ring alarms reliably. Please grant them all to continue.</string>
+
+    <!-- Common Actions & Alerts -->
+    <string name="next_alarm_prefix">Next:</string>
+    <string name="no_active_alarms">No active alarms</string>
+    <string name="calculating">Calculating…</string>
+    <string name="no_alarms_yet">No Alarms Yet</string>
+    <string name="no_alarms_hint">Tap + to create your first cyclic or weekly alarm.</string>
+    <string name="silent_banner_text">⚡ Alarms ring even in Silent &amp; DND mode. Note: if phone is switched off, alarms cannot ring.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="select_all">All</string>
+    <string name="select_none">None</string>
+    <string name="selected_count">%d selected</string>
+    <string name="back_to_settings">Back to Settings</string>
 </resources>

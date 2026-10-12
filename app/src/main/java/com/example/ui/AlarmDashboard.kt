@@ -58,6 +58,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
+import com.example.R
+import com.example.util.LocaleManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -120,7 +123,9 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     val lightWhiteness   by viewModel.lightWhiteness.collectAsStateWithLifecycle()
     val lastCustomTrackUri by viewModel.lastCustomTrackUri.collectAsStateWithLifecycle()
     val silentBannerDismissed by viewModel.silentBannerDismissed.collectAsStateWithLifecycle()
+    val appLanguage      by viewModel.appLanguage.collectAsStateWithLifecycle()
     var selectedThemeForSetup by remember { mutableStateOf(themeMode) }
+    var selectedLanguageForSetup by remember { mutableStateOf(appLanguage) }
 
     var clock by remember { mutableStateOf("--:--:--") }
     var date  by remember { mutableStateOf("") }
@@ -303,10 +308,10 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             Column(modifier = Modifier.fillMaxWidth().background(c.surfaceColor)) {
                 HorizontalDivider(color = c.outlineColor)
                 Row(modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 8.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
-                    BottomTab("Alarms",    Icons.Default.Notifications,  currentTab == 0) { currentTab = 0 }
-                    BottomTab("Timer",     Icons.Default.Timer,          currentTab == 1) { currentTab = 1 }
-                    BottomTab("Stopwatch", Icons.Default.AccessTime,     currentTab == 2) { currentTab = 2 }
-                    BottomTab("Settings",  Icons.Default.Settings,       currentTab == 3) { currentTab = 3 }
+                    BottomTab(stringResource(R.string.nav_alarms),    Icons.Default.Notifications,  currentTab == 0) { currentTab = 0 }
+                    BottomTab(stringResource(R.string.nav_timer),     Icons.Default.Timer,          currentTab == 1) { currentTab = 1 }
+                    BottomTab(stringResource(R.string.nav_stopwatch), Icons.Default.AccessTime,     currentTab == 2) { currentTab = 2 }
+                    BottomTab(stringResource(R.string.nav_settings),  Icons.Default.Settings,       currentTab == 3) { currentTab = 3 }
                 }
             }
         }
@@ -453,7 +458,12 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                             timeFormat = timeFormat,
                             onTimeFormatChange = { viewModel.setTimeFormat(it) },
                             lightWhiteness = lightWhiteness,
-                            onLightWhitenessChange = { viewModel.setLightWhiteness(it) }
+                            onLightWhitenessChange = { viewModel.setLightWhiteness(it) },
+                            appLanguage = appLanguage,
+                            onLanguageChange = { code ->
+                                viewModel.setAppLanguage(code)
+                                LocaleManager.setLanguage(context, code, restartActivity = true)
+                            }
                         )
                     }
                 }
@@ -508,7 +518,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
         }
     }
 
-    // First Launch Theme Selection Dialog
+    // First Launch Setup Dialog (Language & Theme Selection)
     if (!isThemeSetupDone) {
         Dialog(
             onDismissRequest = { /* Force explicit user choice */ },
@@ -518,44 +528,145 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                 shape = RoundedCornerShape(20.dp),
                 color = c.surfaceColor,
                 border = BorderStroke(1.dp, c.outlineColor),
-                modifier = Modifier.fillMaxWidth(0.92f).padding(16.dp)
+                modifier = Modifier.fillMaxWidth(0.95f).padding(12.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp),
+                    modifier = Modifier.padding(18.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(56.dp)
+                            .size(52.dp)
                             .clip(CircleShape)
                             .background(BrandBlue.copy(alpha = 0.18f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Default.Build, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(28.dp))
+                        Icon(Icons.Default.Language, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(28.dp))
                     }
-                    Spacer(Modifier.height(14.dp))
-                    Text("Welcome to Cyclic Alarms", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = c.textPrimary, textAlign = TextAlign.Center)
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        stringResource(R.string.welcome_title),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = c.textPrimary,
+                        textAlign = TextAlign.Center
+                    )
                     Spacer(Modifier.height(6.dp))
-                    Text("Select your preferred theme. You can change this anytime in Settings.", fontSize = 13.sp, color = c.textSecondary, textAlign = TextAlign.Center, lineHeight = 18.sp)
-                    Spacer(Modifier.height(20.dp))
+                    Text(
+                        stringResource(R.string.first_run_subtitle),
+                        fontSize = 12.sp,
+                        color = c.textSecondary,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 17.sp
+                    )
+                    Spacer(Modifier.height(16.dp))
+
+                    // Language Selection Section
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Language, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            stringResource(R.string.select_language),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = c.textPrimary
+                        )
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 140.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(c.surfaceVariant)
+                            .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(10.dp))
+                            .padding(4.dp)
+                    ) {
+                        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                            items(LocaleManager.SUPPORTED_LANGUAGES) { lang ->
+                                val isLangSel = selectedLanguageForSetup == lang.code
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(if (isLangSel) BrandBlue.copy(alpha = 0.2f) else Color.Transparent)
+                                        .clickable {
+                                            selectedLanguageForSetup = lang.code
+                                            LocaleManager.setLanguage(context, lang.code, restartActivity = false)
+                                        }
+                                        .padding(horizontal = 10.dp, vertical = 7.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(lang.flagEmoji, fontSize = 16.sp)
+                                        Spacer(Modifier.width(8.dp))
+                                        Column {
+                                            Text(
+                                                lang.nativeName,
+                                                fontSize = 13.sp,
+                                                fontWeight = if (isLangSel) FontWeight.Bold else FontWeight.Medium,
+                                                color = if (isLangSel) BrandBlue else c.textPrimary
+                                            )
+                                            if (lang.code.isNotEmpty()) {
+                                                Text(
+                                                    lang.englishName,
+                                                    fontSize = 10.sp,
+                                                    color = c.textSecondary
+                                                )
+                                            }
+                                        }
+                                    }
+                                    if (isLangSel) {
+                                        Icon(Icons.Default.Check, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(18.dp))
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    // Theme Selection Section
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Build, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            stringResource(R.string.select_theme),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = c.textPrimary
+                        )
+                    }
+                    Spacer(Modifier.height(8.dp))
 
                     // Dark options row
                     Row(
                         modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(c.surfaceVariant).padding(4.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        listOf("Pure Dark" to "🌑", "Dark" to "🌙").forEach { (mode, emoji) ->
+                        listOf(
+                            ("Pure Dark" to "🌑") to stringResource(R.string.theme_pure_dark),
+                            ("Dark" to "🌙") to stringResource(R.string.theme_dark)
+                        ).forEach { (pair, label) ->
+                            val (mode, emoji) = pair
                             val isSel = selectedThemeForSetup == mode
                             Box(
-                                modifier = Modifier.weight(1f).height(42.dp).clip(RoundedCornerShape(8.dp))
+                                modifier = Modifier.weight(1f).height(38.dp).clip(RoundedCornerShape(8.dp))
                                     .background(if (isSel) Color(0xFF1A1A2E) else Color.Transparent)
                                     .border(BorderStroke(if (isSel) 1.5.dp else 0.dp, if (isSel) BrandBlue else Color.Transparent), RoundedCornerShape(8.dp))
                                     .clickable { selectedThemeForSetup = mode; viewModel.setThemeMode(mode) },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    Text(emoji, fontSize = 13.sp)
-                                    Text(mode, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = if (isSel) BrandBlue else c.textSecondary)
+                                    Text(emoji, fontSize = 12.sp)
+                                    Text(label, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = if (isSel) BrandBlue else c.textSecondary)
                                 }
                             }
                         }
@@ -566,30 +677,37 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(c.surfaceVariant).padding(4.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        listOf("System" to "⚙️", "Light" to "☀️").forEach { (mode, emoji) ->
+                        listOf(
+                            ("System" to "⚙️") to stringResource(R.string.theme_system),
+                            ("Light" to "☀️") to stringResource(R.string.theme_light)
+                        ).forEach { (pair, label) ->
+                            val (mode, emoji) = pair
                             val isSel = selectedThemeForSetup == mode
                             Box(
-                                modifier = Modifier.weight(1f).height(42.dp).clip(RoundedCornerShape(8.dp))
+                                modifier = Modifier.weight(1f).height(38.dp).clip(RoundedCornerShape(8.dp))
                                     .background(if (isSel) BrandBlue else Color.Transparent)
                                     .clickable { selectedThemeForSetup = mode; viewModel.setThemeMode(mode) },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    Text(emoji, fontSize = 13.sp)
-                                    Text(mode, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = if (isSel) Color(0xFF003166) else c.textSecondary)
+                                    Text(emoji, fontSize = 12.sp)
+                                    Text(label, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = if (isSel) Color(0xFF003166) else c.textSecondary)
                                 }
                             }
                         }
                     }
 
-                    Spacer(Modifier.height(24.dp))
+                    Spacer(Modifier.height(20.dp))
                     Button(
-                        onClick = { viewModel.completeThemeSetup(selectedThemeForSetup) },
-                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        onClick = {
+                            viewModel.completeFirstRunSetup(selectedThemeForSetup, selectedLanguageForSetup)
+                            LocaleManager.setLanguage(context, selectedLanguageForSetup, restartActivity = true)
+                        },
+                        modifier = Modifier.fillMaxWidth().height(46.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166)),
                         shape = RoundedCornerShape(12.dp)
                     ) {
-                        Text("Save & Continue", fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
+                        Text(stringResource(R.string.save_and_continue), fontSize = 14.sp, fontWeight = FontWeight.ExtraBold)
                     }
                 }
             }
@@ -1235,7 +1353,9 @@ fun SettingsPageView(
     timeFormat: String,
     onTimeFormatChange: (String) -> Unit,
     lightWhiteness: Float = 0f,
-    onLightWhitenessChange: (Float) -> Unit = {}
+    onLightWhitenessChange: (Float) -> Unit = {},
+    appLanguage: String = "",
+    onLanguageChange: (String) -> Unit = {}
 ) {
     val c = LocalAppColors.current
     val context = LocalContext.current
@@ -1337,10 +1457,152 @@ fun SettingsPageView(
                     Spacer(Modifier.width(12.dp))
                     Column {
                         Text("About Cyclic Alarms", fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = c.textPrimary)
-                        Text("Version 1.6 • Release notes, support & creator info", fontSize = 12.sp, color = c.textSecondary)
+                        Text("Version 1.6.3 • Release notes, support & creator info", fontSize = 12.sp, color = c.textSecondary)
                     }
                 }
                 Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
+            }
+
+            // ── APP LANGUAGE CARD (OFFLINE) ──
+            var showLanguagePicker by remember { mutableStateOf(false) }
+            val currentLanguageObj = LocaleManager.SUPPORTED_LANGUAGES.find { it.code == appLanguage }
+                ?: LocaleManager.SUPPORTED_LANGUAGES.first()
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(c.surfaceColor)
+                    .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(14.dp))
+                    .padding(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(BrandBlue.copy(alpha = 0.15f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(Icons.Default.Language, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
+                        }
+                        Spacer(Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                stringResource(R.string.setting_language_title),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = c.textPrimary
+                            )
+                            Text(
+                                stringResource(R.string.setting_language_subtitle),
+                                fontSize = 11.sp,
+                                color = c.textSecondary
+                            )
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                // Currently selected language chip / expander
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(c.surfaceVariant)
+                        .border(BorderStroke(1.dp, if (showLanguagePicker) BrandBlue else c.outlineColor), RoundedCornerShape(10.dp))
+                        .clickable { showLanguagePicker = !showLanguagePicker }
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(currentLanguageObj.flagEmoji, fontSize = 18.sp)
+                        Spacer(Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                currentLanguageObj.nativeName,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = BrandBlue
+                            )
+                            if (currentLanguageObj.code.isNotEmpty()) {
+                                Text(
+                                    currentLanguageObj.englishName,
+                                    fontSize = 11.sp,
+                                    color = c.textSecondary
+                                )
+                            }
+                        }
+                    }
+                    Icon(
+                        if (showLanguagePicker) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = BrandBlue,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+
+                AnimatedVisibility(
+                    visible = showLanguagePicker,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(c.surfaceVariant)
+                            .padding(4.dp)
+                    ) {
+                        LocaleManager.SUPPORTED_LANGUAGES.forEach { lang ->
+                            val isSel = lang.code == appLanguage
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(if (isSel) BrandBlue.copy(alpha = 0.2f) else Color.Transparent)
+                                    .clickable {
+                                        showLanguagePicker = false
+                                        onLanguageChange(lang.code)
+                                    }
+                                    .padding(horizontal = 10.dp, vertical = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(lang.flagEmoji, fontSize = 16.sp)
+                                    Spacer(Modifier.width(10.dp))
+                                    Column {
+                                        Text(
+                                            lang.nativeName,
+                                            fontSize = 13.sp,
+                                            fontWeight = if (isSel) FontWeight.ExtraBold else FontWeight.Normal,
+                                            color = if (isSel) BrandBlue else c.textPrimary
+                                        )
+                                        if (lang.code.isNotEmpty()) {
+                                            Text(
+                                                lang.englishName,
+                                                fontSize = 10.sp,
+                                                color = c.textSecondary
+                                            )
+                                        }
+                                    }
+                                }
+                                if (isSel) {
+                                    Icon(Icons.Default.Check, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(18.dp))
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             // ── APPEARANCE — Theme Mode ──
@@ -2215,7 +2477,7 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.6.2", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.6.3", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
@@ -2282,11 +2544,23 @@ fun AboutPageView() {
             Text("Tap on any release version to expand or collapse notes", fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.6.2 — Expanded by default (current release)
+            // v1.6.3 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = "v1.6.2 (Current Release)",
+                version = "v1.6.3 (Current Release)",
                 badgeText = "Latest",
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "🌐" to "Major Multilingual Support — fully offline language localization (System Default, English, Turkish, Spanish, German, French, Hindi, Portuguese, Russian, Chinese, Japanese, Arabic)",
+                    "🚀" to "First-Run Language Setup — choose preferred language and theme on initial app launch without requiring internet",
+                    "⚙️" to "In-App Language Settings — easily switch display language anytime from the Settings page"
+                )
+            )
+
+            // v1.6.2 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = "v1.6.2 Release Notes",
+                badgeText = "v1.6.2",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "🛡" to "Android 9 Compatibility Fix — eliminated cold-launch abrupt quits on Android 9 and older versions",
                     "⏱" to "Timer & Stopwatch API Guard — guarded API 31 foreground service notifications to ensure flawless background tracking on all Android versions",
