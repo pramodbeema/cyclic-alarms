@@ -28,7 +28,7 @@ Builds:
 
   - versionName: 1.6.4
     versionCode: 20261013
-    commit: 618da66f93e69acdeeb699d91dad26826433d85f
+    commit: d33be00af46c727981f17957df579b442d4df4b8
     subdir: app
     gradle:
       - yes
