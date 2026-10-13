@@ -9,7 +9,7 @@
 
     <!-- First Run Setup -->
     <string name="welcome_title">Добро пожаловать в Cyclic Alarms</string>
-    <string name="first_run_subtitle">Выберите язык и тему для начала. Вы сможете изменить их в любое время в Настройках.</string>
+    <string name="first_run_subtitle">Выберите язык и тему для начала работы. Вы сможете изменить их в любое время в Настройках.</string>
     <string name="select_language">Язык</string>
     <string name="select_theme">Тема</string>
     <string name="save_and_continue">Сохранить и продолжить</string>
@@ -17,17 +17,22 @@
     <!-- Settings Page -->
     <string name="settings_title">НАСТРОЙКИ</string>
     <string name="setting_language_title">Язык приложения</string>
-    <string name="setting_language_subtitle">Изменение языка полностью офлайн</string>
+    <string name="setting_language_subtitle">Изменяйте язык приложения полностью офлайн</string>
     <string name="setting_theme_title">Тема</string>
-    <string name="setting_clock_format_title">Формат отображения времени</string>
-    <string name="setting_clock_format_subtitle">Формат часов на главном экране</string>
+    <string name="setting_clock_format_title">Формат отображения часов</string>
+    <string name="setting_clock_format_subtitle">Выберите формат отображения времени на главном экране</string>
     <string name="setting_permissions_title">Разрешения и доступ к системе</string>
-    <string name="setting_permissions_subtitle">Управление системным доступом для гарантированного срабатывания будильника</string>
+    <string name="setting_permissions_subtitle">Управление доступом для надежного срабатывания будильника и экрана блокировки</string>
+    <string name="about_cyclic_alarms">О приложении Cyclic Alarms</string>
+    <string name="about_cyclic_alarms_subtitle">Версия 1.6.4 • Примечания к выпуску, поддержка и автор</string>
+    <string name="tinted">С оттенком</string>
+    <string name="pure_white">Чистый белый</string>
 
-    <string name="theme_pure_dark">Глубокий черный</string>
-    <string name="theme_dark">Темная</string>
-    <string name="theme_system">Системная</string>
-    <string name="theme_light">Светлая</string>
+    <!-- Theme options -->
+    <string name="theme_pure_dark">Глубокий темный</string>
+    <string name="theme_dark">Темный</string>
+    <string name="theme_system">Системный</string>
+    <string name="theme_light">Светлый</string>
     <string name="background_brightness">Яркость фона</string>
 
     <string name="time_format_12h">12-часовой (AM/PM)</string>
@@ -35,30 +40,214 @@
 
     <!-- Permissions -->
     <string name="perm_notifications">Уведомления</string>
-    <string name="perm_notifications_sub">Необходимо для звука будильника и баннеров</string>
+    <string name="perm_notifications_sub">Требуется для громких сигналов будильника и баннеров</string>
     <string name="perm_exact_alarm">Точное расписание будильников</string>
-    <string name="perm_exact_alarm_sub">Позволяет будильнику звучать секунда в секунду</string>
+    <string name="perm_exact_alarm_sub">Позволяет сигналу срабатывать в заданную секунду</string>
     <string name="perm_fullscreen">Полноэкранные оповещения</string>
-    <string name="perm_fullscreen_sub">Отображает экран будильника поверх экрана блокировки</string>
-    <string name="perm_overlay">Поверх других приложений</string>
-    <string name="perm_overlay_sub">Разрешает всплывающее окно будильника поверх других приложений</string>
+    <string name="perm_fullscreen_sub">Отображает экран звонка поверх экрана блокировки</string>
+    <string name="perm_overlay">Отображение поверх других приложений</string>
+    <string name="perm_overlay_sub">Необходимо для всплывающего окна на экране блокировки</string>
+    <string name="badge_granted">✓ Предоставлено</string>
+    <string name="badge_disabled">⚠ Отключено</string>
+    <string name="btn_fix">Исправить</string>
+    <string name="btn_fix_now">Исправить сейчас</string>
+    <string name="btn_manage">Управление</string>
+    <string name="btn_grant">Разрешить</string>
 
     <!-- Permission Gate Screen -->
     <string name="perm_gate_title">Требуются разрешения</string>
-    <string name="perm_gate_desc">Cyclic Alarms необходимы эти разрешения для надежной работы будильника. Пожалуйста, предоставьте их все.</string>
+    <string name="perm_gate_desc">Cyclic Alarms необходимы эти разрешения для надежного срабатывания будильников. Пожалуйста, предоставьте их все для продолжения.</string>
 
     <!-- Common Actions & Alerts -->
     <string name="next_alarm_prefix">Следующий:</string>
     <string name="no_active_alarms">Нет активных будильников</string>
     <string name="calculating">Вычисление…</string>
     <string name="no_alarms_yet">Будильников пока нет</string>
-    <string name="no_alarms_hint">Нажмите +, чтобы создать циклический или еженедельный будильник.</string>
-    <string name="silent_banner_text">⚡ Будильники звонят даже в беззвучном режиме и «Не беспокоить». Примечание: если телефон выключен, будильник не сработает.</string>
+    <string name="no_alarms_hint">Нажмите +, чтобы создать первый циклический или еженедельный будильник.</string>
+    <string name="notif_off_warning">⚠ Уведомления выключены — будильники не сработают</string>
+    <string name="silent_banner_text">⚡ Будильники звонят даже в режиме «Без звука» и «Не беспокоить». Примечание: если телефон выключен, будильник не сработает.</string>
     <string name="delete">Удалить</string>
+    <string name="edit">Изменить</string>
     <string name="cancel">Отмена</string>
     <string name="save">Сохранить</string>
+    <string name="clear">Очистить</string>
+    <string name="ok">ОК</string>
+    <string name="close">Закрыть</string>
     <string name="select_all">Все</string>
-    <string name="select_none">Снять</string>
+    <string name="select_none">Снять выбор</string>
     <string name="selected_count">Выбрано: %d</string>
-    <string name="back_to_settings">Назад в настройки</string>
+    <string name="back_to_settings">Назад в Настройки</string>
+
+    <!-- Timer tab -->
+    <string name="timers_header">ТАЙМЕРЫ (%d/5)</string>
+    <string name="add_timer">Добавить таймер</string>
+    <string name="timer_default_name">Таймер %d</string>
+    <string name="unit_hh">Ч</string>
+    <string name="unit_mm">М</string>
+    <string name="unit_ss">С</string>
+    <string name="times_up">Время вышло!</string>
+    <string name="reset">Сброс</string>
+    <string name="start">Старт</string>
+    <string name="pause">Пауза</string>
+
+    <!-- Stopwatch tab -->
+    <string name="stopwatch_title">СЕКУНДОМЕР</string>
+    <string name="lap">Круг</string>
+    <string name="stop">Стоп</string>
+    <string name="lap_prefix">Круг %d:</string>
+    <string name="table_lap">КРУГ</string>
+    <string name="table_lap_time">ВРЕМЯ КРУГА</string>
+    <string name="table_overall">ОБЩЕЕ ВРЕМЯ</string>
+
+    <!-- Add/Edit Alarm Dialog -->
+    <string name="dialog_new_alarm">Новый будильник</string>
+    <string name="dialog_edit_alarm">Редактировать будильник</string>
+    <string name="alarm_time_section">Время сигнала</string>
+    <string name="alarm_label_optional">Название (необязательно)</string>
+    <string name="alarm_label_placeholder">напр., Рабочая смена</string>
+    <string name="tab_cyclic_days">Циклические дни</string>
+    <string name="tab_weekly_days">Дни недели</string>
+    <string name="cyclic_config_section">Настройка цикла</string>
+    <string name="repeat_on_days_section">Повторять по дням</string>
+    <string name="every_word">Каждые</string>
+    <string name="days_word">дн.</string>
+    <string name="start_date">Дата начала</string>
+    <string name="snooze_duration_section">Длительность повтора</string>
+    <string name="snooze_duration_hint">Выберите или введите длительность повтора в минутах</string>
+    <string name="custom_colon">Своё:</string>
+    <string name="minutes_word">минут</string>
+    <string name="alarm_sound_section">Мелодия будильника</string>
+    <string name="custom_track">Свой трек</string>
+    <string name="custom_track_sub">Пользовательский аудиофайл</string>
+    <string name="pick_from_device">Выбрать с устройства</string>
+    <string name="change_track">Сменить трек</string>
+    <string name="volume_vibration_section">Громкость и вибрация</string>
+    <string name="vibrate">Вибрация</string>
+    <string name="save_alarm">Сохранить будильник</string>
+
+    <!-- Weekday abbreviations -->
+    <string name="day_mo">Пн</string>
+    <string name="day_tu">Вт</string>
+    <string name="day_we">Ср</string>
+    <string name="day_th">Чт</string>
+    <string name="day_fr">Пт</string>
+    <string name="day_sa">Сб</string>
+    <string name="day_su">Вс</string>
+
+    <string name="sched_one_off">ОДНОКРАТНО</string>
+    <string name="sched_daily">ЕЖЕДНЕВНО</string>
+    <string name="sched_mon_fri">ПН – ПТ</string>
+    <string name="sched_weekends">ВЫХОДНЫЕ</string>
+    <string name="sched_cyclic_prefix">ЦИКЛ · КАЖДЫЕ %d ДН.</string>
+
+    <!-- Alarm History -->
+    <string name="alarm_history_title">История будильников</string>
+    <string name="no_history_title">История пуста</string>
+    <string name="no_history_desc">Здесь будут отображаться выключенные и отложенные сигналы.</string>
+
+    <!-- About Subpage -->
+    <string name="about_release_notes_header">О ПРИЛОЖЕНИИ И ВЫПУСКАХ</string>
+    <string name="hero_tagline">Умный будильник для посменной работы, дежурств и циклических графиков</string>
+    <string name="support_community_header">ПОДДЕРЖКА И СООБЩЕСТВО</string>
+    <string name="support_email_title">Отзывы, предложения или сообщения об ошибках</string>
+    <string name="release_history_title">История выпусков и примечания</string>
+    <string name="release_history_subtitle">Нажмите на версию, чтобы развернуть или свернуть примечания</string>
+    <string name="badge_latest">Новейшая</string>
+    <string name="badge_current">Текущая версия</string>
+    <string name="creator_ack_header">СОЗДАТЕЛЬ И БЛАГОДАРНОСТИ</string>
+    <string name="creator_ack_body1">Создано для сменных работников, дежурного персонала и всех, кому нужны периодические будильники за пределами стандартной недели.</string>
+    <string name="creator_ack_body2" formatted="false">Разработано на 100% с помощью ИИ. Без слежки. Без рекламы. 100% бесплатно.</string>
+
+    <!-- Ringing Screen -->
+    <string name="alarm_ringing_title">БУДИЛЬНИК ЗВОНИТ</string>
+    <string name="ringing_default_label">Циклический будильник</string>
+    <string name="ringing_snooze_duration">Длительность повтора</string>
+    <string name="ringing_btn_snooze">Отложить</string>
+    <string name="ringing_btn_dismiss">Выключить</string>
+
+    <!-- Release Notes Titles -->
+    <string name="rel_v1_6_4_title">v1.6.4 (Текущая версия)</string>
+    <string name="rel_v1_6_3_title">Примечания к версии v1.6.3</string>
+    <string name="rel_v1_6_2_title">Примечания к версии v1.6.2</string>
+    <string name="rel_v1_6_1_title">Примечания к версии v1.6.1</string>
+    <string name="rel_v1_6_title">Примечания к версии v1.6</string>
+    <string name="rel_v1_5_title">Примечания к версии v1.5</string>
+    <string name="rel_v1_4_title">Примечания к версии v1.4</string>
+    <string name="rel_v1_3_title">Примечания к версии v1.3</string>
+    <string name="rel_v1_2_title">Примечания к версии v1.2</string>
+    <string name="rel_v1_1_title">Примечания к версии v1.1</string>
+    <string name="rel_v1_0_title">Первый выпуск v1.0</string>
+
+    <!-- Release Notes Items v1.6.4 -->
+    <string name="rel_v1_6_4_item1">Полная офлайн-локализация — полный перевод всех экранов, вкладок, диалогов, таймеров, секундомера, настроек, примечаний к выпуску и экрана звонка на 11 языков</string>
+    <string name="rel_v1_6_4_item2">Приоритетный выбор языка при запуске — диалог выбора языка отображается сразу перед запросом системных разрешений</string>
+    <string name="rel_v1_6_4_item3">Универсальные стандартные цифры — числа строго сохраняются в формате 1, 2, 3 во всех языках для удобства чтения</string>
+
+    <!-- Release Notes Items v1.6.3 -->
+    <string name="rel_v1_6_3_item1">Основа многоязычной поддержки — селектор языка в приложении и 11 офлайн-языковых пакетов</string>
+    <string name="rel_v1_6_3_item2">Диалог первоначальной настройки — выбор предпочтительного языка и темы сразу после установки</string>
+    <string name="rel_v1_6_3_item3">Настройки языка в приложении — удобное переключение языка в любое время в «Настройках»</string>
+
+    <!-- Release Notes Items v1.6.2 -->
+    <string name="rel_v1_6_2_item1">Совместимость с Android 9 — устранены внезапные сбои на Android 9 и более старых версиях</string>
+    <string name="rel_v1_6_2_item2">Защита фоновых служб таймера и секундомера — уведомления переднего плана для непрерывной работы</string>
+    <string name="rel_v1_6_2_item3">Мгновенная остановка звука таймера — нажатие «Очистить» или «Сброс» сразу отключает сигнал</string>
+    <string name="rel_v1_6_2_item4">Умная навигация по уведомлениям — заголовок уведомления показывает статус и открывает нужную вкладку</string>
+    <string name="rel_v1_6_2_item5">Чистый жизненный цикл будильника — мгновенное выключение и возврат на экран блокировки</string>
+
+    <!-- Release Notes Items v1.6.1 -->
+    <string name="rel_v1_6_1_item1">Соответствие стандартам F-Droid — открытый исходный код, лицензия Apache-2.0, без сетевых проверок</string>
+    <string name="rel_v1_6_1_item2">Упрощенное управление разрешениями — понятный интерфейс запроса системных разрешений</string>
+
+    <!-- Release Notes Items v1.6 -->
+    <string name="rel_v1_6_item1">Закрепленное фоновое уведомление — уведомление нельзя смахнуть во время работы, добавлена кнопка «Остановить всё»</string>
+    <string name="rel_v1_6_item2">Контрастность времени в светлой теме — глубокие, контрастные цвета для отличной читаемости</string>
+    <string name="rel_v1_6_item3">Оптимизированный фон светлой темы — сбалансированный серо-голубой оттенок для настройки яркости</string>
+
+    <!-- Release Notes Items v1.5 -->
+    <string name="rel_v1_5_item1">Сохранение своего трека — последний выбранный файл автоматически применяется к новым будильникам</string>
+    <string name="rel_v1_5_item2">Несколько таймеров — одновременный запуск до 5 независимых таймеров</string>
+    <string name="rel_v1_5_item3">Режим Pure Dark — настоящий черный AMOLED для экономии батареи на OLED-экранах</string>
+    <string name="rel_v1_5_item4">Регулятор яркости светлой темы — настройка фона от серого до чисто белого</string>
+    <string name="rel_v1_5_item5">Фоновый таймер и секундомер — продолжают работать в фоне через Foreground Service</string>
+    <string name="rel_v1_5_item6">Звонок в беззвучном режиме и «Не беспокоить» — будильник обходит системную громкость звонка</string>
+
+    <!-- Release Notes Items v1.4 -->
+    <string name="rel_v1_4_item1">Официальное переименование пакета — пакет обновлен до com.beemasfincon.cyclicalarms</string>
+    <string name="rel_v1_4_item2">Повышение надежности — улучшено планирование будильников и управление жизненным циклом службы</string>
+
+    <!-- Release Notes Items v1.3 -->
+    <string name="rel_v1_3_item1">Таймер — обратный отсчет с кольцом прогресса, пресетами (1–30 мин) и звуко-вибросигналом</string>
+    <string name="rel_v1_3_item2">Секундомер — отсчет с кругами, выделением лучшего/худшего кругов и звуковыми тонами нажатий</string>
+    <string name="rel_v1_3_item3">Строгая приватность экрана блокировки — показ поверх блокировки только во время звонка</string>
+    <string name="rel_v1_3_item4">Навигация по 4 вкладкам — Будильники, Таймер, Секундомер и Настройки со страницей «О приложении»</string>
+    <string name="rel_v1_3_item5">Циклические будильники по умолчанию — новые будильники открывают вкладку «Циклические дни»</string>
+    <string name="rel_v1_3_item6">Идеальная форма значка — иконка приложения больше не обрезается лаунчером</string>
+
+    <!-- Release Notes Items v1.2 -->
+    <string name="rel_v1_2_item1">Спиральная иконка приложения — аккуратный будильник в стиле карандашного наброска</string>
+    <string name="rel_v1_2_item2">Индивидуальный повтор — настройка длительности повтора для каждого будильника отдельно</string>
+    <string name="rel_v1_2_item3">Нативный звонок на экране блокировки — звонит поверх блокировки без запроса PIN-кода</string>
+    <string name="rel_v1_2_item4">Удобная навигация — чистый интерфейс с 4 вкладками</string>
+    <string name="rel_v1_2_item5">Переключатель 12/24 ч — выбор желаемого формата времени с обозначением AM/PM</string>
+    <string name="rel_v1_2_item6">Отображение года в дате — главный экран показывает полный год (напр. Сб, 5 сен 2026)</string>
+    <string name="rel_v1_2_item7">Выбор темы при первом запуске — идеальная видимость значков панели состояния</string>
+    <string name="rel_v1_2_item8">Встроенный менеджер разрешений — просмотр и настройка уведомлений, точных будильников и оверлеев</string>
+    <string name="rel_v1_2_item9">Карточка поддержки и сообщества — прямой канал для отзывов и отчетов об ошибках</string>
+
+    <!-- Release Notes Items v1.1 -->
+    <string name="rel_v1_1_item1">Выбор темы Темная / Светлая / Системная в «Настройках»</string>
+    <string name="rel_v1_1_item2">Редактор будильника теперь по умолчанию берет текущее время</string>
+    <string name="rel_v1_1_item3">Селектор минут всегда виден</string>
+    <string name="rel_v1_1_item4">Новый высокий звук будильника — звонкий двухтональный сигнал</string>
+    <string name="rel_v1_1_item5">Громкость по умолчанию на максимум для новых будильников</string>
+    <string name="rel_v1_1_item6">Фирменная подпись Beema\'s FINCON на главном экране</string>
+
+    <!-- Release Notes Items v1.0 -->
+    <string name="rel_v1_0_item1">Циклические будильники — повтор каждые N дней от начальной даты</string>
+    <string name="rel_v1_0_item2">Еженедельные будильники — выбор любой комбинации дней недели</string>
+    <string name="rel_v1_0_item3">7 встроенных полифонических звуков + поддержка пользовательских аудиофайлов</string>
+    <string name="rel_v1_0_item4">Настраиваемый повтор и переключатель вибрации</string>
+    <string name="rel_v1_0_item5">Журнал истории срабатываний будильников с возможностью очистки</string>
 </resources>
+

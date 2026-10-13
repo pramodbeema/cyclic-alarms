@@ -97,6 +97,7 @@ import java.util.*
 @Composable
 fun AlarmDashboard(viewModel: AlarmViewModel) {
     val context = LocalContext.current
+    val c = LocalAppColors.current
     val alarms by viewModel.alarms.collectAsStateWithLifecycle()
     val logs   by viewModel.logs.collectAsStateWithLifecycle()
     val activeAlarm by com.example.service.RingingState.activeAlarm.collectAsState()
@@ -207,318 +208,8 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
 
     if (activeAlarm != null) { RingingScreen(activeAlarm = activeAlarm!!); return }
 
-    val c = LocalAppColors.current
-
-    // ── PERMISSION GATE — block app until critical permissions are granted ──
-    val criticalMissing = !hasExactAlarm || !hasFullScreen || !hasOverlay
-    if (criticalMissing) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(c.appBackground)
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                Icons.Default.Lock,
-                contentDescription = null,
-                tint = WarningAmber,
-                modifier = Modifier.size(64.dp)
-            )
-            Spacer(Modifier.height(20.dp))
-            Text(
-                "Permissions Required",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = c.textPrimary
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                "Cyclic Alarms needs these system permissions to ring alarms reliably. Please grant them all to continue.",
-                fontSize = 14.sp,
-                color = c.textSecondary,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(28.dp))
-
-            if (!hasExactAlarm) {
-                PermissionGateItem(
-                    icon = Icons.Default.Alarm,
-                    title = "Exact Alarm Scheduling",
-                    description = "Allows alarms to fire at the exact time you set",
-                    onOpenSettings = {
-                        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                            Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:${context.packageName}"))
-                        else Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
-                        context.startActivity(intent)
-                    }
-                )
-                Spacer(Modifier.height(12.dp))
-            }
-            if (!hasFullScreen) {
-                PermissionGateItem(
-                    icon = Icons.Default.Fullscreen,
-                    title = "Full-Screen Alarm Alerts",
-                    description = "Shows the ringing screen over your lock screen",
-                    onOpenSettings = {
-                        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-                            Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, Uri.parse("package:${context.packageName}"))
-                        else Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
-                        context.startActivity(intent)
-                    }
-                )
-                Spacer(Modifier.height(12.dp))
-            }
-            if (!hasOverlay) {
-                PermissionGateItem(
-                    icon = Icons.Default.Layers,
-                    title = "Display Over Other Apps",
-                    description = "Needed for the lock screen alarm popup",
-                    onOpenSettings = {
-                        context.startActivity(
-                            Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
-                        )
-                    }
-                )
-            }
-        }
-        return
-    }
-
-    Scaffold(
-        containerColor = c.appBackground,
-        floatingActionButton = {
-            if (currentTab == 0) {
-                if (selectionMode) {
-                    FloatingActionButton(
-                        onClick = { selectedIds.forEach { id -> alarms.find { it.id == id }?.let { viewModel.deleteAlarm(it) } }; selectedIds = emptySet() },
-                        containerColor = DeleteRed, contentColor = Color.White, shape = RoundedCornerShape(16.dp)
-                    ) { Icon(Icons.Default.Delete, contentDescription = "Delete selected", modifier = Modifier.size(26.dp)) }
-                } else {
-                    FloatingActionButton(
-                        onClick = { editTarget = null; showAddEdit = true },
-                        containerColor = BrandBlue, contentColor = Color(0xFF003166), shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier.testTag("add_alarm_fab")
-                    ) { Icon(Icons.Default.Add, contentDescription = "Add alarm", modifier = Modifier.size(28.dp)) }
-                }
-            }
-        },
-        bottomBar = {
-            Column(modifier = Modifier.fillMaxWidth().background(c.surfaceColor)) {
-                HorizontalDivider(color = c.outlineColor)
-                Row(modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 8.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
-                    BottomTab(stringResource(R.string.nav_alarms),    Icons.Default.Notifications,  currentTab == 0) { currentTab = 0 }
-                    BottomTab(stringResource(R.string.nav_timer),     Icons.Default.Timer,          currentTab == 1) { currentTab = 1 }
-                    BottomTab(stringResource(R.string.nav_stopwatch), Icons.Default.AccessTime,     currentTab == 2) { currentTab = 2 }
-                    BottomTab(stringResource(R.string.nav_settings),  Icons.Default.Settings,       currentTab == 3) { currentTab = 3 }
-                }
-            }
-        }
-    ) { padding ->
-        Column(modifier = Modifier.fillMaxSize().background(c.appBackground).padding(padding).padding(horizontal = 16.dp)) {
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Header
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Column {
-                    Text(
-                        text = "Beema's FINCON",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = BrandBlue
-                    )
-                    Text(clock, fontSize = 24.sp, fontWeight = FontWeight.Black, color = c.textPrimary, fontFamily = FontFamily.Monospace)
-                    Text(date,  fontSize = 13.sp, color = c.textSecondary, fontWeight = FontWeight.Medium)
-                }
-                // History icon button (top-right, only visible on Alarms tab)
-                if (currentTab == 0) {
-                    IconButton(onClick = { showHistory = true }) {
-                        Icon(
-                            Icons.Default.History,
-                            contentDescription = "Alarm History",
-                            tint = c.textSecondary,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Next alarm pill
-            if (currentTab == 0) {
-                Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(
-                    if (c.isDark) Brush.horizontalGradient(listOf(Color(0xFF1C2D4A), Color(0xFF1E1A2E)))
-                    else Brush.horizontalGradient(listOf(Color(0xFFD6E4FF), Color(0xFFEBDEFF)))
-                ).padding(horizontal = 12.dp, vertical = 7.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(14.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(nextAlarmText, fontSize = 12.sp, color = if (c.isDark) BrandCyan else BrandBlue, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    }
-                }
-            }
-
-            // Notification banner
-            if (!hasNotifPerm && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color(0xFF2D1810)).border(BorderStroke(1.dp, WarningAmber.copy(alpha = 0.4f)), RoundedCornerShape(10.dp)).padding(horizontal = 12.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text("⚠  Notifications off — alarms won't ring", color = WarningAmber, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                    TextButton(onClick = { notifLauncher.launch(Manifest.permission.POST_NOTIFICATIONS) }) { Text("Fix", color = WarningAmber, fontWeight = FontWeight.ExtraBold) }
-                }
-            }
-
-            // Silent mode info banner (one-time, only on Alarms tab)
-            if (!silentBannerDismissed && currentTab == 0) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(SuccessGreen.copy(alpha = 0.1f))
-                        .border(BorderStroke(1.dp, SuccessGreen.copy(alpha = 0.35f)), RoundedCornerShape(10.dp))
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.Top, modifier = Modifier.weight(1f)) {
-                        Icon(Icons.Default.VolumeOff, contentDescription = null, tint = SuccessGreen, modifier = Modifier.size(14.dp).padding(top = 1.dp))
-                        Spacer(Modifier.width(6.dp))
-                        Text(
-                            text = "⚡ Alarms ring even in Silent & DND mode. Note: if phone is switched off, alarms cannot ring.",
-                            color = SuccessGreen, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, lineHeight = 16.sp
-                        )
-                    }
-                    IconButton(onClick = { viewModel.dismissSilentBanner() }, modifier = Modifier.size(28.dp)) {
-                        Icon(Icons.Default.Close, contentDescription = "Dismiss", tint = SuccessGreen, modifier = Modifier.size(14.dp))
-                    }
-                }
-            }
-
-            // Selection bar
-            AnimatedVisibility(visible = selectionMode && currentTab == 0, enter = fadeIn() + expandVertically(), exit = fadeOut() + shrinkVertically()) {
-                Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp).clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).padding(horizontal = 12.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        IconButton(onClick = { selectedIds = emptySet() }, modifier = Modifier.size(28.dp)) {
-                            Icon(Icons.Default.Close, contentDescription = "Cancel", tint = c.textSecondary, modifier = Modifier.size(16.dp))
-                        }
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("${selectedIds.size} selected", color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    }
-                    val allSel = alarms.isNotEmpty() && selectedIds.containsAll(alarms.map { it.id })
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        TextButton(onClick = { selectedIds = if (allSel) emptySet() else alarms.map { it.id }.toSet() }) {
-                            Text(if (allSel) "None" else "All", color = BrandBlue, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                        }
-                        Button(onClick = { selectedIds.forEach { id -> alarms.find { it.id == id }?.let { viewModel.deleteAlarm(it) } }; selectedIds = emptySet() },
-                            colors = ButtonDefaults.buttonColors(containerColor = DeleteRed),
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp), shape = RoundedCornerShape(8.dp)) {
-                            Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(14.dp))
-                            Spacer(Modifier.width(4.dp))
-                            Text("Delete", fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Tab content
-            AnimatedContent(targetState = currentTab, transitionSpec = { fadeIn() togetherWith fadeOut() }, label = "tabs") { tab ->
-                when (tab) {
-                    0 -> {
-                        if (alarms.isEmpty()) {
-                            EmptyStateView(Icons.Default.Notifications, "No Alarms Yet", "Tap + to create your first cyclic or weekly alarm.")
-                        } else {
-                            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxSize().padding(bottom = 80.dp)) {
-                                items(alarms, key = { it.id }) { alarm ->
-                                    val isSel = selectedIds.contains(alarm.id)
-                                    AlarmCard(
-                                        alarm = alarm, isSelected = isSel, isSelectionMode = selectionMode,
-                                        onToggle = { if (!selectionMode) viewModel.toggleAlarm(alarm) },
-                                        onEdit = { editTarget = alarm; showAddEdit = true },
-                                        onDelete = { viewModel.deleteAlarm(alarm) },
-                                        onPlayPreview = { viewModel.previewSound(alarm.soundPreset, alarm.volume) },
-                                        onLongPress = { selectedIds = selectedIds + alarm.id },
-                                        onSelectToggle = { selectedIds = if (isSel) selectedIds - alarm.id else selectedIds + alarm.id }
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    1 -> { TimerScreen() }
-                    2 -> { StopwatchScreen() }
-                    3 -> {
-                        SettingsPageView(
-                            themeMode = themeMode,
-                            onThemeModeChange = { viewModel.setThemeMode(it) },
-                            timeFormat = timeFormat,
-                            onTimeFormatChange = { viewModel.setTimeFormat(it) },
-                            lightWhiteness = lightWhiteness,
-                            onLightWhitenessChange = { viewModel.setLightWhiteness(it) },
-                            appLanguage = appLanguage,
-                            onLanguageChange = { code ->
-                                viewModel.setAppLanguage(code)
-                                LocaleManager.setLanguage(context, code, restartActivity = true)
-                            }
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    if (showAddEdit) {
-        AlarmAddEditDialog(
-            alarm = editTarget,
-            lastCustomTrackUri = if (editTarget == null) lastCustomTrackUri else "",
-            onDismiss = { viewModel.stopPreview(); showAddEdit = false },
-            onSave = { a -> viewModel.stopPreview(); if (editTarget == null) viewModel.addAlarm(a) else viewModel.updateAlarm(a); showAddEdit = false },
-            onPlayPreview = { s, v -> viewModel.previewSound(s, v) },
-            onStopPreview = { viewModel.stopPreview() },
-            onTrackPicked = { uri -> viewModel.setLastCustomTrackUri(uri) }
-        )
-    }
-
-    // History bottom sheet
-    if (showHistory) {
-        val c2 = LocalAppColors.current
-        Dialog(onDismissRequest = { showHistory = false }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
-            Surface(
-                modifier = Modifier.fillMaxWidth(0.96f).fillMaxHeight(0.82f),
-                shape = RoundedCornerShape(20.dp), color = c2.surfaceColor, border = BorderStroke(1.dp, c2.outlineColor)
-            ) {
-                Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text("Alarm History", color = c2.textPrimary, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            if (logs.isNotEmpty()) {
-                                TextButton(onClick = { viewModel.clearLogs() }) {
-                                    Icon(Icons.Default.Delete, contentDescription = null, tint = DeleteRed, modifier = Modifier.size(16.dp))
-                                    Spacer(Modifier.width(4.dp))
-                                    Text("Clear", color = DeleteRed, fontWeight = FontWeight.Bold)
-                                }
-                            }
-                            IconButton(onClick = { showHistory = false }) { Icon(Icons.Default.Close, contentDescription = "Close", tint = c2.textSecondary) }
-                        }
-                    }
-                    HorizontalDivider(color = c2.outlineColor, modifier = Modifier.padding(vertical = 8.dp))
-                    if (logs.isEmpty()) {
-                        EmptyStateView(Icons.AutoMirrored.Filled.List, "No History", "Dismissed and snoozed alarms will appear here.")
-                    } else {
-                        LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxSize()) {
-                            items(logs, key = { it.id }) { LogItem(it) }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // First Launch Setup Dialog (Language & Theme Selection)
+    // ── FIRST LAUNCH SETUP DIALOG (Language & Theme Selection) ──
+    // Displayed immediately on fresh install before any permission blocks
     if (!isThemeSetupDone) {
         Dialog(
             onDismissRequest = { /* Force explicit user choice */ },
@@ -713,6 +404,332 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             }
         }
     }
+
+    // ── PERMISSION GATE — block app until critical permissions are granted ──
+    val criticalMissing = !hasExactAlarm || !hasFullScreen || !hasOverlay
+    if (criticalMissing) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(c.appBackground)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                Icons.Default.Lock,
+                contentDescription = null,
+                tint = WarningAmber,
+                modifier = Modifier.size(64.dp)
+            )
+            Spacer(Modifier.height(20.dp))
+            Text(
+                stringResource(R.string.perm_gate_title),
+                fontSize = 22.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = c.textPrimary
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                stringResource(R.string.perm_gate_desc),
+                fontSize = 14.sp,
+                color = c.textSecondary,
+                textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(28.dp))
+
+            if (!hasExactAlarm) {
+                PermissionGateItem(
+                    icon = Icons.Default.Alarm,
+                    title = stringResource(R.string.perm_exact_alarm),
+                    description = stringResource(R.string.perm_exact_alarm_sub),
+                    onOpenSettings = {
+                        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                            Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:${context.packageName}"))
+                        else Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
+                        context.startActivity(intent)
+                    }
+                )
+                Spacer(Modifier.height(12.dp))
+            }
+            if (!hasFullScreen) {
+                PermissionGateItem(
+                    icon = Icons.Default.Fullscreen,
+                    title = stringResource(R.string.perm_fullscreen),
+                    description = stringResource(R.string.perm_fullscreen_sub),
+                    onOpenSettings = {
+                        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                            Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, Uri.parse("package:${context.packageName}"))
+                        else Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
+                        context.startActivity(intent)
+                    }
+                )
+                Spacer(Modifier.height(12.dp))
+            }
+            if (!hasOverlay) {
+                PermissionGateItem(
+                    icon = Icons.Default.Layers,
+                    title = stringResource(R.string.perm_overlay),
+                    description = stringResource(R.string.perm_overlay_sub),
+                    onOpenSettings = {
+                        context.startActivity(
+                            Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
+                        )
+                    }
+                )
+            }
+        }
+        return
+    }
+
+    Scaffold(
+        containerColor = c.appBackground,
+        floatingActionButton = {
+            if (currentTab == 0) {
+                if (selectionMode) {
+                    FloatingActionButton(
+                        onClick = { selectedIds.forEach { id -> alarms.find { it.id == id }?.let { viewModel.deleteAlarm(it) } }; selectedIds = emptySet() },
+                        containerColor = DeleteRed, contentColor = Color.White, shape = RoundedCornerShape(16.dp)
+                    ) { Icon(Icons.Default.Delete, contentDescription = "Delete selected", modifier = Modifier.size(26.dp)) }
+                } else {
+                    FloatingActionButton(
+                        onClick = { editTarget = null; showAddEdit = true },
+                        containerColor = BrandBlue, contentColor = Color(0xFF003166), shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier.testTag("add_alarm_fab")
+                    ) { Icon(Icons.Default.Add, contentDescription = "Add alarm", modifier = Modifier.size(28.dp)) }
+                }
+            }
+        },
+        bottomBar = {
+            Column(modifier = Modifier.fillMaxWidth().background(c.surfaceColor)) {
+                HorizontalDivider(color = c.outlineColor)
+                Row(modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 8.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
+                    BottomTab(stringResource(R.string.nav_alarms),    Icons.Default.Notifications,  currentTab == 0) { currentTab = 0 }
+                    BottomTab(stringResource(R.string.nav_timer),     Icons.Default.Timer,          currentTab == 1) { currentTab = 1 }
+                    BottomTab(stringResource(R.string.nav_stopwatch), Icons.Default.AccessTime,     currentTab == 2) { currentTab = 2 }
+                    BottomTab(stringResource(R.string.nav_settings),  Icons.Default.Settings,       currentTab == 3) { currentTab = 3 }
+                }
+            }
+        }
+    ) { padding ->
+        Column(modifier = Modifier.fillMaxSize().background(c.appBackground).padding(padding).padding(horizontal = 16.dp)) {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Header
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Column {
+                    Text(
+                        text = "Beema's FINCON",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = BrandBlue
+                    )
+                    Text(clock, fontSize = 24.sp, fontWeight = FontWeight.Black, color = c.textPrimary, fontFamily = FontFamily.Monospace)
+                    Text(date,  fontSize = 13.sp, color = c.textSecondary, fontWeight = FontWeight.Medium)
+                }
+                // History icon button (top-right, only visible on Alarms tab)
+                if (currentTab == 0) {
+                    IconButton(onClick = { showHistory = true }) {
+                        Icon(
+                            Icons.Default.History,
+                            contentDescription = "Alarm History",
+                            tint = c.textSecondary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Next alarm pill
+            if (currentTab == 0) {
+                val nextPrefix = stringResource(R.string.next_alarm_prefix)
+                val noActiveStr = stringResource(R.string.no_active_alarms)
+                val calcStr = stringResource(R.string.calculating)
+                val nextAlarmDisplay = remember(alarms, nextPrefix, noActiveStr, calcStr) {
+                    val enabled = alarms.filter { it.isEnabled }
+                    if (enabled.isEmpty()) return@remember noActiveStr
+                    val next = enabled.map { it to AlarmScheduler.calculateNextTriggerTime(it) }.minByOrNull { it.second }
+                    next?.let {
+                        val diff = it.second - System.currentTimeMillis()
+                        if (diff > 0) {
+                            val h = diff / 3_600_000; val m = (diff / 60_000) % 60
+                            "$nextPrefix ${SimpleDateFormat("E hh:mm a", Locale.getDefault()).format(Date(it.second))}  (${h}h ${m}m)"
+                        } else calcStr
+                    } ?: noActiveStr
+                }
+                Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(
+                    if (c.isDark) Brush.horizontalGradient(listOf(Color(0xFF1C2D4A), Color(0xFF1E1A2E)))
+                    else Brush.horizontalGradient(listOf(Color(0xFFD6E4FF), Color(0xFFEBDEFF)))
+                ).padding(horizontal = 12.dp, vertical = 7.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(14.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(nextAlarmDisplay, fontSize = 12.sp, color = if (c.isDark) BrandCyan else BrandBlue, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
+                }
+            }
+
+            // Notification banner
+            if (!hasNotifPerm && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color(0xFF2D1810)).border(BorderStroke(1.dp, WarningAmber.copy(alpha = 0.4f)), RoundedCornerShape(10.dp)).padding(horizontal = 12.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Text(stringResource(R.string.notif_off_warning), color = WarningAmber, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                    TextButton(onClick = { notifLauncher.launch(Manifest.permission.POST_NOTIFICATIONS) }) { Text(stringResource(R.string.btn_fix), color = WarningAmber, fontWeight = FontWeight.ExtraBold) }
+                }
+            }
+
+            // Silent mode info banner (one-time, only on Alarms tab)
+            if (!silentBannerDismissed && currentTab == 0) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(SuccessGreen.copy(alpha = 0.1f))
+                        .border(BorderStroke(1.dp, SuccessGreen.copy(alpha = 0.35f)), RoundedCornerShape(10.dp))
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.Top, modifier = Modifier.weight(1f)) {
+                        Icon(Icons.Default.VolumeOff, contentDescription = null, tint = SuccessGreen, modifier = Modifier.size(14.dp).padding(top = 1.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            text = stringResource(R.string.silent_banner_text),
+                            color = SuccessGreen, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, lineHeight = 16.sp
+                        )
+                    }
+                    IconButton(onClick = { viewModel.dismissSilentBanner() }, modifier = Modifier.size(28.dp)) {
+                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.close), tint = SuccessGreen, modifier = Modifier.size(14.dp))
+                    }
+                }
+            }
+
+            // Selection bar
+            AnimatedVisibility(visible = selectionMode && currentTab == 0, enter = fadeIn() + expandVertically(), exit = fadeOut() + shrinkVertically()) {
+                Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp).clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).padding(horizontal = 12.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(onClick = { selectedIds = emptySet() }, modifier = Modifier.size(28.dp)) {
+                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel), tint = c.textSecondary, modifier = Modifier.size(16.dp))
+                        }
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(stringResource(R.string.selected_count, selectedIds.size), color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    }
+                    val allSel = alarms.isNotEmpty() && selectedIds.containsAll(alarms.map { it.id })
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        TextButton(onClick = { selectedIds = if (allSel) emptySet() else alarms.map { it.id }.toSet() }) {
+                            Text(if (allSel) stringResource(R.string.select_none) else stringResource(R.string.select_all), color = BrandBlue, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        }
+                        Button(onClick = { selectedIds.forEach { id -> alarms.find { it.id == id }?.let { viewModel.deleteAlarm(it) } }; selectedIds = emptySet() },
+                            colors = ButtonDefaults.buttonColors(containerColor = DeleteRed),
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp), shape = RoundedCornerShape(8.dp)) {
+                            Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(14.dp))
+                            Spacer(Modifier.width(4.dp))
+                            Text(stringResource(R.string.delete), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Tab content
+            AnimatedContent(targetState = currentTab, transitionSpec = { fadeIn() togetherWith fadeOut() }, label = "tabs") { tab ->
+                when (tab) {
+                    0 -> {
+                        if (alarms.isEmpty()) {
+                            EmptyStateView(Icons.Default.Notifications, stringResource(R.string.no_alarms_yet), stringResource(R.string.no_alarms_hint))
+                        } else {
+                            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxSize().padding(bottom = 80.dp)) {
+                                items(alarms, key = { it.id }) { alarm ->
+                                    val isSel = selectedIds.contains(alarm.id)
+                                    AlarmCard(
+                                        alarm = alarm, isSelected = isSel, isSelectionMode = selectionMode,
+                                        onToggle = { if (!selectionMode) viewModel.toggleAlarm(alarm) },
+                                        onEdit = { editTarget = alarm; showAddEdit = true },
+                                        onDelete = { viewModel.deleteAlarm(alarm) },
+                                        onPlayPreview = { viewModel.previewSound(alarm.soundPreset, alarm.volume) },
+                                        onLongPress = { selectedIds = selectedIds + alarm.id },
+                                        onSelectToggle = { selectedIds = if (isSel) selectedIds - alarm.id else selectedIds + alarm.id }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    1 -> { TimerScreen() }
+                    2 -> { StopwatchScreen() }
+                    3 -> {
+                        SettingsPageView(
+                            themeMode = themeMode,
+                            onThemeModeChange = { viewModel.setThemeMode(it) },
+                            timeFormat = timeFormat,
+                            onTimeFormatChange = { viewModel.setTimeFormat(it) },
+                            lightWhiteness = lightWhiteness,
+                            onLightWhitenessChange = { viewModel.setLightWhiteness(it) },
+                            appLanguage = appLanguage,
+                            onLanguageChange = { code ->
+                                viewModel.setAppLanguage(code)
+                                LocaleManager.setLanguage(context, code, restartActivity = true)
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    if (showAddEdit) {
+        AlarmAddEditDialog(
+            alarm = editTarget,
+            lastCustomTrackUri = if (editTarget == null) lastCustomTrackUri else "",
+            onDismiss = { viewModel.stopPreview(); showAddEdit = false },
+            onSave = { a -> viewModel.stopPreview(); if (editTarget == null) viewModel.addAlarm(a) else viewModel.updateAlarm(a); showAddEdit = false },
+            onPlayPreview = { s, v -> viewModel.previewSound(s, v) },
+            onStopPreview = { viewModel.stopPreview() },
+            onTrackPicked = { uri -> viewModel.setLastCustomTrackUri(uri) }
+        )
+    }
+
+    // History bottom sheet
+    if (showHistory) {
+        val c2 = LocalAppColors.current
+        Dialog(onDismissRequest = { showHistory = false }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(0.96f).fillMaxHeight(0.82f),
+                shape = RoundedCornerShape(20.dp), color = c2.surfaceColor, border = BorderStroke(1.dp, c2.outlineColor)
+            ) {
+                Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Text(stringResource(R.string.alarm_history_title), color = c2.textPrimary, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (logs.isNotEmpty()) {
+                                TextButton(onClick = { viewModel.clearLogs() }) {
+                                    Icon(Icons.Default.Delete, contentDescription = null, tint = DeleteRed, modifier = Modifier.size(16.dp))
+                                    Spacer(Modifier.width(4.dp))
+                                    Text(stringResource(R.string.clear), color = DeleteRed, fontWeight = FontWeight.Bold)
+                                }
+                            }
+                            IconButton(onClick = { showHistory = false }) { Icon(Icons.Default.Close, contentDescription = stringResource(R.string.close), tint = c2.textSecondary) }
+                        }
+                    }
+                    HorizontalDivider(color = c2.outlineColor, modifier = Modifier.padding(vertical = 8.dp))
+                    if (logs.isEmpty()) {
+                        EmptyStateView(Icons.AutoMirrored.Filled.List, stringResource(R.string.no_history_title), stringResource(R.string.no_history_desc))
+                    } else {
+                        LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxSize()) {
+                            items(logs, key = { it.id }) { LogItem(it) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }
 
 // ════════════════════════════════════════════════════════
@@ -753,15 +770,22 @@ fun AlarmCard(
     val ampm    = if (alarm.hour >= 12) "PM" else "AM"
     val timeStr = String.format("%02d:%02d", displayHour, alarm.minute)
 
-    val headerText = if (isCyclic) "CYCLIC · EVERY ${alarm.cyclicIntervalDays}D"
+    val headerText = if (isCyclic) stringResource(R.string.sched_cyclic_prefix, alarm.cyclicIntervalDays)
     else {
         val d = alarm.getWeeklyDaysSet()
+        val mo = stringResource(R.string.day_mo)
+        val tu = stringResource(R.string.day_tu)
+        val we = stringResource(R.string.day_we)
+        val th = stringResource(R.string.day_th)
+        val fr = stringResource(R.string.day_fr)
+        val sa = stringResource(R.string.day_sa)
+        val su = stringResource(R.string.day_su)
         when {
-            d.isEmpty() -> "ONE-OFF"
-            d.size == 7 -> "DAILY"
-            d.size == 5 && !d.contains(6) && !d.contains(7) -> "MON – FRI"
-            d.size == 2 && d.contains(6) && d.contains(7)   -> "WEEKENDS"
-            else -> listOf("Mo","Tu","We","Th","Fr","Sa","Su").let { n -> d.sorted().joinToString(" · ") { n[it - 1] } }
+            d.isEmpty() -> stringResource(R.string.sched_one_off)
+            d.size == 7 -> stringResource(R.string.sched_daily)
+            d.size == 5 && !d.contains(6) && !d.contains(7) -> stringResource(R.string.sched_mon_fri)
+            d.size == 2 && d.contains(6) && d.contains(7)   -> stringResource(R.string.sched_weekends)
+            else -> listOf(mo, tu, we, th, fr, sa, su).let { n -> d.sorted().joinToString(" · ") { n[it - 1] } }
         }
     }
 
@@ -831,17 +855,17 @@ fun AlarmCard(
                         colors = ButtonDefaults.buttonColors(containerColor = accent.copy(alpha = 0.2f), contentColor = accent),
                         shape = RoundedCornerShape(10.dp), contentPadding = PaddingValues(horizontal = 8.dp),
                         elevation = ButtonDefaults.buttonElevation(0.dp)) {
-                        Icon(Icons.Default.Edit, contentDescription = "Edit", modifier = Modifier.size(15.dp))
+                        Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit), modifier = Modifier.size(15.dp))
                         Spacer(Modifier.width(6.dp))
-                        Text("Edit", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
+                        Text(stringResource(R.string.edit), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
                     }
                     Button(onClick = onDelete, modifier = Modifier.weight(1f).height(42.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = DeleteRed.copy(alpha = 0.18f), contentColor = DeleteRed),
                         shape = RoundedCornerShape(10.dp), contentPadding = PaddingValues(horizontal = 8.dp),
                         elevation = ButtonDefaults.buttonElevation(0.dp)) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete", modifier = Modifier.size(15.dp))
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete), modifier = Modifier.size(15.dp))
                         Spacer(Modifier.width(6.dp))
-                        Text("Delete", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
+                        Text(stringResource(R.string.delete), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
                     }
                 }
             }
@@ -1021,8 +1045,8 @@ fun AlarmAddEditDialog(
             Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text(if (alarm == null) "New Alarm" else "Edit Alarm", color = c.textPrimary, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
-                    IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, contentDescription = "Close", tint = c.textSecondary) }
+                    Text(if (alarm == null) stringResource(R.string.dialog_new_alarm) else stringResource(R.string.dialog_edit_alarm), color = c.textPrimary, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                    IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, contentDescription = stringResource(R.string.close), tint = c.textSecondary) }
                 }
                 HorizontalDivider(color = c.outlineColor, modifier = Modifier.padding(vertical = 8.dp))
 
@@ -1030,7 +1054,7 @@ fun AlarmAddEditDialog(
 
                     // TIME PICKER
                     item {
-                        SectionCard("Alarm Time") {
+                        SectionCard(stringResource(R.string.alarm_time_section)) {
                             val focusMgr = LocalFocusManager.current
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                                 TimeSpinner(value = hour12Str, tag = "hour_input",
@@ -1061,8 +1085,8 @@ fun AlarmAddEditDialog(
                     // LABEL
                     item {
                         OutlinedTextField(value = label, onValueChange = { label = it },
-                            label = { Text("Label (optional)", color = c.textSecondary) },
-                            placeholder = { Text("e.g. Work Shift", color = c.textDisabled) },
+                            label = { Text(stringResource(R.string.alarm_label_optional), color = c.textSecondary) },
+                            placeholder = { Text(stringResource(R.string.alarm_label_placeholder), color = c.textDisabled) },
                             modifier = Modifier.fillMaxWidth().testTag("alarm_label_input"),
                             colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = BrandBlue, unfocusedBorderColor = c.outlineColor, focusedLabelColor = BrandBlue, focusedTextColor = c.textPrimary, unfocusedTextColor = c.textPrimary, cursorColor = BrandBlue),
                             shape = RoundedCornerShape(12.dp), singleLine = true)
@@ -1071,7 +1095,7 @@ fun AlarmAddEditDialog(
                     // TYPE TABS
                     item {
                         Row(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(c.appBackground).padding(4.dp)) {
-                            listOf("WEEKLY" to "Weekly Days", "CYCLIC" to "Cyclic Days").forEach { (type, lbl) ->
+                            listOf("WEEKLY" to stringResource(R.string.tab_weekly_days), "CYCLIC" to stringResource(R.string.tab_cyclic_days)).forEach { (type, lbl) ->
                                 val active = alarmType == type
                                 Box(modifier = Modifier.weight(1f).clip(RoundedCornerShape(8.dp)).background(if (active) (if (type == "WEEKLY") BrandPurple else BrandBlue) else Color.Transparent).clickable { alarmType = type }.padding(vertical = 10.dp), contentAlignment = Alignment.Center) {
                                     Text(lbl, fontWeight = FontWeight.ExtraBold, fontSize = 13.sp, color = if (active) Color.White else c.textSecondary)
@@ -1084,9 +1108,17 @@ fun AlarmAddEditDialog(
                     item {
                         AnimatedContent(targetState = alarmType, label = "sched") { type ->
                             if (type == "WEEKLY") {
-                                SectionCard("Repeat on Days") {
+                                SectionCard(stringResource(R.string.repeat_on_days_section)) {
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                        val dn = listOf("Mo","Tu","We","Th","Fr","Sa","Su")
+                                        val dn = listOf(
+                                            stringResource(R.string.day_mo),
+                                            stringResource(R.string.day_tu),
+                                            stringResource(R.string.day_we),
+                                            stringResource(R.string.day_th),
+                                            stringResource(R.string.day_fr),
+                                            stringResource(R.string.day_sa),
+                                            stringResource(R.string.day_su)
+                                        )
                                         for (i in 1..7) {
                                             val a = weeklyDays[i] ?: false
                                             Box(modifier = Modifier.size(40.dp).clip(CircleShape).background(if (a) BrandPurple else c.surfaceVariant).border(BorderStroke(1.dp, if (a) BrandPurple else c.outlineColor), CircleShape).clickable { weeklyDays[i] = !a }.testTag("day_button_$i"), contentAlignment = Alignment.Center) {
@@ -1096,9 +1128,9 @@ fun AlarmAddEditDialog(
                                     }
                                 }
                             } else {
-                                SectionCard("Cyclic Configuration") {
+                                SectionCard(stringResource(R.string.cyclic_config_section)) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text("Every", color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                        Text(stringResource(R.string.every_word), color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                                         Spacer(Modifier.width(10.dp))
                                         OutlinedTextField(value = cyclicInterval, onValueChange = { if (it.all(Char::isDigit)) cyclicInterval = it },
                                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -1107,7 +1139,7 @@ fun AlarmAddEditDialog(
                                             shape = RoundedCornerShape(8.dp),
                                             textStyle = TextStyle(textAlign = TextAlign.Center, color = c.textPrimary, fontSize = 14.sp))
                                         Spacer(Modifier.width(10.dp))
-                                        Text("days", color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                        Text(stringResource(R.string.days_word), color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                                     }
                                     Spacer(Modifier.height(12.dp))
                                     val sdf = remember { SimpleDateFormat("EEE, MMM d yyyy", Locale.getDefault()) }
@@ -1117,7 +1149,7 @@ fun AlarmAddEditDialog(
                                             Icon(Icons.Default.DateRange, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
                                             Spacer(Modifier.width(10.dp))
                                             Column {
-                                                Text("Start Date", fontSize = 11.sp, color = c.textSecondary, fontWeight = FontWeight.Bold)
+                                                Text(stringResource(R.string.start_date), fontSize = 11.sp, color = c.textSecondary, fontWeight = FontWeight.Bold)
                                                 Text(sdf.format(Date(cyclicStart)), fontSize = 14.sp, color = c.textPrimary, fontWeight = FontWeight.Bold)
                                             }
                                         }
@@ -1126,7 +1158,7 @@ fun AlarmAddEditDialog(
                                     if (showDatePicker) {
                                         DatePickerDialog(onDismissRequest = { showDatePicker = false },
                                             confirmButton = { TextButton(onClick = { datePickerState.selectedDateMillis?.let { cyclicStart = it }; showDatePicker = false }) { Text("OK", color = BrandBlue, fontWeight = FontWeight.Bold) } },
-                                            dismissButton = { TextButton(onClick = { showDatePicker = false }) { Text("Cancel", color = c.textSecondary) } }
+                                            dismissButton = { TextButton(onClick = { showDatePicker = false }) { Text(stringResource(R.string.cancel), color = c.textSecondary) } }
                                         ) { DatePicker(state = datePickerState) }
                                     }
                                 }
@@ -1136,8 +1168,8 @@ fun AlarmAddEditDialog(
 
                     // SNOOZE DURATION (Per Alarm)
                     item {
-                        SectionCard("Snooze Duration") {
-                            Text("Select or enter snooze duration in minutes", fontSize = 11.sp, color = c.textSecondary)
+                        SectionCard(stringResource(R.string.snooze_duration_section)) {
+                            Text(stringResource(R.string.snooze_duration_hint), fontSize = 11.sp, color = c.textSecondary)
                             Spacer(Modifier.height(8.dp))
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                 listOf(5, 10, 15, 20, 30).forEach { opt ->
@@ -1158,7 +1190,7 @@ fun AlarmAddEditDialog(
                             }
                             Spacer(Modifier.height(10.dp))
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("Custom:", color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                Text(stringResource(R.string.custom_colon), color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 13.sp)
                                 Spacer(Modifier.width(10.dp))
                                 OutlinedTextField(
                                     value = customSnooze,
@@ -1176,25 +1208,21 @@ fun AlarmAddEditDialog(
                                     textStyle = TextStyle(textAlign = TextAlign.Center, color = c.textPrimary, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text("minutes", color = c.textSecondary, fontSize = 13.sp)
+                                Text(stringResource(R.string.minutes_word), color = c.textSecondary, fontSize = 13.sp)
                             }
                         }
                     }
 
                     // SOUND
                     item {
-                        SectionCard("Alarm Sound") {
+                        SectionCard(stringResource(R.string.alarm_sound_section)) {
                             // ── Custom track row (always visible) ──
-                            // Shows the picked track filename as a selectable row when one is set,
-                            // and always shows a "Pick from device" / "Change track" button below it.
                             if (customTrackUri.isNotEmpty()) {
                                 val trackName = run {
-                                    // Try to decode a human-readable filename from the URI
                                     val raw = customTrackUri.substringAfterLast("/")
                                     val decoded = try {
                                         android.net.Uri.decode(raw)
                                     } catch (_: Exception) { raw }
-                                    // Strip common percent-encoded noise and truncate
                                     decoded.substringAfterLast("%2F").substringAfterLast("/")
                                         .removeSuffix(".mp3").removeSuffix(".m4a")
                                         .removeSuffix(".wav").removeSuffix(".ogg")
@@ -1222,14 +1250,14 @@ fun AlarmAddEditDialog(
                                         Spacer(Modifier.width(4.dp))
                                         Column {
                                             Text(
-                                                trackName,
+                                                if (trackName == "Custom Track") stringResource(R.string.custom_track) else trackName,
                                                 color = if (selCustom) c.textPrimary else c.textSecondary,
                                                 fontWeight = if (selCustom) FontWeight.Bold else FontWeight.Normal,
                                                 fontSize = 13.sp,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis
                                             )
-                                            Text("Custom track", color = c.textDisabled, fontSize = 10.sp)
+                                            Text(stringResource(R.string.custom_track_sub), color = c.textDisabled, fontSize = 10.sp)
                                         }
                                     }
                                     IconButton(
@@ -1263,7 +1291,7 @@ fun AlarmAddEditDialog(
                                 Icon(Icons.Default.Add, contentDescription = null, tint = c.textSecondary, modifier = Modifier.size(18.dp))
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    if (customTrackUri.isNotEmpty()) "Change track" else "Pick from device",
+                                    if (customTrackUri.isNotEmpty()) stringResource(R.string.change_track) else stringResource(R.string.pick_from_device),
                                     color = c.textSecondary,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 13.sp
@@ -1295,7 +1323,7 @@ fun AlarmAddEditDialog(
 
                     // VOLUME + VIBRATE
                     item {
-                        SectionCard("Volume & Vibration") {
+                        SectionCard(stringResource(R.string.volume_vibration_section)) {
                             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                                 Icon(Icons.Default.Build, contentDescription = null, tint = c.textSecondary, modifier = Modifier.size(18.dp))
                                 Slider(value = volume, onValueChange = { volume = it }, modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
@@ -1307,7 +1335,7 @@ fun AlarmAddEditDialog(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(Icons.Default.Phone, contentDescription = null, tint = if (vibrate) BrandPurple else c.textDisabled, modifier = Modifier.size(18.dp))
                                     Spacer(Modifier.width(8.dp))
-                                    Text("Vibrate", color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                    Text(stringResource(R.string.vibrate), color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                                 }
                                 Switch(checked = vibrate, onCheckedChange = { vibrate = it },
                                     colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = BrandPurple, uncheckedThumbColor = c.textDisabled, uncheckedTrackColor = c.surfaceVariant))
@@ -1322,7 +1350,7 @@ fun AlarmAddEditDialog(
                     OutlinedButton(onClick = onDismiss, modifier = Modifier.weight(1f).height(48.dp),
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = c.textSecondary),
                         border = BorderStroke(1.dp, c.outlineColor), shape = RoundedCornerShape(12.dp)) {
-                        Text("Cancel", fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.cancel), fontWeight = FontWeight.Bold)
                     }
                     Button(onClick = {
                         val daysStr  = weeklyDays.filterValues { it }.keys.sorted().joinToString(",")
@@ -1335,7 +1363,7 @@ fun AlarmAddEditDialog(
                     }, modifier = Modifier.weight(1.6f).height(48.dp).testTag("save_alarm_button"),
                         colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166)),
                         shape = RoundedCornerShape(12.dp)) {
-                        Text("Save Alarm", fontWeight = FontWeight.ExtraBold, fontSize = 15.sp)
+                        Text(stringResource(R.string.save_alarm), fontWeight = FontWeight.ExtraBold, fontSize = 15.sp)
                     }
                 }
             }
@@ -1422,9 +1450,9 @@ fun SettingsPageView(
                     .clickable { currentSubpage = null }
                     .padding(vertical = 8.dp, horizontal = 4.dp)
             ) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = BrandBlue, modifier = Modifier.size(22.dp))
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back_to_settings), tint = BrandBlue, modifier = Modifier.size(22.dp))
                 Spacer(Modifier.width(6.dp))
-                Text("Back to Settings", color = BrandBlue, fontWeight = FontWeight.ExtraBold, fontSize = 14.sp)
+                Text(stringResource(R.string.back_to_settings), color = BrandBlue, fontWeight = FontWeight.ExtraBold, fontSize = 14.sp)
             }
             AboutPageView()
         }
@@ -1436,7 +1464,7 @@ fun SettingsPageView(
                 .padding(bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text("SETTINGS", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
+            Text(stringResource(R.string.settings_title), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
 
             // ── ABOUT SUBPAGE NAVIGATION CARD ──
             Row(
@@ -1456,8 +1484,8 @@ fun SettingsPageView(
                     }
                     Spacer(Modifier.width(12.dp))
                     Column {
-                        Text("About Cyclic Alarms", fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = c.textPrimary)
-                        Text("Version 1.6.3 • Release notes, support & creator info", fontSize = 12.sp, color = c.textSecondary)
+                        Text(stringResource(R.string.about_cyclic_alarms), fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = c.textPrimary)
+                        Text(stringResource(R.string.about_cyclic_alarms_subtitle), fontSize = 12.sp, color = c.textSecondary)
                     }
                 }
                 Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
@@ -1617,7 +1645,7 @@ fun SettingsPageView(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Build, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("Theme", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = c.textPrimary)
+                Text(stringResource(R.string.setting_theme_title), fontWeight = FontWeight.Bold, fontSize = 15.sp, color = c.textPrimary)
             }
             Spacer(Modifier.height(12.dp))
             // Dark row: Pure Dark + Dark
@@ -1625,7 +1653,10 @@ fun SettingsPageView(
                 modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                listOf("Pure Dark" to "🌑", "Dark" to "🌙").forEach { (mode, emoji) ->
+                listOf(
+                    Triple("Pure Dark", "🌑", stringResource(R.string.theme_pure_dark)),
+                    Triple("Dark", "🌙", stringResource(R.string.theme_dark))
+                ).forEach { (mode, emoji, label) ->
                     val selected = themeMode == mode
                     Box(
                         modifier = Modifier.weight(1f).height(40.dp).clip(RoundedCornerShape(8.dp))
@@ -1636,7 +1667,7 @@ fun SettingsPageView(
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(emoji, fontSize = 13.sp)
-                            Text(mode, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = if (selected) BrandBlue else c.textSecondary)
+                            Text(label, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = if (selected) BrandBlue else c.textSecondary)
                         }
                     }
                 }
@@ -1647,7 +1678,10 @@ fun SettingsPageView(
                 modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                listOf("System" to "⚙️", "Light" to "☀️").forEach { (mode, emoji) ->
+                listOf(
+                    Triple("System", "⚙️", stringResource(R.string.theme_system)),
+                    Triple("Light", "☀️", stringResource(R.string.theme_light))
+                ).forEach { (mode, emoji, label) ->
                     val selected = themeMode == mode
                     Box(
                         modifier = Modifier.weight(1f).height(40.dp).clip(RoundedCornerShape(8.dp))
@@ -1657,7 +1691,7 @@ fun SettingsPageView(
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(emoji, fontSize = 13.sp)
-                            Text(mode, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = if (selected) Color(0xFF003166) else c.textSecondary)
+                            Text(label, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = if (selected) Color(0xFF003166) else c.textSecondary)
                         }
                     }
                 }
@@ -1669,19 +1703,19 @@ fun SettingsPageView(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Default.WbSunny, contentDescription = null, tint = WarningAmber, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(8.dp))
-                        Text("Background Brightness", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = c.textPrimary, modifier = Modifier.weight(1f))
+                        Text(stringResource(R.string.background_brightness), fontWeight = FontWeight.Bold, fontSize = 13.sp, color = c.textPrimary, modifier = Modifier.weight(1f))
                         Text("${(lightWhiteness * 100).toInt()}%", fontSize = 12.sp, color = WarningAmber, fontWeight = FontWeight.ExtraBold)
                     }
                     Spacer(Modifier.height(4.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("Tinted", fontSize = 10.sp, color = c.textDisabled)
+                        Text(stringResource(R.string.tinted), fontSize = 10.sp, color = c.textDisabled)
                         Slider(
                             value = lightWhiteness,
                             onValueChange = { onLightWhitenessChange(it) },
                             modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                             colors = SliderDefaults.colors(thumbColor = WarningAmber, activeTrackColor = WarningAmber, inactiveTrackColor = c.outlineColor)
                         )
-                        Text("Pure White", fontSize = 10.sp, color = c.textDisabled)
+                        Text(stringResource(R.string.pure_white), fontSize = 10.sp, color = c.textDisabled)
                     }
                 }
             }
@@ -1700,10 +1734,10 @@ fun SettingsPageView(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("Clock Display Format", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = c.textPrimary)
+                Text(stringResource(R.string.setting_clock_format_title), fontWeight = FontWeight.Bold, fontSize = 15.sp, color = c.textPrimary)
             }
             Spacer(Modifier.height(6.dp))
-            Text("Choose how time is displayed on the home screen clock", fontSize = 12.sp, color = c.textSecondary)
+            Text(stringResource(R.string.setting_clock_format_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(12.dp))
             Row(
                 modifier = Modifier
@@ -1713,7 +1747,7 @@ fun SettingsPageView(
                     .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                listOf("12H" to "12-Hour (AM/PM)", "24H" to "24-Hour").forEach { (fmt, lbl) ->
+                listOf("12H" to stringResource(R.string.time_format_12h), "24H" to stringResource(R.string.time_format_24h)).forEach { (fmt, lbl) ->
                     val selected = timeFormat == fmt
                     Box(
                         modifier = Modifier
@@ -1748,14 +1782,14 @@ fun SettingsPageView(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Lock, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("Permissions & App Access", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = c.textPrimary)
+                Text(stringResource(R.string.setting_permissions_title), fontWeight = FontWeight.Bold, fontSize = 15.sp, color = c.textPrimary)
             }
-            Text("Manage system access required for reliable alarm ringing and lock-screen popups", fontSize = 12.sp, color = c.textSecondary)
+            Text(stringResource(R.string.setting_permissions_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
             PermissionRowItem(
-                title = "Notifications",
-                subtitle = "Required to trigger loud alarm sounds and banners",
+                title = stringResource(R.string.perm_notifications),
+                subtitle = stringResource(R.string.perm_notifications_sub),
                 isGranted = notifGranted,
                 onClickManage = {
                     val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1770,8 +1804,8 @@ fun SettingsPageView(
             )
 
             PermissionRowItem(
-                title = "Exact Alarm Scheduling",
-                subtitle = "Allows alarm to fire at the exact second requested",
+                title = stringResource(R.string.perm_exact_alarm),
+                subtitle = stringResource(R.string.perm_exact_alarm_sub),
                 isGranted = exactAlarmGranted,
                 onClickManage = {
                     val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -1784,8 +1818,8 @@ fun SettingsPageView(
             )
 
             PermissionRowItem(
-                title = "Full-Screen Alarm Alerts",
-                subtitle = "Displays full-screen ringing UI over keyguard when device is locked",
+                title = stringResource(R.string.perm_fullscreen),
+                subtitle = stringResource(R.string.perm_fullscreen_sub),
                 isGranted = fullScreenGranted,
                 onClickManage = {
                     val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -1798,8 +1832,8 @@ fun SettingsPageView(
             )
 
             PermissionRowItem(
-                title = "Display Over Other Apps",
-                subtitle = "Allows popup window display on top of other running applications",
+                title = stringResource(R.string.perm_overlay),
+                subtitle = stringResource(R.string.perm_overlay_sub),
                 isGranted = overlayGranted,
                 onClickManage = {
                     val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
@@ -1822,7 +1856,7 @@ private fun PermissionRowItem(
     val bg = if (isGranted) SuccessGreen.copy(alpha = 0.1f) else DeleteRed.copy(alpha = 0.12f)
     val borderCol = if (isGranted) SuccessGreen.copy(alpha = 0.35f) else DeleteRed.copy(alpha = 0.4f)
     val statusCol = if (isGranted) SuccessGreen else DeleteRed
-    val statusText = if (isGranted) "✓ Granted" else "⚠ Disabled"
+    val statusText = if (isGranted) stringResource(R.string.badge_granted) else stringResource(R.string.badge_disabled)
 
     Column(
         modifier = Modifier
@@ -1885,7 +1919,7 @@ private fun PermissionRowItem(
                 elevation = ButtonDefaults.buttonElevation(0.dp)
             ) {
                 Text(
-                    text = if (isGranted) "Manage" else "Fix Now",
+                    text = if (isGranted) stringResource(R.string.btn_manage) else stringResource(R.string.btn_fix_now),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -1935,7 +1969,7 @@ private fun PermissionGateItem(
             colors = ButtonDefaults.buttonColors(containerColor = DeleteRed, contentColor = Color.White),
             modifier = Modifier.height(38.dp)
         ) {
-            Text("Grant", fontWeight = FontWeight.ExtraBold, fontSize = 12.sp)
+            Text(stringResource(R.string.btn_grant), fontWeight = FontWeight.ExtraBold, fontSize = 12.sp)
         }
     }
 }
@@ -1985,7 +2019,7 @@ fun TimerScreen() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "TIMERS (${timers.size}/5)",
+                stringResource(R.string.timers_header, timers.size),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = c.textSecondary,
@@ -2003,7 +2037,7 @@ fun TimerScreen() {
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(4.dp))
-                    Text("Add Timer", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.add_timer), fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -2092,8 +2126,12 @@ private fun MultiTimerCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val timerLabel = if (timer.label.startsWith("Timer")) {
+                val num = timer.label.removePrefix("Timer").trim()
+                stringResource(R.string.timer_default_name) + (if (num.isNotEmpty()) " $num" else "")
+            } else timer.label
             Text(
-                text = timer.label,
+                text = timerLabel,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = if (timer.isRunning) CyclicAccent else c.textPrimary
@@ -2113,7 +2151,7 @@ private fun MultiTimerCard(
                 horizontalArrangement = Arrangement.Center
             ) {
                 TimerInputField(
-                    value = inputHours, label = "HH", tag = "h_${timer.id}",
+                    value = inputHours, label = stringResource(R.string.unit_hh), tag = "h_${timer.id}",
                     onValueChange = {
                         if (it.length <= 2 && it.all(Char::isDigit)) {
                             inputHours = it
@@ -2124,7 +2162,7 @@ private fun MultiTimerCard(
                 )
                 Text(":", fontSize = 24.sp, fontWeight = FontWeight.Black, color = BrandBlue, modifier = Modifier.padding(horizontal = 2.dp))
                 TimerInputField(
-                    value = inputMinutes, label = "MM", tag = "m_${timer.id}",
+                    value = inputMinutes, label = stringResource(R.string.unit_mm), tag = "m_${timer.id}",
                     onValueChange = {
                         if (it.length <= 2 && it.all(Char::isDigit)) {
                             inputMinutes = it
@@ -2135,7 +2173,7 @@ private fun MultiTimerCard(
                 )
                 Text(":", fontSize = 24.sp, fontWeight = FontWeight.Black, color = BrandBlue, modifier = Modifier.padding(horizontal = 2.dp))
                 TimerInputField(
-                    value = inputSeconds, label = "SS", tag = "s_${timer.id}",
+                    value = inputSeconds, label = stringResource(R.string.unit_ss), tag = "s_${timer.id}",
                     onValueChange = {
                         if (it.length <= 2 && it.all(Char::isDigit)) {
                             inputSeconds = it
@@ -2179,7 +2217,7 @@ private fun MultiTimerCard(
             )
             if (timer.isFinished) {
                 Text(
-                    "Time's Up!",
+                    stringResource(R.string.times_up),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = DeleteRed.copy(alpha = displayAlpha)
@@ -2210,7 +2248,7 @@ private fun MultiTimerCard(
                 border = BorderStroke(1.dp, c.outlineColor),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = c.textSecondary)
             ) {
-                Text("Reset", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                Text(stringResource(R.string.reset), fontWeight = FontWeight.Bold, fontSize = 12.sp)
             }
 
             Button(
@@ -2233,7 +2271,7 @@ private fun MultiTimerCard(
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
-                    text = if (timer.isFinished) "Clear" else if (timer.isRunning) "Pause" else "Start",
+                    text = if (timer.isFinished) stringResource(R.string.clear) else if (timer.isRunning) stringResource(R.string.pause) else stringResource(R.string.start),
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 13.sp
                 )
@@ -2310,7 +2348,7 @@ fun StopwatchScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(8.dp))
-        Text("STOPWATCH", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
+        Text(stringResource(R.string.stopwatch_title), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
         Spacer(Modifier.height(16.dp))
 
         // Main display
@@ -2330,7 +2368,7 @@ fun StopwatchScreen() {
                 if (laps.isNotEmpty()) {
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = "Lap ${laps.size + 1}: ${formatElapsed(lapMs)}",
+                        text = "${stringResource(R.string.lap_prefix, laps.size + 1)} ${formatElapsed(lapMs)}",
                         fontSize = 12.sp, color = c.textSecondary, fontWeight = FontWeight.Bold
                     )
                 }
@@ -2362,7 +2400,7 @@ fun StopwatchScreen() {
                     contentDescription = null, modifier = Modifier.size(18.dp)
                 )
                 Spacer(Modifier.width(6.dp))
-                Text(if (isRunning) "Lap" else "Reset", fontWeight = FontWeight.ExtraBold)
+                Text(if (isRunning) stringResource(R.string.lap) else stringResource(R.string.reset), fontWeight = FontWeight.ExtraBold)
             }
 
             // Start / Stop button
@@ -2388,7 +2426,7 @@ fun StopwatchScreen() {
                     contentDescription = null
                 )
                 Spacer(Modifier.width(8.dp))
-                Text(if (isRunning) "Stop" else "Start", fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
+                Text(if (isRunning) stringResource(R.string.stop) else stringResource(R.string.start), fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
             }
         }
 
@@ -2401,9 +2439,9 @@ fun StopwatchScreen() {
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("LAP", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 0.8.sp)
-                Text("LAP TIME", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 0.8.sp)
-                Text("OVERALL", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 0.8.sp)
+                Text(stringResource(R.string.table_lap), fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 0.8.sp)
+                Text(stringResource(R.string.table_lap_time), fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 0.8.sp)
+                Text(stringResource(R.string.table_overall), fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 0.8.sp)
             }
             Spacer(Modifier.height(4.dp))
             Column(
@@ -2449,7 +2487,7 @@ fun AboutPageView() {
             .padding(bottom = 80.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("ABOUT & RELEASE NOTES", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
+        Text(stringResource(R.string.about_release_notes_header), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
 
         // Hero Card
         Column(
@@ -2477,11 +2515,11 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.6.3", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.6.4", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
-            Text("Smart shift, roster & repeating cycle alarm app", fontSize = 12.sp, color = c.textSecondary, textAlign = TextAlign.Center)
+            Text(stringResource(R.string.hero_tagline), fontSize = 12.sp, color = c.textSecondary, textAlign = TextAlign.Center)
         }
 
         // ── SUPPORT & COMMUNITY CARD ──
@@ -2493,7 +2531,7 @@ fun AboutPageView() {
                 .border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(14.dp))
                 .padding(16.dp)
         ) {
-            Text("SUPPORT & COMMUNITY", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.sp)
+            Text(stringResource(R.string.support_community_header), fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.sp)
             Spacer(Modifier.height(10.dp))
             Row(
                 modifier = Modifier
@@ -2518,7 +2556,7 @@ fun AboutPageView() {
                     }
                     Spacer(Modifier.width(12.dp))
                     Column {
-                        Text("Feedbacks, Suggestions or Bugs Reporting", fontWeight = FontWeight.ExtraBold, fontSize = 13.sp, color = c.textPrimary)
+                        Text(stringResource(R.string.support_email_title), fontWeight = FontWeight.ExtraBold, fontSize = 13.sp, color = c.textPrimary)
                         Text("bp.beema@outlook.com", fontSize = 11.sp, color = BrandBlue, fontWeight = FontWeight.Medium)
                     }
                 }
@@ -2539,145 +2577,157 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Star, contentDescription = null, tint = BrandPurple, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("Release History & Notes", fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = c.textPrimary)
+                Text(stringResource(R.string.release_history_title), fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = c.textPrimary)
             }
-            Text("Tap on any release version to expand or collapse notes", fontSize = 12.sp, color = c.textSecondary)
+            Text(stringResource(R.string.release_history_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.6.3 — Expanded by default (current release)
+            // v1.6.4 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = "v1.6.3 (Current Release)",
-                badgeText = "Latest",
+                version = stringResource(R.string.rel_v1_6_4_title),
+                badgeText = stringResource(R.string.badge_latest),
                 isInitiallyExpanded = true,
                 items = listOf(
-                    "🌐" to "Major Multilingual Support — fully offline language localization (System Default, English, Turkish, Spanish, German, French, Hindi, Portuguese, Russian, Chinese, Japanese, Arabic)",
-                    "🚀" to "First-Run Language Setup — choose preferred language and theme on initial app launch without requiring internet",
-                    "⚙️" to "In-App Language Settings — easily switch display language anytime from the Settings page"
+                    "🌐" to stringResource(R.string.rel_v1_6_4_item1),
+                    "🚀" to stringResource(R.string.rel_v1_6_4_item2),
+                    "🔢" to stringResource(R.string.rel_v1_6_4_item3)
+                )
+            )
+
+            // v1.6.3 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = stringResource(R.string.rel_v1_6_3_title),
+                badgeText = "v1.6.3",
+                isInitiallyExpanded = false,
+                items = listOf(
+                    "🌐" to stringResource(R.string.rel_v1_6_3_item1),
+                    "🚀" to stringResource(R.string.rel_v1_6_3_item2),
+                    "⚙️" to stringResource(R.string.rel_v1_6_3_item3)
                 )
             )
 
             // v1.6.2 — Collapsed
             ExpandableReleaseNoteCard(
-                version = "v1.6.2 Release Notes",
+                version = stringResource(R.string.rel_v1_6_2_title),
                 badgeText = "v1.6.2",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "🛡" to "Android 9 Compatibility Fix — eliminated cold-launch abrupt quits on Android 9 and older versions",
-                    "⏱" to "Timer & Stopwatch API Guard — guarded API 31 foreground service notifications to ensure flawless background tracking on all Android versions",
-                    "🔇" to "Timer Alert Stop on Clear/Reset — tapping Clear or Reset now immediately silences the ringing sound",
-                    "🧭" to "Smart Notification Navigation & Title — notification title dynamically reflects Timer vs Stopwatch and tap opens the exact active tab",
-                    "🔒" to "Clean Alarm Lifecycle — guaranteed immediate dismiss & lock screen restore without background leakage"
+                    "🛡" to stringResource(R.string.rel_v1_6_2_item1),
+                    "⏱" to stringResource(R.string.rel_v1_6_2_item2),
+                    "🔇" to stringResource(R.string.rel_v1_6_2_item3),
+                    "🧭" to stringResource(R.string.rel_v1_6_2_item4),
+                    "🔒" to stringResource(R.string.rel_v1_6_2_item5)
                 )
             )
 
             // v1.6.1 — Collapsed
             ExpandableReleaseNoteCard(
-                version = "v1.6.1 Release Notes",
+                version = stringResource(R.string.rel_v1_6_1_title),
                 badgeText = "v1.6.1",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "📦" to "F-Droid Compliance — clean open-source metadata, Apache-2.0 license, removed network update checkers",
-                    "🔑" to "Permission Streamlining — streamlined permission gate for modern and legacy Android systems"
+                    "📦" to stringResource(R.string.rel_v1_6_1_item1),
+                    "🔑" to stringResource(R.string.rel_v1_6_1_item2)
                 )
             )
 
             // v1.6 — Collapsed
             ExpandableReleaseNoteCard(
-                version = "v1.6 Release Notes",
+                version = stringResource(R.string.rel_v1_6_title),
                 badgeText = "v1.6",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "🔔" to "Non-dismissible background notification — timer & stopwatch notification cannot be swiped away while running (like YouTube), with a 'Stop All' action button",
-                    "🎨" to "Light mode alarm time fix — cyclic and weekly alarm times now use deep, high-contrast colours instead of washed-out light blue/purple",
-                    "🌤" to "Deeper light mode tint — default background is more noticeably grey-blue so the whiteness slider feels meaningful across its full range"
+                    "🔔" to stringResource(R.string.rel_v1_6_item1),
+                    "🎨" to stringResource(R.string.rel_v1_6_item2),
+                    "🌤" to stringResource(R.string.rel_v1_6_item3)
                 )
             )
 
             // v1.5 — Collapsed
             ExpandableReleaseNoteCard(
-                version = "v1.5 Release Notes",
+                version = stringResource(R.string.rel_v1_5_title),
                 badgeText = "v1.5",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "🎵" to "Persistent Custom Track — last-used music file auto-applied to every new alarm",
-                    "⏱" to "Multiple Timers — run up to 5 independent countdown timers simultaneously",
-                    "🌑" to "Pure Dark Mode — true AMOLED black theme for OLED screen battery savings",
-                    "☀️" to "Light Mode Brightness Slider — adjust background brightness from tinted to pure white",
-                    "🔄" to "Background Timer & Stopwatch — continue running when app is backgrounded via Foreground Service",
-                    "🔔" to "Rings in Silent & DND Mode — alarms bypass ringer volume, no more missed alarms"
+                    "🎵" to stringResource(R.string.rel_v1_5_item1),
+                    "⏱" to stringResource(R.string.rel_v1_5_item2),
+                    "🌑" to stringResource(R.string.rel_v1_5_item3),
+                    "☀️" to stringResource(R.string.rel_v1_5_item4),
+                    "🔄" to stringResource(R.string.rel_v1_5_item5),
+                    "🔔" to stringResource(R.string.rel_v1_5_item6)
                 )
             )
 
             // v1.4 — Collapsed
             ExpandableReleaseNoteCard(
-                version = "v1.4 Release Notes",
+                version = stringResource(R.string.rel_v1_4_title),
                 badgeText = "v1.4",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "📦" to "Official Package Rebrand — package updated to com.beemasfincon.cyclicalarms",
-                    "🎯" to "Reliability Improvements — upgraded alarm scheduling and foreground service lifecycle handling"
+                    "📦" to stringResource(R.string.rel_v1_4_item1),
+                    "🎯" to stringResource(R.string.rel_v1_4_item2)
                 )
             )
 
             // v1.3 — Collapsed
             ExpandableReleaseNoteCard(
-                version = "v1.3 Release Notes",
+                version = stringResource(R.string.rel_v1_3_title),
                 badgeText = "v1.3",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "⏱" to "Timer — built-in countdown timer with progress ring, quick presets (1m–30m), sound & vibration alert",
-                    "⏱" to "Stopwatch — elapsed time tracker with lap recording, fastest/slowest lap highlights, touch audio tones",
-                    "🔒" to "Strict Lock Screen Privacy — app only shows over keyguard while actively ringing; dismiss/snooze immediately locks & returns to prior screen without exposing dashboard",
-                    "📱" to "4-Tab Navigation — Alarms, Timer, Stopwatch, Settings (with embedded About sub-page)",
-                    "🌀" to "Default Cyclic — new alarms open on Cyclic Days tab by default",
-                    "🖼" to "Icon Fit Fix — app icon no longer appears cropped on launcher"
+                    "⏱" to stringResource(R.string.rel_v1_3_item1),
+                    "⏱" to stringResource(R.string.rel_v1_3_item2),
+                    "🔒" to stringResource(R.string.rel_v1_3_item3),
+                    "📱" to stringResource(R.string.rel_v1_3_item4),
+                    "🌀" to stringResource(R.string.rel_v1_3_item5),
+                    "🖼" to stringResource(R.string.rel_v1_3_item6)
                 )
             )
 
             // v1.2 — Collapsed
             ExpandableReleaseNoteCard(
-                version = "v1.2 Release Notes",
+                version = stringResource(R.string.rel_v1_2_title),
                 badgeText = "v1.2",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "🌀" to "Pencil-Sketched Spiral Alarm Icon — clean, symmetrical alarm clock launcher icon",
-                    "⏱" to "Per-Alarm Custom Snooze — set desired snooze duration (5, 10, 15, 20m or custom minutes)",
-                    "🔒" to "Native Lock Screen Ringing — rings smoothly over keyguard without PIN unlock prompt",
-                    "📱" to "4-Tab Navigation — clean layout for Alarms, History, Settings & About",
-                    "🕒" to "12H / 24H Clock Toggle — select preferred format with uppercase 'PM'/'AM'",
-                    "📅" to "Year Display in Date — home clock displays full year (e.g. Sat, Sep 5, 2026)",
-                    "🎨" to "First-Launch Theme Prompt & Status Bar Fix — seamless light/dark theme icon visibility",
-                    "🔑" to "In-App Permissions Manager — view and manage notification, exact alarm & overlay access",
-                    "✉️" to "Support & Community Card — moved to About page for easy feedback & bug reporting"
+                    "🌀" to stringResource(R.string.rel_v1_2_item1),
+                    "⏱" to stringResource(R.string.rel_v1_2_item2),
+                    "🔒" to stringResource(R.string.rel_v1_2_item3),
+                    "📱" to stringResource(R.string.rel_v1_2_item4),
+                    "🕒" to stringResource(R.string.rel_v1_2_item5),
+                    "📅" to stringResource(R.string.rel_v1_2_item6),
+                    "🎨" to stringResource(R.string.rel_v1_2_item7),
+                    "🔑" to stringResource(R.string.rel_v1_2_item8),
+                    "✉️" to stringResource(R.string.rel_v1_2_item9)
                 )
             )
 
             // v1.1 — Collapsed by default
             ExpandableReleaseNoteCard(
-                version = "v1.1 Release Notes",
+                version = stringResource(R.string.rel_v1_1_title),
                 badgeText = "v1.1",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "🌙" to "Dark / Light / System theme selector in Settings",
-                    "🕐" to "Alarm editor now defaults to current time",
-                    "👁"  to "Minute spinner always visible — no more invisible digits",
-                    "🔔" to "New High Pitch alarm sound — loud dual-tone alert",
-                    "🔊" to "Volume defaults to maximum for new alarms",
-                    "🏷"  to "Beema's FINCON branding on home screen"
+                    "🌙" to stringResource(R.string.rel_v1_1_item1),
+                    "🕐" to stringResource(R.string.rel_v1_1_item2),
+                    "👁"  to stringResource(R.string.rel_v1_1_item3),
+                    "🔔" to stringResource(R.string.rel_v1_1_item4),
+                    "🔊" to stringResource(R.string.rel_v1_1_item5),
+                    "🏷"  to stringResource(R.string.rel_v1_1_item6)
                 )
             )
 
             // v1.0 — Collapsed by default
             ExpandableReleaseNoteCard(
-                version = "v1.0 Initial Release",
+                version = stringResource(R.string.rel_v1_0_title),
                 badgeText = "v1.0",
                 isInitiallyExpanded = false,
                 items = listOf(
-                    "⏰" to "Cyclic alarms — repeat every N days from a start date",
-                    "📅" to "Weekly alarms — pick any combination of weekdays",
-                    "🎵" to "7 built-in synth sounds + custom audio file support",
-                    "😴" to "Configurable snooze and vibration toggle",
-                    "📋" to "Alarm history log with clear option"
+                    "⏰" to stringResource(R.string.rel_v1_0_item1),
+                    "📅" to stringResource(R.string.rel_v1_0_item2),
+                    "🎵" to stringResource(R.string.rel_v1_0_item3),
+                    "😴" to stringResource(R.string.rel_v1_0_item4),
+                    "📋" to stringResource(R.string.rel_v1_0_item5)
                 )
             )
         }
@@ -2692,10 +2742,10 @@ fun AboutPageView() {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("CREATOR & ACKNOWLEDGMENTS", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.sp)
-            Text("Built for shift workers, roster personnel, and anyone needing recurring interval alarms beyond standard weekly schedules.", fontSize = 12.sp, color = c.textSecondary, lineHeight = 18.sp)
+            Text(stringResource(R.string.creator_ack_header), fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.sp)
+            Text(stringResource(R.string.creator_ack_body1), fontSize = 12.sp, color = c.textSecondary, lineHeight = 18.sp)
             Spacer(Modifier.height(4.dp))
-            Text("100% AI-assisted development. Zero tracking. Zero ads. 100% free.", fontSize = 11.sp, color = BrandBlue, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.creator_ack_body2), fontSize = 11.sp, color = BrandBlue, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -2783,7 +2833,7 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight().padding(vertical = 40.dp)) {
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("ALARM RINGING", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = BrandBlue, letterSpacing = 2.sp)
+                Text(stringResource(R.string.alarm_ringing_title), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = BrandBlue, letterSpacing = 2.sp)
                 Spacer(Modifier.height(24.dp))
                 Box(modifier = Modifier.size(160.dp).graphicsLayer(scaleX = pulse, scaleY = pulse).background(BrandBlue.copy(alpha = 0.15f), CircleShape).border(BorderStroke(2.dp, BrandBlue.copy(alpha = 0.3f)), CircleShape), contentAlignment = Alignment.Center) {
                     Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(80.dp))
@@ -2797,7 +2847,7 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
                 }
                 Text(timeStr, fontSize = 60.sp, fontWeight = FontWeight.Black, color = TextPrimary, fontFamily = FontFamily.Monospace)
                 Spacer(Modifier.height(8.dp))
-                Text(activeAlarm.label.ifEmpty { "Cyclic Alarm" }, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = TextSecondary, textAlign = TextAlign.Center)
+                Text(activeAlarm.label.ifEmpty { stringResource(R.string.ringing_default_label) }, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = TextSecondary, textAlign = TextAlign.Center)
             }
 
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -2815,7 +2865,7 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Snooze Duration",
+                        stringResource(R.string.ringing_snooze_duration),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = TextSecondary
@@ -2882,7 +2932,7 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
                 ) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Snooze (${selectedSnoozeMins}m)", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                    Text(stringResource(R.string.ringing_btn_snooze) + " (${selectedSnoozeMins}m)", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                 }
 
                 OutlinedButton(
@@ -2902,7 +2952,7 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
                 ) {
                     Icon(Icons.Default.Close, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Dismiss", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                    Text(stringResource(R.string.ringing_btn_dismiss), fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                 }
             }
         }

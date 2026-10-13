@@ -2,14 +2,14 @@
     <string name="app_name">Cyclic Alarms</string>
 
     <!-- Bottom Navigation -->
-    <string name="nav_alarms">Alarme</string>
+    <string name="nav_alarms">Wecker</string>
     <string name="nav_timer">Timer</string>
     <string name="nav_stopwatch">Stoppuhr</string>
     <string name="nav_settings">Einstellungen</string>
 
     <!-- First Run Setup -->
     <string name="welcome_title">Willkommen bei Cyclic Alarms</string>
-    <string name="first_run_subtitle">Wählen Sie Ihre Sprache und Ihr Design. Sie können dies jederzeit in den Einstellungen ändern.</string>
+    <string name="first_run_subtitle">Wählen Sie Ihre Sprache und Ihr Design, um zu beginnen. Sie können diese jederzeit in den Einstellungen ändern.</string>
     <string name="select_language">Sprache</string>
     <string name="select_theme">Design</string>
     <string name="save_and_continue">Speichern &amp; Weiter</string>
@@ -19,11 +19,16 @@
     <string name="setting_language_title">App-Sprache</string>
     <string name="setting_language_subtitle">Sprache komplett offline ändern</string>
     <string name="setting_theme_title">Design</string>
-    <string name="setting_clock_format_title">Uhrzeit-Anzeigeformat</string>
-    <string name="setting_clock_format_subtitle">Wählen Sie das Format für die Uhr auf dem Startbildschirm</string>
-    <string name="setting_permissions_title">Berechtigungen &amp; Systemzugriff</string>
-    <string name="setting_permissions_subtitle">Berechtigungen für zuverlässiges Klingeln und Sperrbildschirm verwalten</string>
+    <string name="setting_clock_format_title">Uhrzeitanzeigeformat</string>
+    <string name="setting_clock_format_subtitle">Wählen Sie das Format der Zeitanzeige auf dem Startbildschirm</string>
+    <string name="setting_permissions_title">Berechtigungen &amp; App-Zugriff</string>
+    <string name="setting_permissions_subtitle">Systemzugriff für zuverlässiges Klingeln und Sperrbildschirm-Popups verwalten</string>
+    <string name="about_cyclic_alarms">Über Cyclic Alarms</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.6.4 • Versionshinweise, Support &amp; Entwickler-Info</string>
+    <string name="tinted">Getönt</string>
+    <string name="pure_white">Reinweiß</string>
 
+    <!-- Theme options -->
     <string name="theme_pure_dark">Tiefschwarz</string>
     <string name="theme_dark">Dunkel</string>
     <string name="theme_system">System</string>
@@ -35,30 +40,213 @@
 
     <!-- Permissions -->
     <string name="perm_notifications">Benachrichtigungen</string>
-    <string name="perm_notifications_sub">Erforderlich für Alarmsound und Banner</string>
-    <string name="perm_exact_alarm">Genaue Weckerzeit</string>
-    <string name="perm_exact_alarm_sub">Ermöglicht das sekundengenaue Klingeln</string>
-    <string name="perm_fullscreen">Vollbild-Alarmbenachrichtigungen</string>
-    <string name="perm_fullscreen_sub">Zeigt Alarm über dem gesperrten Bildschirm an</string>
+    <string name="perm_notifications_sub">Erforderlich für laute Wecktöne und Banner</string>
+    <string name="perm_exact_alarm">Genaue Wecker-Planung</string>
+    <string name="perm_exact_alarm_sub">Ermöglicht das Auslösen des Weckers zur exakt eingestellten Sekunde</string>
+    <string name="perm_fullscreen">Vollbild-Weckalarme</string>
+    <string name="perm_fullscreen_sub">Zeigt den Weckbildschirm über dem Sperrbildschirm an</string>
     <string name="perm_overlay">Über anderen Apps anzeigen</string>
-    <string name="perm_overlay_sub">Erlaubt Wecker-Popups über anderen Apps</string>
+    <string name="perm_overlay_sub">Erforderlich für das Alarm-Popup auf dem Sperrbildschirm</string>
+    <string name="badge_granted">✓ Gewährt</string>
+    <string name="badge_disabled">⚠ Deaktiviert</string>
+    <string name="btn_fix">Beheben</string>
+    <string name="btn_fix_now">Jetzt beheben</string>
+    <string name="btn_manage">Verwalten</string>
+    <string name="btn_grant">Erlauben</string>
 
     <!-- Permission Gate Screen -->
     <string name="perm_gate_title">Berechtigungen erforderlich</string>
-    <string name="perm_gate_desc">Cyclic Alarms benötigt diese Berechtigungen, um zuverlässig zu klingeln. Bitte alle gewähren.</string>
+    <string name="perm_gate_desc">Cyclic Alarms benötigt diese Systemberechtigungen, um zuverlässig zu wecken. Bitte gewähren Sie alle, um fortzufahren.</string>
 
     <!-- Common Actions & Alerts -->
     <string name="next_alarm_prefix">Nächster:</string>
-    <string name="no_active_alarms">Keine aktiven Alarme</string>
-    <string name="calculating">Wird berechnet…</string>
-    <string name="no_alarms_yet">Noch keine Alarme</string>
-    <string name="no_alarms_hint">Tippen Sie auf +, um Ihren ersten Alarm zu erstellen.</string>
-    <string name="silent_banner_text">⚡ Alarme klingeln auch bei Lautlos &amp; Nicht stören. Hinweis: Bei ausgeschaltetem Smartphone können keine Alarme klingeln.</string>
+    <string name="no_active_alarms">Keine aktiven Wecker</string>
+    <string name="calculating">Berechne…</string>
+    <string name="no_alarms_yet">Noch keine Wecker</string>
+    <string name="no_alarms_hint">Tippen Sie auf +, um Ihren ersten zyklischen oder wöchentlichen Wecker zu erstellen.</string>
+    <string name="notif_off_warning">⚠ Benachrichtigungen aus — Wecker klingeln nicht</string>
+    <string name="silent_banner_text">⚡ Wecker klingeln auch im Lautlos- und Nicht-Stören-Modus. Hinweis: Bei ausgeschaltetem Telefon kann kein Wecker klingeln.</string>
     <string name="delete">Löschen</string>
+    <string name="edit">Bearbeiten</string>
     <string name="cancel">Abbrechen</string>
     <string name="save">Speichern</string>
+    <string name="clear">Löschen</string>
+    <string name="ok">OK</string>
+    <string name="close">Schließen</string>
     <string name="select_all">Alle</string>
     <string name="select_none">Keine</string>
     <string name="selected_count">%d ausgewählt</string>
     <string name="back_to_settings">Zurück zu Einstellungen</string>
+
+    <!-- Timer tab -->
+    <string name="timers_header">TIMER (%d/5)</string>
+    <string name="add_timer">Timer hinzufügen</string>
+    <string name="timer_default_name">Timer %d</string>
+    <string name="unit_hh">STD</string>
+    <string name="unit_mm">MIN</string>
+    <string name="unit_ss">SEK</string>
+    <string name="times_up">Zeit abgelaufen!</string>
+    <string name="reset">Zurücksetzen</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+
+    <!-- Stopwatch tab -->
+    <string name="stopwatch_title">STOPPUHR</string>
+    <string name="lap">Runde</string>
+    <string name="stop">Stopp</string>
+    <string name="lap_prefix">Runde %d:</string>
+    <string name="table_lap">RUNDE</string>
+    <string name="table_lap_time">RUNDENZEIT</string>
+    <string name="table_overall">GESAMT</string>
+
+    <!-- Add/Edit Alarm Dialog -->
+    <string name="dialog_new_alarm">Neuer Wecker</string>
+    <string name="dialog_edit_alarm">Wecker bearbeiten</string>
+    <string name="alarm_time_section">Weckzeit</string>
+    <string name="alarm_label_optional">Bezeichnung (optional)</string>
+    <string name="alarm_label_placeholder">z.B. Frühschicht</string>
+    <string name="tab_cyclic_days">Zyklische Tage</string>
+    <string name="tab_weekly_days">Wochentage</string>
+    <string name="cyclic_config_section">Zyklische Konfiguration</string>
+    <string name="repeat_on_days_section">An Tagen wiederholen</string>
+    <string name="every_word">Alle</string>
+    <string name="days_word">Tage</string>
+    <string name="start_date">Startdatum</string>
+    <string name="snooze_duration_section">Schlummerdauer</string>
+    <string name="snooze_duration_hint">Schlummerdauer in Minuten auswählen oder eingeben</string>
+    <string name="custom_colon">Eigener Wert:</string>
+    <string name="minutes_word">Minuten</string>
+    <string name="alarm_sound_section">Weckton</string>
+    <string name="custom_track">Eigene Audiodatei</string>
+    <string name="custom_track_sub">Eigener Musiktitel</string>
+    <string name="pick_from_device">Vom Gerät wählen</string>
+    <string name="change_track">Titel ändern</string>
+    <string name="volume_vibration_section">Lautstärke &amp; Vibration</string>
+    <string name="vibrate">Vibration</string>
+    <string name="save_alarm">Wecker speichern</string>
+
+    <!-- Weekday abbreviations -->
+    <string name="day_mo">Mo</string>
+    <string name="day_tu">Di</string>
+    <string name="day_we">Mi</string>
+    <string name="day_th">Do</string>
+    <string name="day_fr">Fr</string>
+    <string name="day_sa">Sa</string>
+    <string name="day_su">So</string>
+
+    <string name="sched_one_off">EINMALIG</string>
+    <string name="sched_daily">TÄGLICH</string>
+    <string name="sched_mon_fri">MO – FR</string>
+    <string name="sched_weekends">WOCHENENDE</string>
+    <string name="sched_cyclic_prefix">ZYKLISCH · ALLE %d TAGE</string>
+
+    <!-- Alarm History -->
+    <string name="alarm_history_title">Wecker-Verlauf</string>
+    <string name="no_history_title">Kein Verlauf</string>
+    <string name="no_history_desc">Beendete und schlummernde Wecker werden hier angezeigt.</string>
+
+    <!-- About Subpage -->
+    <string name="about_release_notes_header">ÜBER &amp; VERSIONSNOTIZEN</string>
+    <string name="hero_tagline">Smarte Wecker-App für Schichtdienst, Dienstpläne &amp; wiederkehrende Zyklen</string>
+    <string name="support_community_header">SUPPORT &amp; COMMUNITY</string>
+    <string name="support_email_title">Feedback, Anregungen oder Fehlerberichte</string>
+    <string name="release_history_title">Versionshistorie &amp; Notizen</string>
+    <string name="release_history_subtitle">Tippen Sie auf eine Version, um Notizen ein- oder auszuklappen</string>
+    <string name="badge_latest">Neueste</string>
+    <string name="badge_current">Aktuelle Version</string>
+    <string name="creator_ack_header">ENTWICKLER &amp; DANKSAGUNG</string>
+    <string name="creator_ack_body1">Entwickelt für Schichtarbeiter, Einsatzpersonal und alle, die Wecker mit flexiblen Intervallen jenseits klassischer Wochenmuster benötigen.</string>
+    <string name="creator_ack_body2" formatted="false">100% KI-unterstützte Entwicklung. Keine Tracker. Keine Werbung. 100% kostenlos.</string>
+
+    <!-- Ringing Screen -->
+    <string name="alarm_ringing_title">WECKER KLINGELT</string>
+    <string name="ringing_default_label">Zyklischer Wecker</string>
+    <string name="ringing_snooze_duration">Schlummerdauer</string>
+    <string name="ringing_btn_snooze">Schlummern</string>
+    <string name="ringing_btn_dismiss">Ausschalten</string>
+
+    <!-- Release Notes Titles -->
+    <string name="rel_v1_6_4_title">v1.6.4 (Aktuelle Version)</string>
+    <string name="rel_v1_6_3_title">Versionshinweise v1.6.3</string>
+    <string name="rel_v1_6_2_title">Versionshinweise v1.6.2</string>
+    <string name="rel_v1_6_1_title">Versionshinweise v1.6.1</string>
+    <string name="rel_v1_6_title">Versionshinweise v1.6</string>
+    <string name="rel_v1_5_title">Versionshinweise v1.5</string>
+    <string name="rel_v1_4_title">Versionshinweise v1.4</string>
+    <string name="rel_v1_3_title">Versionshinweise v1.3</string>
+    <string name="rel_v1_2_title">Versionshinweise v1.2</string>
+    <string name="rel_v1_1_title">Versionshinweise v1.1</string>
+    <string name="rel_v1_0_title">Erste Veröffentlichung v1.0</string>
+
+    <!-- Release Notes Items v1.6.4 -->
+    <string name="rel_v1_6_4_item1">Vollständige Offline-Lokalisierung — komplette Übersetzung über alle Ansichten, Registerkarten, Dialoge, Timer, Stoppuhr, Einstellungen, Versionshinweise und Klingelansicht in 11 Sprachen</string>
+    <string name="rel_v1_6_4_item2">Prioritäre Sprachauswahl beim Start — Dialog wird sofort vor den Systemberechtigungen angezeigt</string>
+    <string name="rel_v1_6_4_item3">Einheitliche Standardziffern — Zahlen bleiben in allen Übersetzungen strikt 1, 2, 3 für optimale Lesbarkeit</string>
+
+    <!-- Release Notes Items v1.6.3 -->
+    <string name="rel_v1_6_3_item1">Mehrsprachige Grundlage — Sprachwähler in der App und 11 Offline-Sprachpakete</string>
+    <string name="rel_v1_6_3_item2">Ersteinrichtungs-Dialog — bevorzugte Sprache und Design direkt bei der Installation wählen</string>
+    <string name="rel_v1_6_3_item3">In-App-Spracheinstellungen — Anzeige-Sprache jederzeit flexibel in den Einstellungen anpassen</string>
+
+    <!-- Release Notes Items v1.6.2 -->
+    <string name="rel_v1_6_2_item1">Android 9-Kompatibilität — Behebung unerwarteter Schließungen auf Android 9 und älteren Versionen</string>
+    <string name="rel_v1_6_2_item2">Hintergrunddienst-Schutz — abgesicherte Vordergrundbenachrichtigungen für unterbrechungsfreie Zeitmessung</string>
+    <string name="rel_v1_6_2_item3">Sofortiger Timer-Alarmstopp — Tippen auf Löschen oder Zurücksetzen beendet den Klingelton sofort</string>
+    <string name="rel_v1_6_2_item4">Intelligente Benachrichtigungsnavigation — Titel zeigt Timer oder Stoppuhr und öffnet die aktive Registerkarte</string>
+    <string name="rel_v1_6_2_item5">Sicherer Alarmlebenszyklus — sofortiges Schließen und Rückkehr zum Sperrbildschirm</string>
+
+    <!-- Release Notes Items v1.6.1 -->
+    <string name="rel_v1_6_1_item1">F-Droid-Konformität — saubere Open-Source-Metadaten, Apache-2.0-Lizenz, ohne Netzwerk-Prüfungen</string>
+    <string name="rel_v1_6_1_item2">Berechtigungsübersicht — vereinfachte Schnittstelle für Systemberechtigungen</string>
+
+    <!-- Release Notes Items v1.6 -->
+    <string name="rel_v1_6_item1">Dauerhafte Hintergrundbenachrichtigung — Benachrichtigung kann während des Laufs nicht weggewischt werden, mit \'Alles stoppen\'-Button</string>
+    <string name="rel_v1_6_item2">Kontrast im Hell-Modus — Weckzeiten mit kräftigen, kontrastreichen Farben</string>
+    <string name="rel_v1_6_item3">Abgestimmte Tönung im Hell-Modus — grau-blauer Hintergrund für effektivere Helligkeitsregelung</string>
+
+    <!-- Release Notes Items v1.5 -->
+    <string name="rel_v1_5_item1">Gespeicherter Lieblingstitel — zuletzt gewählte Musikdatei wird automatisch für neue Alarme übernommen</string>
+    <string name="rel_v1_5_item2">Mehrere Timer — bis zu 5 unabhängige Countdown-Timer gleichzeitig ausführen</string>
+    <string name="rel_v1_5_item3">Pure Dark-Modus — echtes AMOLED-Schwarz für maximale Energieeinsparung auf OLED-Displays</string>
+    <string name="rel_v1_5_item4">Helligkeitsregler im Hell-Modus — Hintergrund von getönt bis reinweiß stufenlos anpassen</string>
+    <string name="rel_v1_5_item5">Hintergrund-Timer &amp; Stoppuhr — laufen dank Vordergrunddienst zuverlässig weiter</string>
+    <string name="rel_v1_5_item6">Klingeln bei Stumm &amp; Nicht stören — Alarme umgehen die Ruftonlautstärke</string>
+
+    <!-- Release Notes Items v1.4 -->
+    <string name="rel_v1_4_item1">Offizieller Paketname — aktualisiert auf com.beemasfincon.cyclicalarms</string>
+    <string name="rel_v1_4_item2">Zuverlässigkeitsverbesserungen — optimierte Weckzeitplanung und Lifecycle-Verwaltung</string>
+
+    <!-- Release Notes Items v1.3 -->
+    <string name="rel_v1_3_item1">Timer — Countdown mit Fortschrittsring, Schnellwahltasten (1m–30m) und Ton-/Vibrationsalarm</string>
+    <string name="rel_v1_3_item2">Stoppuhr — Zeitmessung mit Runden, Hervorhebung der schnellsten/langsamsten Runden und Tastentönen</string>
+    <string name="rel_v1_3_item3">Strikte Sperrbildschirm-Privatsphäre — Anzeige über der Bildschirmsperre nur bei aktivem Klingeln</string>
+    <string name="rel_v1_3_item4">Navigation mit 4 Registerkarten — Alarme, Timer, Stoppuhr, Einstellungen mit Über-Seite</string>
+    <string name="rel_v1_3_item5">Zyklisch als Standard — neue Alarme öffnen direkt die Registerkarte Zyklische Tage</string>
+    <string name="rel_v1_3_item6">Symbolanpassung — App-Icon wird auf dem Launcher nicht mehr beschnitten dargestellt</string>
+
+    <!-- Release Notes Items v1.2 -->
+    <string name="rel_v1_2_item1">Spiral-Skizzen-Symbol — symmetrischer Bleistiftskizzen-Wecker als App-Icon</string>
+    <string name="rel_v1_2_item2">Individuelle Schlummerdauer — Schlummerzeit für jeden Wecker separat festlegen</string>
+    <string name="rel_v1_2_item3">Natives Klingeln auf Sperrbildschirm — saubere Alarmierung ohne vorherige PIN-Eingabe</string>
+    <string name="rel_v1_2_item4">Strukturierte Navigation — übersichtliches 4-Reiter-Layout</string>
+    <string name="rel_v1_2_item5">12h / 24h Uhrzeitformat — wählen Sie Ihr bevorzugtes Format mit AM/PM</string>
+    <string name="rel_v1_2_item6">Jahresanzeige im Datum — Startbildschirm zeigt das vollständige Jahr (z.B. Sa, 5. Sep 2026)</string>
+    <string name="rel_v1_2_item7">Designauswahl beim ersten Start — optimale Sichtbarkeit der Statusleistensymbole</string>
+    <string name="rel_v1_2_item8">In-App-Berechtigungsmanager — direkte Kontrolle aller wichtigen Systemzugriffe</string>
+    <string name="rel_v1_2_item9">Support &amp; Community-Karte — direkter Draht für Feedback und Fehlerberichte</string>
+
+    <!-- Release Notes Items v1.1 -->
+    <string name="rel_v1_1_item1">Dunkel / Hell / System-Design in den Einstellungen</string>
+    <string name="rel_v1_1_item2">Weckereditor startet mit der aktuellen Uhrzeit</string>
+    <string name="rel_v1_1_item3">Minutenauswahl dauerhaft sichtbar</string>
+    <string name="rel_v1_1_item4">Neuer hoher Alarmton — lauter Zweiton-Weckruf</string>
+    <string name="rel_v1_1_item5">Standardlautstärke für neue Wecker auf Maximum</string>
+    <string name="rel_v1_1_item6">Beema\'s FINCON-Signatur auf dem Startbildschirm</string>
+
+    <!-- Release Notes Items v1.0 -->
+    <string name="rel_v1_0_item1">Zyklische Alarme — Wecken alle N Tage ab einem Startdatum</string>
+    <string name="rel_v1_0_item2">Wöchentliche Alarme — beliebige Wochentage frei kombinierbar</string>
+    <string name="rel_v1_0_item3">7 integrierte Synthesizer-Sounds und Unterstützung eigener Audiodateien</string>
+    <string name="rel_v1_0_item4">Einstellbares Schlummern und Vibration</string>
+    <string name="rel_v1_0_item5">Alarmverlauf mit Löschfunktion</string>
 </resources>

@@ -83,6 +83,12 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 
 ---
 
+## What's new — v1.6.4
+
+- 🌐 **Comprehensive End-to-End Offline Localization** — all screens, tabs, dialogs, empty states, history logs, alarms editor, timers, stopwatch, settings, and lock-screen ringing UI are 100% translated across 11 languages (English, Turkish, Spanish, German, French, Hindi, Portuguese, Russian, Chinese, Japanese, Arabic) and System Default.
+- 🚀 **First-Run Language Gate** — language selection dialog is presented immediately on first launch before the permission gate or dashboard, ensuring user can interact in their preferred language right away.
+- 🔢 **Universal Digit Readability** — numerals remain strictly formatted in standard numbers (`1, 2, 3...`) across all localized displays.
+
 ## What's new — v1.6.3
 
 - 🌐 **Full Offline Multilingual Localization** — complete offline UI translations for 11 global languages (English, Turkish, Spanish, German, French, Hindi, Portuguese, Russian, Chinese, Japanese, Arabic) plus System Default. No internet or external APIs required.

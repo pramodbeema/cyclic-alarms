@@ -9,56 +9,244 @@
 
     <!-- First Run Setup -->
     <string name="welcome_title">Bem-vindo ao Cyclic Alarms</string>
-    <string name="first_run_subtitle">Escolha seu idioma e tema para começar. Você pode alterá-los a qualquer momento nas Configurações.</string>
+    <string name="first_run_subtitle">Selecione seu idioma e tema para começar. Você pode alterá-los a qualquer momento nas Configurações.</string>
     <string name="select_language">Idioma</string>
     <string name="select_theme">Tema</string>
     <string name="save_and_continue">Salvar e Continuar</string>
 
     <!-- Settings Page -->
     <string name="settings_title">CONFIGURAÇÕES</string>
-    <string name="setting_language_title">Idioma do Aplicativo</string>
-    <string name="setting_language_subtitle">Altere o idioma do app totalmente offline</string>
+    <string name="setting_language_title">Idioma do aplicativo</string>
+    <string name="setting_language_subtitle">Altere o idioma de forma totalmente offline</string>
     <string name="setting_theme_title">Tema</string>
-    <string name="setting_clock_format_title">Formato de Exibição do Relógio</string>
-    <string name="setting_clock_format_subtitle">Escolha como a hora é exibida no relógio principal</string>
-    <string name="setting_permissions_title">Permissões e Acesso ao Sistema</string>
-    <string name="setting_permissions_subtitle">Gerencie o acesso do sistema para garantir o toque pontual dos alarmes</string>
+    <string name="setting_clock_format_title">Formato de exibição do relógio</string>
+    <string name="setting_clock_format_subtitle">Escolha como a hora é exibida no relógio da tela inicial</string>
+    <string name="setting_permissions_title">Permissões e acesso ao sistema</string>
+    <string name="setting_permissions_subtitle">Gerencie o acesso do sistema necessário para alarmes pontuais e tela de bloqueio</string>
+    <string name="about_cyclic_alarms">Sobre o Cyclic Alarms</string>
+    <string name="about_cyclic_alarms_subtitle">Versão 1.6.4 • Notas da versão, suporte e criador</string>
+    <string name="tinted">Matizado</string>
+    <string name="pure_white">Branco Puro</string>
 
-    <string name="theme_pure_dark">Preto Puro</string>
+    <!-- Theme options -->
+    <string name="theme_pure_dark">Escuro Puro</string>
     <string name="theme_dark">Escuro</string>
     <string name="theme_system">Sistema</string>
     <string name="theme_light">Claro</string>
-    <string name="background_brightness">Brilho do Fundo</string>
+    <string name="background_brightness">Brilho do plano de fundo</string>
 
     <string name="time_format_12h">12 Horas (AM/PM)</string>
     <string name="time_format_24h">24 Horas</string>
 
     <!-- Permissions -->
     <string name="perm_notifications">Notificações</string>
-    <string name="perm_notifications_sub">Necessário para som e avisos de alarme</string>
-    <string name="perm_exact_alarm">Alarmes Exatos</string>
-    <string name="perm_exact_alarm_sub">Permite que os alarmes toquem no segundo exato</string>
-    <string name="perm_fullscreen">Alertas em Tela Cheia</string>
-    <string name="perm_fullscreen_sub">Exibe a tela de alarme sobre a tela bloqueada</string>
-    <string name="perm_overlay">Sobrepor a outros aplicativos</string>
-    <string name="perm_overlay_sub">Permite janelas pop-up de alarme sobre outros apps</string>
+    <string name="perm_notifications_sub">Necessário para emitir sons altos de alarme e banners</string>
+    <string name="perm_exact_alarm">Agendamento de alarme exato</string>
+    <string name="perm_exact_alarm_sub">Permite que os alarmes toquem no segundo exato definido</string>
+    <string name="perm_fullscreen">Alertas de alarme em tela cheia</string>
+    <string name="perm_fullscreen_sub">Exibe a tela de toque sobre a tela de bloqueio</string>
+    <string name="perm_overlay">Exibir sobre outros aplicativos</string>
+    <string name="perm_overlay_sub">Necessário para a janela pop-up na tela de bloqueio</string>
+    <string name="badge_granted">✓ Concedido</string>
+    <string name="badge_disabled">⚠ Desativado</string>
+    <string name="btn_fix">Corrigir</string>
+    <string name="btn_fix_now">Corrigir agora</string>
+    <string name="btn_manage">Gerenciar</string>
+    <string name="btn_grant">Conceder</string>
 
     <!-- Permission Gate Screen -->
-    <string name="perm_gate_title">Permissões Necessárias</string>
-    <string name="perm_gate_desc">Cyclic Alarms precisa dessas permissões para tocar alarmes com segurança. Conceda todas para continuar.</string>
+    <string name="perm_gate_title">Permissões necessárias</string>
+    <string name="perm_gate_desc">O Cyclic Alarms precisa dessas permissões do sistema para tocar alarmes com precisão. Conceda todas para continuar.</string>
 
     <!-- Common Actions & Alerts -->
     <string name="next_alarm_prefix">Próximo:</string>
-    <string name="no_active_alarms">Sem alarmes ativos</string>
+    <string name="no_active_alarms">Nenhum alarme ativo</string>
     <string name="calculating">Calculando…</string>
-    <string name="no_alarms_yet">Nenhum Alarme Ainda</string>
+    <string name="no_alarms_yet">Nenhum alarme ainda</string>
     <string name="no_alarms_hint">Toque em + para criar seu primeiro alarme cíclico ou semanal.</string>
-    <string name="silent_banner_text">⚡ Os alarmes tocam mesmo nos modos Silencioso e Não Perturbe. Nota: se o aparelho estiver desligado, não tocará.</string>
+    <string name="notif_off_warning">⚠ Notificações desativadas — os alarmes não tocarão</string>
+    <string name="silent_banner_text">⚡ Os alarmes tocam mesmo no modo Silencioso e Não Perturbe. Nota: se o telefone estiver desligado, os alarmes não podem tocar.</string>
     <string name="delete">Excluir</string>
+    <string name="edit">Editar</string>
     <string name="cancel">Cancelar</string>
     <string name="save">Salvar</string>
-    <string name="select_all">Todos</string>
+    <string name="clear">Limpar</string>
+    <string name="ok">OK</string>
+    <string name="close">Fechar</string>
+    <string name="select_all">Tudo</string>
     <string name="select_none">Nenhum</string>
     <string name="selected_count">%d selecionados</string>
     <string name="back_to_settings">Voltar às Configurações</string>
+
+    <!-- Timer tab -->
+    <string name="timers_header">TEMPORIZADORES (%d/5)</string>
+    <string name="add_timer">Adicionar temporizador</string>
+    <string name="timer_default_name">Temporizador %d</string>
+    <string name="unit_hh">HH</string>
+    <string name="unit_mm">MM</string>
+    <string name="unit_ss">SS</string>
+    <string name="times_up">Tempo Esgotado!</string>
+    <string name="reset">Redefinir</string>
+    <string name="start">Iniciar</string>
+    <string name="pause">Pausar</string>
+
+    <!-- Stopwatch tab -->
+    <string name="stopwatch_title">CRONÔMETRO</string>
+    <string name="lap">Volta</string>
+    <string name="stop">Parar</string>
+    <string name="lap_prefix">Volta %d:</string>
+    <string name="table_lap">VOLTA</string>
+    <string name="table_lap_time">TEMPO DA VOLTA</string>
+    <string name="table_overall">TOTAL</string>
+
+    <!-- Add/Edit Alarm Dialog -->
+    <string name="dialog_new_alarm">Novo Alarme</string>
+    <string name="dialog_edit_alarm">Editar Alarme</string>
+    <string name="alarm_time_section">Hora do Alarme</string>
+    <string name="alarm_label_optional">Rótulo (opcional)</string>
+    <string name="alarm_label_placeholder">ex. Turno de Trabalho</string>
+    <string name="tab_cyclic_days">Dias Cíclicos</string>
+    <string name="tab_weekly_days">Dias Semanais</string>
+    <string name="cyclic_config_section">Configuração Cíclica</string>
+    <string name="repeat_on_days_section">Repetir nos dias</string>
+    <string name="every_word">A cada</string>
+    <string name="days_word">dias</string>
+    <string name="start_date">Data de Início</string>
+    <string name="snooze_duration_section">Duração do Soneca</string>
+    <string name="snooze_duration_hint">Selecione ou insira a duração do soneca em minutos</string>
+    <string name="custom_colon">Personalizado:</string>
+    <string name="minutes_word">minutos</string>
+    <string name="alarm_sound_section">Som do Alarme</string>
+    <string name="custom_track">Faixa Personalizada</string>
+    <string name="custom_track_sub">Faixa de áudio personalizada</string>
+    <string name="pick_from_device">Escolher do dispositivo</string>
+    <string name="change_track">Mudar faixa</string>
+    <string name="volume_vibration_section">Volume e Vibração</string>
+    <string name="vibrate">Vibrar</string>
+    <string name="save_alarm">Salvar Alarme</string>
+
+    <!-- Weekday abbreviations -->
+    <string name="day_mo">Seg</string>
+    <string name="day_tu">Ter</string>
+    <string name="day_we">Qua</string>
+    <string name="day_th">Qui</string>
+    <string name="day_fr">Sex</string>
+    <string name="day_sa">Sáb</string>
+    <string name="day_su">Dom</string>
+
+    <string name="sched_one_off">ÚNICO</string>
+    <string name="sched_daily">DIÁRIO</string>
+    <string name="sched_mon_fri">SEG – SEX</string>
+    <string name="sched_weekends">FIM DE SEMANA</string>
+    <string name="sched_cyclic_prefix">CÍCLICO · A CADA %dD</string>
+
+    <!-- Alarm History -->
+    <string name="alarm_history_title">Histórico de Alarmes</string>
+    <string name="no_history_title">Nenhum Histórico</string>
+    <string name="no_history_desc">Alarmes dispensados e adiados aparecerão aqui.</string>
+
+    <!-- About Subpage -->
+    <string name="about_release_notes_header">SOBRE E NOTAS DA VERSÃO</string>
+    <string name="hero_tagline">App inteligente de alarmes para escalas, plantões e ciclos rotativos</string>
+    <string name="support_community_header">SUPORTE E COMUNIDADE</string>
+    <string name="support_email_title">Comentários, sugestões ou relatórios de bugs</string>
+    <string name="release_history_title">Histórico e Notas da Versão</string>
+    <string name="release_history_subtitle">Toque em qualquer versão para expandir ou recolher as notas</string>
+    <string name="badge_latest">Mais Recente</string>
+    <string name="badge_current">Versão Atual</string>
+    <string name="creator_ack_header">CRIADOR E AGRADECIMENTOS</string>
+    <string name="creator_ack_body1">Criado para trabalhadores de turnos e qualquer pessoa que precise de alarmes com intervalos além do padrão semanal.</string>
+    <string name="creator_ack_body2" formatted="false">Desenvolvimento 100% assistido por IA. Zero rastreamento. Zero anúncios. 100% gratuito.</string>
+
+    <!-- Ringing Screen -->
+    <string name="alarm_ringing_title">ALARME TOCANDO</string>
+    <string name="ringing_default_label">Alarme Cíclico</string>
+    <string name="ringing_snooze_duration">Duração do Soneca</string>
+    <string name="ringing_btn_snooze">Soneca</string>
+    <string name="ringing_btn_dismiss">Dispensar</string>
+
+    <!-- Release Notes Titles -->
+    <string name="rel_v1_6_4_title">v1.6.4 (Versão Atual)</string>
+    <string name="rel_v1_6_3_title">Notas da Versão v1.6.3</string>
+    <string name="rel_v1_6_2_title">Notas da Versão v1.6.2</string>
+    <string name="rel_v1_6_1_title">Notas da Versão v1.6.1</string>
+    <string name="rel_v1_6_title">Notas da Versão v1.6</string>
+    <string name="rel_v1_5_title">Notas da Versão v1.5</string>
+    <string name="rel_v1_4_title">Notas da Versão v1.4</string>
+    <string name="rel_v1_3_title">Notas da Versão v1.3</string>
+    <string name="rel_v1_2_title">Notas da Versão v1.2</string>
+    <string name="rel_v1_1_title">Notas da Versão v1.1</string>
+    <string name="rel_v1_0_title">Lançamento Inicial v1.0</string>
+
+    <!-- Release Notes Items v1.6.4 -->
+    <string name="rel_v1_6_4_item1">Localização Completa Offline — tradução integral em todas as telas, abas, diálogos, temporizadores, cronômetro, configurações, notas de versão e tela de toque em 11 idiomas</string>
+    <string name="rel_v1_6_4_item2">Seleção de Idioma Prioritária no Início — diálogo de escolha de idioma apresentado diretamente antes das permissões do sistema</string>
+    <string name="rel_v1_6_4_item3">Dígitos Padrão Universais — numerais mantidos estritamente como 1, 2, 3 em todas as traduções para máxima legibilidade</string>
+
+    <!-- Release Notes Items v1.6.3 -->
+    <string name="rel_v1_6_3_item1">Base de Suporte Multilíngue — seletor de idioma no app e 11 pacotes de tradução offline</string>
+    <string name="rel_v1_6_3_item2">Diálogo de Configuração Inicial — escolha seu idioma e tema preferidos na primeira execução</string>
+    <string name="rel_v1_6_3_item3">Configurações de Idioma no App — altere o idioma facilmente a qualquer momento nas Configurações</string>
+
+    <!-- Release Notes Items v1.6.2 -->
+    <string name="rel_v1_6_2_item1">Compatibilidade com Android 9 — eliminação de encerramentos inesperados no Android 9 e versões antigas</string>
+    <string name="rel_v1_6_2_item2">Proteção de Serviço em Segundo Plano — notificações de primeiro plano protegidas para rastreamento confiável</string>
+    <string name="rel_v1_6_2_item3">Parada Imediata do Alerta do Temporizador — tocar em Limpar ou Redefinir silencia o som na hora</string>
+    <string name="rel_v1_6_2_item4">Navegação Inteligente por Notificação — título dinâmico indicando Temporizador ou Cronômetro abrindo a aba correta</string>
+    <string name="rel_v1_6_2_item5">Ciclo de Vida Limpo do Alarme — encerramento imediato e retorno à tela de bloqueio</string>
+
+    <!-- Release Notes Items v1.6.1 -->
+    <string name="rel_v1_6_1_item1">Conformidade com o F-Droid — metadados de código aberto limpos, licença Apache-2.0, sem verificadores de rede</string>
+    <string name="rel_v1_6_1_item2">Fluxo de Permissões Simplificado — gerenciamento claro e direto de permissões</string>
+
+    <!-- Release Notes Items v1.6 -->
+    <string name="rel_v1_6_item1">Notificação Persistente em Segundo Plano — não pode ser dispensada enquanto o temporizador roda, com botão \'Parar Tudo\'</string>
+    <string name="rel_v1_6_item2">Correção de Contraste no Modo Claro — horários dos alarmes em cores profundas e nítidas</string>
+    <string name="rel_v1_6_item3">Tom Mais Equilibrado no Modo Claro — fundo cinza-azulado para controle de brilho mais eficiente</string>
+
+    <!-- Release Notes Items v1.5 -->
+    <string name="rel_v1_5_item1">Faixa Personalizada Persistente — último áudio escolhido aplicado automaticamente aos novos alarmes</string>
+    <string name="rel_v1_5_item2">Múltiplos Temporizadores — execute até 5 contagens regressivas simultâneas</string>
+    <string name="rel_v1_5_item3">Modo Pure Dark — preto puro AMOLED para economia máxima de bateria em telas OLED</string>
+    <string name="rel_v1_5_item4">Controle de Brilho no Modo Claro — ajuste o fundo de cinza a branco puro</string>
+    <string name="rel_v1_5_item5">Temporizador e Cronômetro em Segundo Plano — continuam rodando via serviço de primeiro plano</string>
+    <string name="rel_v1_5_item6">Toca no Modo Silencioso e Não Perturbe — alarmes contornam o volume do toque</string>
+
+    <!-- Release Notes Items v1.4 -->
+    <string name="rel_v1_4_item1">Nome de Pacote Oficial — renomeado para com.beemasfincon.cyclicalarms</string>
+    <string name="rel_v1_4_item2">Melhorias de Confiabilidade — agendamento e ciclo de vida do alarme aprimorados</string>
+
+    <!-- Release Notes Items v1.3 -->
+    <string name="rel_v1_3_item1">Temporizador — contagem com anel de progresso, botões rápidos (1m–30m) e alerta sonoro com vibração</string>
+    <string name="rel_v1_3_item2">Cronômetro — registro de voltas, destaque das voltas mais rápida/lenta e feedback sonoro</string>
+    <string name="rel_v1_3_item3">Privacidade Estrita na Tela de Bloqueio — exibido sobre o bloqueio somente enquanto o alarme toca</string>
+    <string name="rel_v1_3_item4">Navegação em 4 Abas — Alarmes, Temporizador, Cronômetro e Configurações com página Sobre</string>
+    <string name="rel_v1_3_item5">Aba Cíclica por Padrão — novos alarmes abrem diretamente na aba Dias Cíclicos</string>
+    <string name="rel_v1_3_item6">Ajuste de Ícone — ícone perfeitamente centralizado no inicializador</string>
+
+    <!-- Release Notes Items v1.2 -->
+    <string name="rel_v1_2_item1">Ícone Espiral em Esboço — despertador estilizado e simétrico desenhado a lápis</string>
+    <string name="rel_v1_2_item2">Soneca Personalizada por Alarme — defina a duração da soneca para cada alarme</string>
+    <string name="rel_v1_2_item3">Toque Nativo na Tela de Bloqueio — toca diretamente sobre o bloqueio sem pedir PIN</string>
+    <string name="rel_v1_2_item4">Navegação Dedicada — layout limpo com 4 abas</string>
+    <string name="rel_v1_2_item5">Formato 12h / 24h — escolha sua exibição favorita com AM/PM maiúsculo</string>
+    <string name="rel_v1_2_item6">Ano na Data — relógio principal mostra o ano completo (ex. Sáb, 5 de set de 2026)</string>
+    <string name="rel_v1_2_item7">Aviso de Tema no Início — excelente visibilidade dos ícones da barra de status</string>
+    <string name="rel_v1_2_item8">Gerenciador de Permissões Integrado — controle de notificações, alarmes exatos e sobreposição</string>
+    <string name="rel_v1_2_item9">Cartão de Suporte e Comunidade — canal direto para envio de feedback e sugestões</string>
+
+    <!-- Release Notes Items v1.1 -->
+    <string name="rel_v1_1_item1">Seletor de tema Escuro / Claro / Sistema nas Configurações</string>
+    <string name="rel_v1_1_item2">Editor de alarme inicia com a hora atual</string>
+    <string name="rel_v1_1_item3">Seletor de minutos sempre visível</string>
+    <string name="rel_v1_1_item4">Novo som Agudo — som de dois tons forte e claro</string>
+    <string name="rel_v1_1_item5">Volume padrão no máximo para novos alarmes</string>
+    <string name="rel_v1_1_item6">Marca Beema\'s FINCON na tela inicial</string>
+
+    <!-- Release Notes Items v1.0 -->
+    <string name="rel_v1_0_item1">Alarmes cíclicos — repetição a cada N dias a partir de uma data inicial</string>
+    <string name="rel_v1_0_item2">Alarmes semanais — escolha qualquer combinação de dias da semana</string>
+    <string name="rel_v1_0_item3">7 sons sintetizados integrados e suporte a arquivos de áudio externos</string>
+    <string name="rel_v1_0_item4">Soneca e vibração configuráveis</string>
+    <string name="rel_v1_0_item5">Histórico de alarmes com opção de limpeza</string>
 </resources>

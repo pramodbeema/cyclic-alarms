@@ -23,7 +23,12 @@
     <string name="setting_clock_format_subtitle">Choose how time is displayed on the home screen clock</string>
     <string name="setting_permissions_title">Permissions &amp; App Access</string>
     <string name="setting_permissions_subtitle">Manage system access required for reliable alarm ringing and lock-screen popups</string>
+    <string name="about_cyclic_alarms">About Cyclic Alarms</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.6.4 • Release notes, support &amp; creator info</string>
+    <string name="tinted">Tinted</string>
+    <string name="pure_white">Pure White</string>
 
+    <!-- Theme options -->
     <string name="theme_pure_dark">Pure Dark</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_system">System</string>
@@ -37,11 +42,17 @@
     <string name="perm_notifications">Notifications</string>
     <string name="perm_notifications_sub">Required to trigger loud alarm sounds and banners</string>
     <string name="perm_exact_alarm">Exact Alarm Scheduling</string>
-    <string name="perm_exact_alarm_sub">Allows alarm to fire at the exact second requested</string>
+    <string name="perm_exact_alarm_sub">Allows alarms to fire at the exact time you set</string>
     <string name="perm_fullscreen">Full-Screen Alarm Alerts</string>
-    <string name="perm_fullscreen_sub">Displays full-screen ringing UI over keyguard when device is locked</string>
+    <string name="perm_fullscreen_sub">Shows the ringing screen over your lock screen</string>
     <string name="perm_overlay">Display Over Other Apps</string>
-    <string name="perm_overlay_sub">Allows popup window display on top of other running applications</string>
+    <string name="perm_overlay_sub">Needed for the lock screen alarm popup</string>
+    <string name="badge_granted">✓ Granted</string>
+    <string name="badge_disabled">⚠ Disabled</string>
+    <string name="btn_fix">Fix</string>
+    <string name="btn_fix_now">Fix Now</string>
+    <string name="btn_manage">Manage</string>
+    <string name="btn_grant">Grant</string>
 
     <!-- Permission Gate Screen -->
     <string name="perm_gate_title">Permissions Required</string>
@@ -53,12 +64,189 @@
     <string name="calculating">Calculating…</string>
     <string name="no_alarms_yet">No Alarms Yet</string>
     <string name="no_alarms_hint">Tap + to create your first cyclic or weekly alarm.</string>
+    <string name="notif_off_warning">⚠ Notifications off — alarms won\'t ring</string>
     <string name="silent_banner_text">⚡ Alarms ring even in Silent &amp; DND mode. Note: if phone is switched off, alarms cannot ring.</string>
     <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="clear">Clear</string>
+    <string name="ok">OK</string>
+    <string name="close">Close</string>
     <string name="select_all">All</string>
     <string name="select_none">None</string>
     <string name="selected_count">%d selected</string>
     <string name="back_to_settings">Back to Settings</string>
+
+    <!-- Timer tab -->
+    <string name="timers_header">TIMERS (%d/5)</string>
+    <string name="add_timer">Add Timer</string>
+    <string name="timer_default_name">Timer %d</string>
+    <string name="unit_hh">HH</string>
+    <string name="unit_mm">MM</string>
+    <string name="unit_ss">SS</string>
+    <string name="times_up">Time\'s Up!</string>
+    <string name="reset">Reset</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+
+    <!-- Stopwatch tab -->
+    <string name="stopwatch_title">STOPWATCH</string>
+    <string name="lap">Lap</string>
+    <string name="stop">Stop</string>
+    <string name="lap_prefix">Lap %d:</string>
+    <string name="table_lap">LAP</string>
+    <string name="table_lap_time">LAP TIME</string>
+    <string name="table_overall">OVERALL</string>
+
+    <!-- Add/Edit Alarm Dialog -->
+    <string name="dialog_new_alarm">New Alarm</string>
+    <string name="dialog_edit_alarm">Edit Alarm</string>
+    <string name="alarm_time_section">Alarm Time</string>
+    <string name="alarm_label_optional">Label (optional)</string>
+    <string name="alarm_label_placeholder">e.g. Work Shift</string>
+    <string name="tab_cyclic_days">Cyclic Days</string>
+    <string name="tab_weekly_days">Weekly Days</string>
+    <string name="cyclic_config_section">Cyclic Configuration</string>
+    <string name="repeat_on_days_section">Repeat on Days</string>
+    <string name="every_word">Every</string>
+    <string name="days_word">days</string>
+    <string name="start_date">Start Date</string>
+    <string name="snooze_duration_section">Snooze Duration</string>
+    <string name="snooze_duration_hint">Select or enter snooze duration in minutes</string>
+    <string name="custom_colon">Custom:</string>
+    <string name="minutes_word">minutes</string>
+    <string name="alarm_sound_section">Alarm Sound</string>
+    <string name="custom_track">Custom Track</string>
+    <string name="custom_track_sub">Custom track</string>
+    <string name="pick_from_device">Pick from device</string>
+    <string name="change_track">Change track</string>
+    <string name="volume_vibration_section">Volume &amp; Vibration</string>
+    <string name="vibrate">Vibrate</string>
+    <string name="save_alarm">Save Alarm</string>
+
+    <!-- Weekday abbreviations -->
+    <string name="day_mo">Mo</string>
+    <string name="day_tu">Tu</string>
+    <string name="day_we">We</string>
+    <string name="day_th">Th</string>
+    <string name="day_fr">Fr</string>
+    <string name="day_sa">Sa</string>
+    <string name="day_su">Su</string>
+
+    <string name="sched_one_off">ONE-OFF</string>
+    <string name="sched_daily">DAILY</string>
+    <string name="sched_mon_fri">MON – FRI</string>
+    <string name="sched_weekends">WEEKENDS</string>
+    <string name="sched_cyclic_prefix">CYCLIC · EVERY %dD</string>
+
+    <!-- Alarm History -->
+    <string name="alarm_history_title">Alarm History</string>
+    <string name="no_history_title">No History</string>
+    <string name="no_history_desc">Dismissed and snoozed alarms will appear here.</string>
+
+    <!-- About Subpage -->
+    <string name="about_release_notes_header">ABOUT &amp; RELEASE NOTES</string>
+    <string name="hero_tagline">Smart shift, roster &amp; repeating cycle alarm app</string>
+    <string name="support_community_header">SUPPORT &amp; COMMUNITY</string>
+    <string name="support_email_title">Feedbacks, Suggestions or Bugs Reporting</string>
+    <string name="release_history_title">Release History &amp; Notes</string>
+    <string name="release_history_subtitle">Tap on any release version to expand or collapse notes</string>
+    <string name="badge_latest">Latest</string>
+    <string name="badge_current">Current Release</string>
+    <string name="creator_ack_header">CREATOR &amp; ACKNOWLEDGMENTS</string>
+    <string name="creator_ack_body1">Built for shift workers, roster personnel, and anyone needing recurring interval alarms beyond standard weekly schedules.</string>
+    <string name="creator_ack_body2" formatted="false">100% AI-assisted development. Zero tracking. Zero ads. 100% free.</string>
+
+    <!-- Ringing Screen -->
+    <string name="alarm_ringing_title">ALARM RINGING</string>
+    <string name="ringing_default_label">Cyclic Alarm</string>
+    <string name="ringing_snooze_duration">Snooze Duration</string>
+    <string name="ringing_btn_snooze">Snooze</string>
+    <string name="ringing_btn_dismiss">Dismiss</string>
+
+    <!-- Release Notes Titles -->
+    <string name="rel_v1_6_4_title">v1.6.4 (Current Release)</string>
+    <string name="rel_v1_6_3_title">v1.6.3 Release Notes</string>
+    <string name="rel_v1_6_2_title">v1.6.2 Release Notes</string>
+    <string name="rel_v1_6_1_title">v1.6.1 Release Notes</string>
+    <string name="rel_v1_6_title">v1.6 Release Notes</string>
+    <string name="rel_v1_5_title">v1.5 Release Notes</string>
+    <string name="rel_v1_4_title">v1.4 Release Notes</string>
+    <string name="rel_v1_3_title">v1.3 Release Notes</string>
+    <string name="rel_v1_2_title">v1.2 Release Notes</string>
+    <string name="rel_v1_1_title">v1.1 Release Notes</string>
+    <string name="rel_v1_0_title">v1.0 Initial Release</string>
+
+    <!-- Release Notes Items v1.6.4 -->
+    <string name="rel_v1_6_4_item1">Comprehensive Offline Localization — complete translation across all screens, tabs, dialogs, timers, stopwatch, settings, release notes and ringing UI in 11 languages</string>
+    <string name="rel_v1_6_4_item2">Priority First-Run Language Gate — language picker presented immediately upon launch prior to system permissions</string>
+    <string name="rel_v1_6_4_item3">Consistent Standard Digits — numerals remain strictly 1, 2, 3 across all localized views for universal readability</string>
+
+    <!-- Release Notes Items v1.6.3 -->
+    <string name="rel_v1_6_3_item1">Multilingual Support Foundation — added in-app language picker and 11 offline language resource translations</string>
+    <string name="rel_v1_6_3_item2">First-Run Setup Dialog — prompt users for preferred language and theme on install</string>
+    <string name="rel_v1_6_3_item3">In-App Language Settings — easily switch display language anytime from Settings</string>
+
+    <!-- Release Notes Items v1.6.2 -->
+    <string name="rel_v1_6_2_item1">Android 9 Compatibility Fix — eliminated cold-launch abrupt quits on Android 9 and older versions</string>
+    <string name="rel_v1_6_2_item2">Timer &amp; Stopwatch API Guard — guarded API 31 foreground service notifications to ensure flawless background tracking on all Android versions</string>
+    <string name="rel_v1_6_2_item3">Timer Alert Stop on Clear/Reset — tapping Clear or Reset now immediately silences the ringing sound</string>
+    <string name="rel_v1_6_2_item4">Smart Notification Navigation &amp; Title — notification title dynamically reflects Timer vs Stopwatch and tap opens the exact active tab</string>
+    <string name="rel_v1_6_2_item5">Clean Alarm Lifecycle — guaranteed immediate dismiss &amp; lock screen restore without background leakage</string>
+
+    <!-- Release Notes Items v1.6.1 -->
+    <string name="rel_v1_6_1_item1">F-Droid Compliance — clean open-source metadata, Apache-2.0 license, removed network update checkers</string>
+    <string name="rel_v1_6_1_item2">Permission Streamlining — streamlined permission gate for modern and legacy Android systems</string>
+
+    <!-- Release Notes Items v1.6 -->
+    <string name="rel_v1_6_item1">Non-dismissible background notification — timer &amp; stopwatch notification cannot be swiped away while running, with a \'Stop All\' action button</string>
+    <string name="rel_v1_6_item2">Light mode alarm time fix — cyclic and weekly alarm times now use deep, high-contrast colours instead of washed-out tints</string>
+    <string name="rel_v1_6_item3">Deeper light mode tint — default background is more noticeably grey-blue so the whiteness slider feels meaningful</string>
+
+    <!-- Release Notes Items v1.5 -->
+    <string name="rel_v1_5_item1">Persistent Custom Track — last-used music file auto-applied to every new alarm</string>
+    <string name="rel_v1_5_item2">Multiple Timers — run up to 5 independent countdown timers simultaneously</string>
+    <string name="rel_v1_5_item3">Pure Dark Mode — true AMOLED black theme for OLED screen battery savings</string>
+    <string name="rel_v1_5_item4">Light Mode Brightness Slider — adjust background brightness from tinted to pure white</string>
+    <string name="rel_v1_5_item5">Background Timer &amp; Stopwatch — continue running when app is backgrounded via Foreground Service</string>
+    <string name="rel_v1_5_item6">Rings in Silent &amp; DND Mode — alarms bypass ringer volume, no more missed alarms</string>
+
+    <!-- Release Notes Items v1.4 -->
+    <string name="rel_v1_4_item1">Official Package Rebrand — package updated to com.beemasfincon.cyclicalarms</string>
+    <string name="rel_v1_4_item2">Reliability Improvements — upgraded alarm scheduling and foreground service lifecycle handling</string>
+
+    <!-- Release Notes Items v1.3 -->
+    <string name="rel_v1_3_item1">Timer — built-in countdown timer with progress ring, quick presets (1m–30m), sound &amp; vibration alert</string>
+    <string name="rel_v1_3_item2">Stopwatch — elapsed time tracker with lap recording, fastest/slowest lap highlights, touch audio tones</string>
+    <string name="rel_v1_3_item3">Strict Lock Screen Privacy — app only shows over keyguard while actively ringing; dismiss/snooze immediately locks &amp; returns</string>
+    <string name="rel_v1_3_item4">4-Tab Navigation — Alarms, Timer, Stopwatch, Settings (with embedded About sub-page)</string>
+    <string name="rel_v1_3_item5">Default Cyclic — new alarms open on Cyclic Days tab by default</string>
+    <string name="rel_v1_3_item6">Icon Fit Fix — app icon no longer appears cropped on launcher</string>
+
+    <!-- Release Notes Items v1.2 -->
+    <string name="rel_v1_2_item1">Pencil-Sketched Spiral Alarm Icon — clean, symmetrical alarm clock launcher icon</string>
+    <string name="rel_v1_2_item2">Per-Alarm Custom Snooze — set desired snooze duration (5, 10, 15, 20m or custom minutes)</string>
+    <string name="rel_v1_2_item3">Native Lock Screen Ringing — rings smoothly over keyguard without PIN unlock prompt</string>
+    <string name="rel_v1_2_item4">Dedicated Page Navigation — clean layout for Alarms, History, Settings &amp; About</string>
+    <string name="rel_v1_2_item5">12H / 24H Clock Toggle — select preferred format with uppercase \'PM\'/\'AM\'</string>
+    <string name="rel_v1_2_item6">Year Display in Date — home clock displays full year (e.g. Sat, Sep 5, 2026)</string>
+    <string name="rel_v1_2_item7">First-Launch Theme Prompt &amp; Status Bar Fix — seamless light/dark theme icon visibility</string>
+    <string name="rel_v1_2_item8">In-App Permissions Manager — view and manage notification, exact alarm &amp; overlay access</string>
+    <string name="rel_v1_2_item9">Support &amp; Community Card — moved to About page for easy feedback &amp; bug reporting</string>
+
+    <!-- Release Notes Items v1.1 -->
+    <string name="rel_v1_1_item1">Dark / Light / System theme selector in Settings</string>
+    <string name="rel_v1_1_item2">Alarm editor now defaults to current time</string>
+    <string name="rel_v1_1_item3">Minute spinner always visible — no more invisible digits</string>
+    <string name="rel_v1_1_item4">New High Pitch alarm sound — loud dual-tone alert</string>
+    <string name="rel_v1_1_item5">Volume defaults to maximum for new alarms</string>
+    <string name="rel_v1_1_item6">Beema\'s FINCON branding on home screen</string>
+
+    <!-- Release Notes Items v1.0 -->
+    <string name="rel_v1_0_item1">Cyclic alarms — repeat every N days from a start date</string>
+    <string name="rel_v1_0_item2">Weekly alarms — pick any combination of weekdays</string>
+    <string name="rel_v1_0_item3">7 built-in synth sounds + custom audio file support</string>
+    <string name="rel_v1_0_item4">Configurable snooze and vibration toggle</string>
+    <string name="rel_v1_0_item5">Alarm history log with clear option</string>
 </resources>

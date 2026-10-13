@@ -9,56 +9,245 @@
 
     <!-- First Run Setup -->
     <string name="welcome_title">Cyclic Alarms へようこそ</string>
-    <string name="first_run_subtitle">言語とテーマを選択してください。後から「設定」でいつでも変更できます。</string>
+    <string name="first_run_subtitle">開始するには言語とテーマを選択してください。これらは設定からいつでも変更できます。</string>
     <string name="select_language">言語</string>
     <string name="select_theme">テーマ</string>
     <string name="save_and_continue">保存して続行</string>
 
     <!-- Settings Page -->
     <string name="settings_title">設定</string>
-    <string name="setting_language_title">アプリ言語</string>
-    <string name="setting_language_subtitle">完全オフラインで言語を変更します</string>
+    <string name="setting_language_title">アプリの言語</string>
+    <string name="setting_language_subtitle">完全オフラインでアプリの表示言語を変更</string>
     <string name="setting_theme_title">テーマ</string>
     <string name="setting_clock_format_title">時計表示フォーマット</string>
     <string name="setting_clock_format_subtitle">ホーム画面の時計表示形式を選択します</string>
     <string name="setting_permissions_title">権限とシステムアクセス</string>
-    <string name="setting_permissions_subtitle">確実にアラームを鳴らすために必要な権限を管理します</string>
+    <string name="setting_permissions_subtitle">正確なアラーム鳴動とロック画面表示に必要な権限を管理</string>
+    <string name="about_cyclic_alarms">Cyclic Alarms について</string>
+    <string name="about_cyclic_alarms_subtitle">バージョン 1.6.4 • リリースノート、サポート、開発者情報</string>
+    <string name="tinted">色付き</string>
+    <string name="pure_white">ピュアホワイト</string>
 
-    <string name="theme_pure_dark">ピュアブラック</string>
+    <!-- Theme options -->
+    <string name="theme_pure_dark">ピュアダーク</string>
     <string name="theme_dark">ダーク</string>
     <string name="theme_system">システム</string>
     <string name="theme_light">ライト</string>
     <string name="background_brightness">背景の明るさ</string>
 
-    <string name="time_format_12h">12時間表示 (AM/PM)</string>
-    <string name="time_format_24h">24時間表示</string>
+    <string name="time_format_12h">12時間制 (AM/PM)</string>
+    <string name="time_format_24h">24時間制</string>
 
     <!-- Permissions -->
     <string name="perm_notifications">通知</string>
-    <string name="perm_notifications_sub">アラーム音やバナー表示に必要です</string>
+    <string name="perm_notifications_sub">大音量のアラーム音とバナーの表示に必要です</string>
     <string name="perm_exact_alarm">正確なアラームのスケジュール</string>
-    <string name="perm_exact_alarm_sub">設定した正確な秒数でアラームを鳴らします</string>
+    <string name="perm_exact_alarm_sub">設定された正確な時刻にアラームを作動させます</string>
     <string name="perm_fullscreen">全画面アラーム通知</string>
-    <string name="perm_fullscreen_sub">端末ロック時にロック画面上にアラームを表示します</string>
+    <string name="perm_fullscreen_sub">端末ロック時にロック画面上に鳴動画面を表示します</string>
     <string name="perm_overlay">他のアプリの上に重ねて表示</string>
-    <string name="perm_overlay_sub">他のアプリ起動中にアラームポップアップを表示します</string>
+    <string name="perm_overlay_sub">ロック画面でのアラームポップアップ表示に必要です</string>
+    <string name="badge_granted">✓ 許可済み</string>
+    <string name="badge_disabled">⚠ 無効</string>
+    <string name="btn_fix">修正</string>
+    <string name="btn_fix_now">今すぐ修正</string>
+    <string name="btn_manage">管理</string>
+    <string name="btn_grant">許可する</string>
 
     <!-- Permission Gate Screen -->
-    <string name="perm_gate_title">権限が必要です</string>
-    <string name="perm_gate_desc">Cyclic Alarms が確実に動作するためにこれらの権限が必要です。続行するには許可してください。</string>
+    <string name="perm_gate_title">必要な権限</string>
+    <string name="perm_gate_desc">確実にアラームを鳴らすにはこれらのシステム権限が必要です。続行するにはすべて許可してください。</string>
 
     <!-- Common Actions & Alerts -->
-    <string name="next_alarm_prefix">次回:</string>
-    <string name="no_active_alarms">有効なアラームはありません</string>
+    <string name="next_alarm_prefix">次回：</string>
+    <string name="no_active_alarms">アクティブなアラームなし</string>
     <string name="calculating">計算中…</string>
-    <string name="no_alarms_yet">アラームがありません</string>
-    <string name="no_alarms_hint">+ をタップして最初のアラームを作成してください。</string>
-    <string name="silent_banner_text">⚡ サイレントモードやマナーモードでもアラームは鳴ります。注意: 電源OFF時は鳴りません。</string>
+    <string name="no_alarms_yet">アラームはまだありません</string>
+    <string name="no_alarms_hint">+ をタップして最初の周期アラームまたは週間アラームを作成してください。</string>
+    <string name="notif_off_warning">⚠ 通知が無効です — アラームが鳴りません</string>
+    <string name="silent_banner_text">⚡ サイレントモードやマナーモードでもアラームは鳴ります。注：端末の電源が切れている場合は鳴りません。</string>
     <string name="delete">削除</string>
+    <string name="edit">編集</string>
     <string name="cancel">キャンセル</string>
     <string name="save">保存</string>
-    <string name="select_all">すべて</string>
-    <string name="select_none">解除</string>
-    <string name="selected_count">%d 件選択中</string>
+    <string name="clear">クリア</string>
+    <string name="ok">OK</string>
+    <string name="close">閉じる</string>
+    <string name="select_all">すべて選択</string>
+    <string name="select_none">選択解除</string>
+    <string name="selected_count">%d件選択中</string>
     <string name="back_to_settings">設定に戻る</string>
+
+    <!-- Timer tab -->
+    <string name="timers_header">タイマー (%d/5)</string>
+    <string name="add_timer">タイマーを追加</string>
+    <string name="timer_default_name">タイマー %d</string>
+    <string name="unit_hh">時間</string>
+    <string name="unit_mm">分</string>
+    <string name="unit_ss">秒</string>
+    <string name="times_up">時間になりました！</string>
+    <string name="reset">リセット</string>
+    <string name="start">スタート</string>
+    <string name="pause">一時停止</string>
+
+    <!-- Stopwatch tab -->
+    <string name="stopwatch_title">ストップウォッチ</string>
+    <string name="lap">ラップ</string>
+    <string name="stop">ストップ</string>
+    <string name="lap_prefix">ラップ %d：</string>
+    <string name="table_lap">ラップ</string>
+    <string name="table_lap_time">ラップタイム</string>
+    <string name="table_overall">合計</string>
+
+    <!-- Add/Edit Alarm Dialog -->
+    <string name="dialog_new_alarm">新規アラーム</string>
+    <string name="dialog_edit_alarm">アラーム編集</string>
+    <string name="alarm_time_section">アラーム時刻</string>
+    <string name="alarm_label_optional">ラベル（任意）</string>
+    <string name="alarm_label_placeholder">例：早番シフト</string>
+    <string name="tab_cyclic_days">周期日数</string>
+    <string name="tab_weekly_days">曜日指定</string>
+    <string name="cyclic_config_section">周期設定</string>
+    <string name="repeat_on_days_section">繰り返す曜日</string>
+    <string name="every_word">毎</string>
+    <string name="days_word">日ごと</string>
+    <string name="start_date">開始日</string>
+    <string name="snooze_duration_section">スヌーズ時間</string>
+    <string name="snooze_duration_hint">スヌーズ時間を分単位で選択または入力</string>
+    <string name="custom_colon">カスタム：</string>
+    <string name="minutes_word">分</string>
+    <string name="alarm_sound_section">アラーム音</string>
+    <string name="custom_track">カスタムトラック</string>
+    <string name="custom_track_sub">端末内の音声ファイル</string>
+    <string name="pick_from_device">端末から選択</string>
+    <string name="change_track">トラック変更</string>
+    <string name="volume_vibration_section">音量とバイブレーション</string>
+    <string name="vibrate">バイブレーション</string>
+    <string name="save_alarm">アラームを保存</string>
+
+    <!-- Weekday abbreviations -->
+    <string name="day_mo">月</string>
+    <string name="day_tu">火</string>
+    <string name="day_we">水</string>
+    <string name="day_th">木</string>
+    <string name="day_fr">金</string>
+    <string name="day_sa">土</string>
+    <string name="day_su">日</string>
+
+    <string name="sched_one_off">1回のみ</string>
+    <string name="sched_daily">毎日</string>
+    <string name="sched_mon_fri">月 – 金</string>
+    <string name="sched_weekends">土日</string>
+    <string name="sched_cyclic_prefix">周期 · %d日ごと</string>
+
+    <!-- Alarm History -->
+    <string name="alarm_history_title">アラーム履歴</string>
+    <string name="no_history_title">履歴なし</string>
+    <string name="no_history_desc">停止またはスヌーズしたアラームがここに表示されます。</string>
+
+    <!-- About Subpage -->
+    <string name="about_release_notes_header">アプリについてとリリースノート</string>
+    <string name="hero_tagline">シフト勤務・当直・交代勤務のためのスマートな周期アラーム</string>
+    <string name="support_community_header">サポート &amp; コミュニティ</string>
+    <string name="support_email_title">ご意見・ご要望・バグ報告</string>
+    <string name="release_history_title">リリース履歴 &amp; ノート</string>
+    <string name="release_history_subtitle">バージョンをタップするとノートが開閉します</string>
+    <string name="badge_latest">最新</string>
+    <string name="badge_current">現在のバージョン</string>
+    <string name="creator_ack_header">開発者 &amp; 謝辞</string>
+    <string name="creator_ack_body1">シフト勤務者や、通常の週単位では対応できない変則周期アラームを必要とするすべての人のために作られました。</string>
+    <string name="creator_ack_body2" formatted="false">100% AI支援開発。追跡なし。広告なし。完全無料。</string>
+
+    <!-- Ringing Screen -->
+    <string name="alarm_ringing_title">アラーム鳴動中</string>
+    <string name="ringing_default_label">周期アラーム</string>
+    <string name="ringing_snooze_duration">スヌーズ時間</string>
+    <string name="ringing_btn_snooze">スヌーズ</string>
+    <string name="ringing_btn_dismiss">停止</string>
+
+    <!-- Release Notes Titles -->
+    <string name="rel_v1_6_4_title">v1.6.4 (現在のバージョン)</string>
+    <string name="rel_v1_6_3_title">v1.6.3 リリースノート</string>
+    <string name="rel_v1_6_2_title">v1.6.2 リリースノート</string>
+    <string name="rel_v1_6_1_title">v1.6.1 リリースノート</string>
+    <string name="rel_v1_6_title">v1.6 リリースノート</string>
+    <string name="rel_v1_5_title">v1.5 リリースノート</string>
+    <string name="rel_v1_4_title">v1.4 リリースノート</string>
+    <string name="rel_v1_3_title">v1.3 リリースノート</string>
+    <string name="rel_v1_2_title">v1.2 リリースノート</string>
+    <string name="rel_v1_1_title">v1.1 リリースノート</string>
+    <string name="rel_v1_0_title">v1.0 初回リリース</string>
+
+    <!-- Release Notes Items v1.6.4 -->
+    <string name="rel_v1_6_4_item1">完全オフライン多言語対応 — 全画面、タブ、ダイアログ、タイマー、ストップウォッチ、設定、更新ノート、アラーム鳴動画面を11言語で完全に翻訳</string>
+    <string name="rel_v1_6_4_item2">初回起動時の優先言語選択 — システム権限要求の前に言語およびテーマ選択ダイアログを即時表示</string>
+    <string name="rel_v1_6_4_item3">統一された標準数字表記 — 全言語において数字は厳格に 1, 2, 3 表記を維持し、明瞭な視認性を確保</string>
+
+    <!-- Release Notes Items v1.6.3 -->
+    <string name="rel_v1_6_3_item1">多言語対応の基盤 — アプリ内言語ピッカーおよび11のオフライン言語リソースを追加</string>
+    <string name="rel_v1_6_3_item2">初回セットアップダイアログ — インストール時にお好みの言語とテーマを簡単選択</string>
+    <string name="rel_v1_6_3_item3">アプリ内言語設定 — 「設定」からいつでも表示言語をスムーズに変更可能</string>
+
+    <!-- Release Notes Items v1.6.2 -->
+    <string name="rel_v1_6_2_item1">Android 9 互換性修正 — Android 9 および以前のバージョンでの強制終了を解消</string>
+    <string name="rel_v1_6_2_item2">バックグラウンドサービス保護 — フォアグラウンド通知ガードにより安定したタイマー計測を保証</string>
+    <string name="rel_v1_6_2_item3">タイマー音の即時停止 — 「クリア」または「リセット」タップでアラーム音が瞬時に停止</string>
+    <string name="rel_v1_6_2_item4">スマート通知ナビゲーション — 通知タイトルが状態を示し、タップで該当タブを的確に開く</string>
+    <string name="rel_v1_6_2_item5">クリーンなアラームライフサイクル — 即座の停止とバックグラウンド漏れのない確実なロック画面復帰</string>
+
+    <!-- Release Notes Items v1.6.1 -->
+    <string name="rel_v1_6_1_item1">F-Droid 基準準拠 — クリーンなオープンソースメタデータ、Apache-2.0 ライセンス、ネットワーク更新チェックの排除</string>
+    <string name="rel_v1_6_1_item2">権限フローの簡素化 — 新旧 Android の両方に対応した明快な権限管理画面</string>
+
+    <!-- Release Notes Items v1.6 -->
+    <string name="rel_v1_6_item1">常駐バックグラウンド通知 — 動作中の通知はスワイプ削除不可、「すべて停止」ボタン付き</string>
+    <string name="rel_v1_6_item2">ライトモードの時刻コントラスト改善 — 見やすく明瞭な高コントラストカラーを採用</string>
+    <string name="rel_v1_6_item3">ライトモード背景色の最適化 — 明度スライダーの効果が際立つバランスの良いグレーブルー背景</string>
+
+    <!-- Release Notes Items v1.5 -->
+    <string name="rel_v1_5_item1">カスタム曲の自動保持 — 最後に使用した音楽ファイルを新規アラームに自動適用</string>
+    <string name="rel_v1_5_item2">マルチタイマー — 最大5つの個別カウントダウンタイマーを同時に実行可能</string>
+    <string name="rel_v1_5_item3">Pure Dark モード — 有機ELディスプレイのバッテリーを節約する完全な黒 (AMOLED)</string>
+    <string name="rel_v1_5_item4">ライトモード明度スライダー — 背景をグレーがかった色から純白まで自由に調整</string>
+    <string name="rel_v1_5_item5">バックグラウンドタイマー &amp; ストップウォッチ — アプリを閉じてもフォアグラウンドサービスで継続動作</string>
+    <string name="rel_v1_5_item6">サイレント・マナーモードでの鳴動 — 着信音量をバイパスして確実にアラーム鳴動</string>
+
+    <!-- Release Notes Items v1.4 -->
+    <string name="rel_v1_4_item1">公式パッケージ名の刷新 — com.beemasfincon.cyclicalarms に更新</string>
+    <string name="rel_v1_4_item2">信頼性の向上 — アラームスケジュールとサービスライフサイクルの大幅な堅牢化</string>
+
+    <!-- Release Notes Items v1.3 -->
+    <string name="rel_v1_3_item1">タイマー — プログレスリング、クイックプリセット (1分〜30分)、音とバイブレーションによるカウントダウン</string>
+    <string name="rel_v1_3_item2">ストップウォッチ — ラップ記録、最速/最遅ラップの強調表示、タッチ効果音付きの経過時間計測</string>
+    <string name="rel_v1_3_item3">厳格なロック画面プライバシー — アラーム鳴動時のみロック画面上に表示し、停止後は即座にロック</string>
+    <string name="rel_v1_3_item4">4タブ構成ナビゲーション — アラーム、タイマー、ストップウォッチ、情報ページを含む設定</string>
+    <string name="rel_v1_3_item5">周期タブを初期表示 — 新規アラーム作成時に「周期日数」タブがデフォルトで開く</string>
+    <string name="rel_v1_3_item6">アプリアイコンの最適化 — ランチャーでアイコンが切り取られないよう表示を修正</string>
+
+    <!-- Release Notes Items v1.2 -->
+    <string name="rel_v1_2_item1">スパイラルスケッチアイコン — 鉛筆スケッチ風の美しい目覚まし時計アイコン</string>
+    <string name="rel_v1_2_item2">個別スヌーズ設定 — アラームごとに異なるスヌーズ時間を自由に設定可能</string>
+    <string name="rel_v1_2_item3">ロック画面での確実なネイティブ鳴動 — PIN入力を求めずにロック画面上へ滑らかに鳴動</string>
+    <string name="rel_v1_2_item4">整理されたページナビゲーション — 4つの専用タブによる明快なレイアウト</string>
+    <string name="rel_v1_2_item5">12時間/24時間表示切替 — 大文字の AM/PM または24時間表示を選択可能</string>
+    <string name="rel_v1_2_item6">日付の年号表示 — ホーム画面の時計に西暦年をフル表示 (例: 2026年9月5日(土))</string>
+    <string name="rel_v1_2_item7">初回テーマ選択案内 — ステータスバーアイコンが背景色に関わらず常に鮮明に表示</string>
+    <string name="rel_v1_2_item8">アプリ内権限マネージャー — 通知、正確なアラーム、オーバーレイ権限を一括管理</string>
+    <string name="rel_v1_2_item9">サポート &amp; コミュニティカード — ご意見やバグ報告を素早く送信可能</string>
+
+    <!-- Release Notes Items v1.1 -->
+    <string name="rel_v1_1_item1">設定にダーク / ライト / システム追従テーマセレクターを追加</string>
+    <string name="rel_v1_1_item2">アラーム編集画面の初期値を現在時刻に設定</string>
+    <string name="rel_v1_1_item3">分選択スピナーを常に表示</string>
+    <string name="rel_v1_1_item4">新しい高音アラーム音 — 明瞭で聞き取りやすい2トーン音</string>
+    <string name="rel_v1_1_item5">新規アラームの初期音量を最大に設定</string>
+    <string name="rel_v1_1_item6">ホーム画面に Beema\'s FINCON ブランドを表示</string>
+
+    <!-- Release Notes Items v1.0 -->
+    <string name="rel_v1_0_item1">周期アラーム — 開始日から指定したN日ごとに繰り返し</string>
+    <string name="rel_v1_0_item2">週間アラーム — 任意の曜日を自由に組み合わせて設定</string>
+    <string name="rel_v1_0_item3">7種類の内蔵電子音とカスタムオーディオファイル対応</string>
+    <string name="rel_v1_0_item4">スヌーズとバイブレーションのON/OFF設定</string>
+    <string name="rel_v1_0_item5">消去可能なアラーム履歴ログ機能</string>
 </resources>
+

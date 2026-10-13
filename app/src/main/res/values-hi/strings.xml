@@ -9,56 +9,245 @@
 
     <!-- First Run Setup -->
     <string name="welcome_title">Cyclic Alarms में आपका स्वागत है</string>
-    <string name="first_run_subtitle">शुरू करने के लिए अपनी भाषा और थीम चुनें। आप इन्हें कभी भी सेटिंग्स में बदल सकते हैं।</string>
+    <string name="first_run_subtitle">शुरू करने के लिए अपनी भाषा और थीम चुनें। आप इन्हें सेटिंग्स में कभी भी बदल सकते हैं।</string>
     <string name="select_language">भाषा</string>
     <string name="select_theme">थीम</string>
     <string name="save_and_continue">सहेजें और आगे बढ़ें</string>
 
     <!-- Settings Page -->
     <string name="settings_title">सेटिंग्स</string>
-    <string name="setting_language_title">ऐप भाषा</string>
-    <string name="setting_language_subtitle">इंटरनेट के बिना ऑफ़लाइन भाषा बदलें</string>
+    <string name="setting_language_title">ऐप की भाषा</string>
+    <string name="setting_language_subtitle">पूरी तरह से ऑफ़लाइन ऐप की भाषा बदलें</string>
     <string name="setting_theme_title">थीम</string>
     <string name="setting_clock_format_title">घड़ी प्रदर्शन प्रारूप</string>
-    <string name="setting_clock_format_subtitle">होम स्क्रीन पर समय का प्रारूप चुनें</string>
-    <string name="setting_permissions_title">अनुमतियाँ और सिस्टम एक्सेस</string>
-    <string name="setting_permissions_subtitle">विश्वसनीय अलार्म बजने के लिए आवश्यक अनुमतियों को प्रबंधित करें</string>
+    <string name="setting_clock_format_subtitle">होम स्क्रीन घड़ी पर समय कैसे दिखे, चुनें</string>
+    <string name="setting_permissions_title">अनुमतियाँ और ऐप एक्सेस</string>
+    <string name="setting_permissions_subtitle">सटीक अलार्म बजने और लॉक-स्क्रीन पॉपअप के लिए सिस्टम अनुमतियाँ प्रबंधित करें</string>
+    <string name="about_cyclic_alarms">Cyclic Alarms के बारे में</string>
+    <string name="about_cyclic_alarms_subtitle">संस्करण 1.6.4 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
+    <string name="tinted">टिंटेड</string>
+    <string name="pure_white">प्योर व्हाइट</string>
 
-    <string name="theme_pure_dark">गहरा काला</string>
+    <!-- Theme options -->
+    <string name="theme_pure_dark">प्योर डार्क</string>
     <string name="theme_dark">डार्क</string>
     <string name="theme_system">सिस्टम</string>
     <string name="theme_light">लाइट</string>
-    <string name="background_brightness">पृष्ठभूमि चमक</string>
+    <string name="background_brightness">बैकग्राउंड ब्राइटनेस</string>
 
     <string name="time_format_12h">12-घंटे (AM/PM)</string>
     <string name="time_format_24h">24-घंटे</string>
 
     <!-- Permissions -->
-    <string name="perm_notifications">सूचनाएँ</string>
-    <string name="perm_notifications_sub">तेज अलार्म ध्वनि और बैनर के लिए आवश्यक</string>
-    <string name="perm_exact_alarm">सटीक समय अलार्म</string>
-    <string name="perm_exact_alarm_sub">अलार्म को बिल्कुल सही सेकंड पर बजने की अनुमति देता है</string>
-    <string name="perm_fullscreen">पूर्ण-स्क्रीन अलार्म अलर्ट</string>
-    <string name="perm_fullscreen_sub">फ़ोन लॉक होने पर स्क्रीन पर अलार्म दिखाता है</string>
-    <string name="perm_overlay">अन्य ऐप्स के ऊपर दिखाएँ</string>
-    <string name="perm_overlay_sub">अन्य ऐप्स के ऊपर अलार्म पॉपअप विंडो की अनुमति देता है</string>
+    <string name="perm_notifications">सूचनाएँ (Notifications)</string>
+    <string name="perm_notifications_sub">तेज़ अलार्म ध्वनि और बैनर प्रदर्शित करने के लिए आवश्यक</string>
+    <string name="perm_exact_alarm">सटीक अलार्म शेड्यूलिंग</string>
+    <string name="perm_exact_alarm_sub">आपके द्वारा निर्धारित सटीक समय पर अलार्म बजने देता है</string>
+    <string name="perm_fullscreen">फुल-स्क्रीन अलार्म अलर्ट</string>
+    <string name="perm_fullscreen_sub">फ़ोन लॉक होने पर लॉक स्क्रीन पर रिंगिंग स्क्रीन दिखाता है</string>
+    <string name="perm_overlay">अन्य ऐप के ऊपर प्रदर्शित करें</string>
+    <string name="perm_overlay_sub">लॉक स्क्रीन अलार्म पॉपअप के लिए आवश्यक</string>
+    <string name="badge_granted">✓ स्वीकृत</string>
+    <string name="badge_disabled">⚠ अक्षम</string>
+    <string name="btn_fix">ठीक करें</string>
+    <string name="btn_fix_now">अभी ठीक करें</string>
+    <string name="btn_manage">प्रबंधित करें</string>
+    <string name="btn_grant">अनुमति दें</string>
 
     <!-- Permission Gate Screen -->
     <string name="perm_gate_title">अनुमतियाँ आवश्यक हैं</string>
-    <string name="perm_gate_desc">अलार्म सही समय पर बजने के लिए इन अनुमतियों की आवश्यकता है। कृपया जारी रखने के लिए सभी अनुमतियाँ दें।</string>
+    <string name="perm_gate_desc">अलार्म विश्वसनीयता से बजने के लिए इन सिस्टम अनुमतियों की आवश्यकता है। कृपया जारी रखने के लिए सभी अनुमतियाँ दें।</string>
 
     <!-- Common Actions & Alerts -->
     <string name="next_alarm_prefix">अगला:</string>
     <string name="no_active_alarms">कोई सक्रिय अलार्म नहीं</string>
     <string name="calculating">गणना की जा रही है…</string>
-    <string name="no_alarms_yet">अभी कोई अलार्म नहीं है</string>
-    <string name="no_alarms_hint">अपना पहला चक्रीय या साप्ताहिक अलार्म बनाने के लिए + पर टैप करें।</string>
-    <string name="silent_banner_text">⚡ अलार्म साइलेंट और DND मोड में भी बजता है। ध्यान दें: फ़ोन स्विच ऑफ़ होने पर अलार्म नहीं बज सकता।</string>
+    <string name="no_alarms_yet">अभी तक कोई अलार्म नहीं है</string>
+    <string name="no_alarms_hint">पहला चक्रीय या साप्ताहिक अलार्म बनाने के लिए + पर टैप करें।</string>
+    <string name="notif_off_warning">⚠ सूचनाएँ बंद हैं — अलार्म नहीं बजेगा</string>
+    <string name="silent_banner_text">⚡ साइलेंट और डीएनडी मोड में भी अलार्म बजता है। नोट: यदि फ़ोन बंद है, तो अलार्म नहीं बज सकता।</string>
     <string name="delete">हटाएं</string>
+    <string name="edit">संपादित करें</string>
     <string name="cancel">रद्द करें</string>
     <string name="save">सहेजें</string>
+    <string name="clear">हटाएं</string>
+    <string name="ok">ठीक है</string>
+    <string name="close">बंद करें</string>
     <string name="select_all">सभी</string>
     <string name="select_none">कोई नहीं</string>
     <string name="selected_count">%d चयनित</string>
     <string name="back_to_settings">सेटिंग्स पर वापस जाएं</string>
+
+    <!-- Timer tab -->
+    <string name="timers_header">टाइमर (%d/5)</string>
+    <string name="add_timer">टाइमर जोड़ें</string>
+    <string name="timer_default_name">टाइमर %d</string>
+    <string name="unit_hh">घंटे</string>
+    <string name="unit_mm">मिनट</string>
+    <string name="unit_ss">सेकंड</string>
+    <string name="times_up">समय समाप्त!</string>
+    <string name="reset">रीसेट</string>
+    <string name="start">शुरू करें</string>
+    <string name="pause">रोकें</string>
+
+    <!-- Stopwatch tab -->
+    <string name="stopwatch_title">स्टॉपवॉच</string>
+    <string name="lap">लैप</string>
+    <string name="stop">रोकें</string>
+    <string name="lap_prefix">लैप %d:</string>
+    <string name="table_lap">लैप</string>
+    <string name="table_lap_time">लैप समय</string>
+    <string name="table_overall">कुल समय</string>
+
+    <!-- Add/Edit Alarm Dialog -->
+    <string name="dialog_new_alarm">नया अलार्म</string>
+    <string name="dialog_edit_alarm">अलार्म संपादित करें</string>
+    <string name="alarm_time_section">अलार्म का समय</string>
+    <string name="alarm_label_optional">लेबल (वैकल्पिक)</string>
+    <string name="alarm_label_placeholder">उदा. कार्य शिफ्ट</string>
+    <string name="tab_cyclic_days">चक्रीय दिन</string>
+    <string name="tab_weekly_days">साप्ताहिक दिन</string>
+    <string name="cyclic_config_section">चक्रीय विन्यास</string>
+    <string name="repeat_on_days_section">दिनों में दोहराएं</string>
+    <string name="every_word">प्रत्येक</string>
+    <string name="days_word">दिन</string>
+    <string name="start_date">प्रारंभ तिथि</string>
+    <string name="snooze_duration_section">स्नूज़ अवधि</string>
+    <string name="snooze_duration_hint">मिनटों में स्नूज़ अवधि चुनें या दर्ज करें</string>
+    <string name="custom_colon">कस्टम:</string>
+    <string name="minutes_word">मिनट</string>
+    <string name="alarm_sound_section">अलार्म ध्वनि</string>
+    <string name="custom_track">कस्टम ट्रैक</string>
+    <string name="custom_track_sub">कस्टम ऑडियो ट्रैक</string>
+    <string name="pick_from_device">डिवाइस से चुनें</string>
+    <string name="change_track">ट्रैक बदलें</string>
+    <string name="volume_vibration_section">ध्वनि स्तर और कंपन</string>
+    <string name="vibrate">कंपन</string>
+    <string name="save_alarm">अलार्म सहेजें</string>
+
+    <!-- Weekday abbreviations -->
+    <string name="day_mo">सोम</string>
+    <string name="day_tu">मंगल</string>
+    <string name="day_we">बुध</string>
+    <string name="day_th">गुरु</string>
+    <string name="day_fr">शुक्र</string>
+    <string name="day_sa">शनि</string>
+    <string name="day_su">रवि</string>
+
+    <string name="sched_one_off">एक बार</string>
+    <string name="sched_daily">प्रतिदिन</string>
+    <string name="sched_mon_fri">सोम – शुक्र</string>
+    <string name="sched_weekends">सप्ताहांत</string>
+    <string name="sched_cyclic_prefix">चक्रीय · प्रत्येक %d दिन</string>
+
+    <!-- Alarm History -->
+    <string name="alarm_history_title">अलार्म इतिहास</string>
+    <string name="no_history_title">कोई इतिहास नहीं</string>
+    <string name="no_history_desc">बंद और स्नूज़ किए गए अलार्म यहाँ दिखाई देंगे।</string>
+
+    <!-- About Subpage -->
+    <string name="about_release_notes_header">परिचय और रिलीज़ नोट्स</string>
+    <string name="hero_tagline">स्मार्ट शिफ्ट, रोस्टर और चक्रीय अलार्म ऐप</string>
+    <string name="support_community_header">सहायता और समुदाय</string>
+    <string name="support_email_title">प्रतिक्रिया, सुझाव या बग रिपोर्ट</string>
+    <string name="release_history_title">रिलीज़ इतिहास और नोट्स</string>
+    <string name="release_history_subtitle">नोट्स खोलने या बंद करने के लिए किसी भी वर्शन पर टैप करें</string>
+    <string name="badge_latest">नवीनतम</string>
+    <string name="badge_current">वर्तमान रिलीज़</string>
+    <string name="creator_ack_header">निर्माता और आभार</string>
+    <string name="creator_ack_body1">शिफ्ट कर्मियों और मानक साप्ताहिक कार्यक्रम से परे आवर्ती अंतराल अलार्म की आवश्यकता वाले किसी भी व्यक्ति के लिए निर्मित।</string>
+    <string name="creator_ack_body2" formatted="false">100% AI-सहायता प्राप्त विकास। कोई ट्रैकिंग नहीं। कोई विज्ञापन नहीं। 100% मुफ़्त।</string>
+
+    <!-- Ringing Screen -->
+    <string name="alarm_ringing_title">अलार्म बज रहा है</string>
+    <string name="ringing_default_label">चक्रीय अलार्म</string>
+    <string name="ringing_snooze_duration">स्नूज़ अवधि</string>
+    <string name="ringing_btn_snooze">स्नूज़ करें</string>
+    <string name="ringing_btn_dismiss">बंद करें</string>
+
+    <!-- Release Notes Titles -->
+    <string name="rel_v1_6_4_title">v1.6.4 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_6_3_title">v1.6.3 रिलीज़ नोट्स</string>
+    <string name="rel_v1_6_2_title">v1.6.2 रिलीज़ नोट्स</string>
+    <string name="rel_v1_6_1_title">v1.6.1 रिलीज़ नोट्स</string>
+    <string name="rel_v1_6_title">v1.6 रिलीज़ नोट्स</string>
+    <string name="rel_v1_5_title">v1.5 रिलीज़ नोट्स</string>
+    <string name="rel_v1_4_title">v1.4 रिलीज़ नोट्स</string>
+    <string name="rel_v1_3_title">v1.3 रिलीज़ नोट्स</string>
+    <string name="rel_v1_2_title">v1.2 रिलीज़ नोट्स</string>
+    <string name="rel_v1_1_title">v1.1 रिलीज़ नोट्स</string>
+    <string name="rel_v1_0_title">v1.0 पहली रिलीज़</string>
+
+    <!-- Release Notes Items v1.6.4 -->
+    <string name="rel_v1_6_4_item1">व्यापक ऑफ़लाइन स्थानीयकरण — 11 भाषाओं में सभी स्क्रीन, टैब, डायलॉग, टाइमर, स्टॉपवॉच, सेटिंग्स, रिलीज़ नोट्स और रिंगिंग स्क्रीन का संपूर्ण अनुवाद</string>
+    <string name="rel_v1_6_4_item2">प्राथमिकता भाषा चयन — सिस्टम अनुमतियों से पहले पहली बार खोलने पर सीधे भाषा चयन विंडो</string>
+    <string name="rel_v1_6_4_item3">सार्वभौमिक मानक अंक — बेहतर पठनीयता के लिए सभी अनुवादित पृष्ठों पर संख्याएं सख्ती से 1, 2, 3 में</string>
+
+    <!-- Release Notes Items v1.6.3 -->
+    <string name="rel_v1_6_3_item1">बहुभाषी समर्थन — ऐप में भाषा चयनकर्ता और 11 ऑफ़लाइन अनुवाद पैक जोड़े गए</string>
+    <string name="rel_v1_6_3_item2">प्रारंभिक सेटअप डायलॉग — इंस्टॉल करने पर अपनी पसंदीदा भाषा और थीम चुनें</string>
+    <string name="rel_v1_6_3_item3">इन-ऐप भाषा सेटिंग्स — सेटिंग्स से कभी भी आसानी से ऐप की भाषा बदलें</string>
+
+    <!-- Release Notes Items v1.6.2 -->
+    <string name="rel_v1_6_2_item1">Android 9 अनुकूलता — Android 9 और पुराने संस्करणों पर अचानक बंद होने की समस्या का समाधान</string>
+    <string name="rel_v1_6_2_item2">बैकग्राउंड सर्विस सुरक्षा — बिना रुकावट टाइमर ट्रैकिंग के लिए फोरग्राउंड नोटिफिकेशन सुरक्षा</string>
+    <string name="rel_v1_6_2_item3">टाइमर अलर्ट तुरंत बंद होना — क्लियर या रीसेट पर टैप करने से अलार्म टोन तुरंत बंद हो जाती है</string>
+    <string name="rel_v1_6_2_item4">स्मार्ट नोटिफिकेशन नेविगेशन — नोटिफिकेशन शीर्षक टाइमर/स्टॉपवॉच स्थिति दिखाता है और सही टैब खोलता है</string>
+    <string name="rel_v1_6_2_item5">सटीक अलार्म लाइफसाइकिल — तुरंत अलार्म बंद होना और बैकग्राउंड रिसाव के बिना लॉक स्क्रीन पर लौटना</string>
+
+    <!-- Release Notes Items v1.6.1 -->
+    <string name="rel_v1_6_1_item1">F-Droid अनुपालन — स्वच्छ ओपन-सोर्स मेटाडेटा, Apache-2.0 लाइसेंस, नेटवर्क चेकर्स हटाए गए</string>
+    <string name="rel_v1_6_1_item2">सुव्यवस्थित अनुमतियां — आधुनिक और पुराने Android के लिए सरल अनुमति प्रबंधन</string>
+
+    <!-- Release Notes Items v1.6 -->
+    <string name="rel_v1_6_item1">स्थायी बैकग्राउंड नोटिफिकेशन — टाइमर चलते समय नोटिफिकेशन नहीं हटाई जा सकती, \'सभी रोकें\' बटन उपलब्ध</string>
+    <string name="rel_v1_6_item2">लाइट मोड समय कंट्रास्ट — स्पष्ट और पढ़ने में आसान उच्च कंट्रास्ट रंगों में अलार्म समय</string>
+    <string name="rel_v1_6_item3">लाइट मोड संतुलित बैकग्राउंड — ब्राइटनेस स्लाइडर के लिए बेहतर ग्रे-नीला बैकग्राउंड शेड</string>
+
+    <!-- Release Notes Items v1.5 -->
+    <string name="rel_v1_5_item1">पसंदीदा ऑडियो ट्रैक — अंतिम चयनित संगीत फ़ाइल नए अलार्म पर स्वतः लागू</string>
+    <string name="rel_v1_5_item2">एकाधिक टाइमर — एक साथ 5 स्वतंत्र उलटी गिनती टाइमर चलाएं</string>
+    <string name="rel_v1_5_item3">प्योर डार्क मोड — OLED स्क्रीन पर बैटरी बचाने के लिए असली AMOLED ब्लैक थीम</string>
+    <string name="rel_v1_5_item4">लाइट मोड ब्राइटनेस स्लाइडर — पृष्ठभूमि को टिंटेड से शुद्ध सफ़ेद तक समायोजित करें</string>
+    <string name="rel_v1_5_item5">बैकग्राउंड टाइमर और स्टॉपवॉच — फोरग्राउंड सर्विस के साथ बैकग्राउंड में निरंतर संचालन</string>
+    <string name="rel_v1_5_item6">साइलेंट और DND में भी रिंग — अलार्म रिंगर वॉल्यूम को बायपास करता है, कभी अलार्म नहीं छूटेगा</string>
+
+    <!-- Release Notes Items v1.4 -->
+    <string name="rel_v1_4_item1">पैकेज का नया नाम — पैकेज com.beemasfincon.cyclicalarms में अपडेट किया गया</string>
+    <string name="rel_v1_4_item2">विश्वसनीयता में सुधार — उन्नत अलार्म शेड्यूलिंग और सर्विस जीवनचक्र प्रबंधन</string>
+
+    <!-- Release Notes Items v1.3 -->
+    <string name="rel_v1_3_item1">टाइमर — प्रोग्रेस रिंग, त्वरित प्रीसेट (1m–30m), ध्वनि और कंपन चेतावनी के साथ उलटी गिनती</string>
+    <string name="rel_v1_3_item2">स्टॉपवॉच — लैप रिकॉर्डिंग, सबसे तेज़/धीमी लैप हाइलाइट्स और स्पर्श ऑडियो टोन</string>
+    <string name="rel_v1_3_item3">लॉक स्क्रीन पर कड़ी गोपनीयता — केवल अलार्म बजने के दौरान ही लॉक स्क्रीन के ऊपर दिखाई देता है</string>
+    <string name="rel_v1_3_item4">4-टैब नेविगेशन — अलार्म, टाइमर, स्टॉपवॉच और सेटिंग्स (परिचय पृष्ठ सहित)</string>
+    <string name="rel_v1_3_item5">डिफ़ॉल्ट चक्रीय टैब — नए अलार्म सीधे चक्रीय दिन टैब में खुलते हैं</string>
+    <string name="rel_v1_3_item6">आइकन फिट सुधार — लॉन्चर पर ऐप आइकन अब कटा हुआ दिखाई नहीं देता</string>
+
+    <!-- Release Notes Items v1.2 -->
+    <string name="rel_v1_2_item1">पेंसिल-स्केच स्पाइरल आइकन — स्वच्छ और सममित अलार्म घड़ी लॉन्चर आइकन</string>
+    <string name="rel_v1_2_item2">प्रति अलार्म स्नूज़ — प्रत्येक अलार्म के लिए अलग स्नूज़ अवधि सेट करें</string>
+    <string name="rel_v1_2_item3">मूल लॉक स्क्रीन रिंगिंग — बिना पिन अनलॉक के लॉक स्क्रीन पर आसानी से बजता है</string>
+    <string name="rel_v1_2_item4">समर्पित नेविगेशन — 4 टैब के साथ स्वच्छ और स्पष्ट लेआउट</string>
+    <string name="rel_v1_2_item5">12H / 24H प्रारूप — बड़े अक्षरों में AM/PM या 24 घंटे प्रारूप चुनें</string>
+    <string name="rel_v1_2_item6">तारीख में वर्ष — मुख्य घड़ी पूर्ण वर्ष प्रदर्शित करती है (उदा. शनि, 5 सितं 2026)</string>
+    <string name="rel_v1_2_item7">प्रथम लॉन्च थीम प्रॉम्प्ट — स्टेटस बार आइकन की स्पष्ट दृश्यता</string>
+    <string name="rel_v1_2_item8">इन-ऐप अनुमति प्रबंधक — सूचनाएं, सटीक अलार्म और ओवरले अनुमतियां प्रबंधित करें</string>
+    <string name="rel_v1_2_item9">समर्थन और समुदाय कार्ड — प्रतिक्रिया और बग रिपोर्टिंग के लिए सीधा चैनल</string>
+
+    <!-- Release Notes Items v1.1 -->
+    <string name="rel_v1_1_item1">सेटिंग्स में डार्क / लाइट / सिस्टम थीम चयनकर्ता</string>
+    <string name="rel_v1_1_item2">अलार्म संपादक अब वर्तमान समय से शुरू होता है</string>
+    <string name="rel_v1_1_item3">मिनट चयनकर्ता हमेशा दिखाई देता है</string>
+    <string name="rel_v1_1_item4">नई हाई पिच अलार्म ध्वनि — तेज दो-टोन चेतावनी</string>
+    <string name="rel_v1_1_item5">नए अलार्म के लिए वॉल्यूम डिफ़ॉल्ट रूप से अधिकतम</string>
+    <string name="rel_v1_1_item6">होम स्क्रीन पर Beema\'s FINCON ब्रांडिंग</string>
+
+    <!-- Release Notes Items v1.0 -->
+    <string name="rel_v1_0_item1">चक्रीय अलार्म — प्रारंभ तिथि से प्रत्येक N दिनों में दोहराव</string>
+    <string name="rel_v1_0_item2">साप्ताहिक अलार्म — सप्ताह के दिनों का कोई भी संयोजन चुनें</string>
+    <string name="rel_v1_0_item3">7 अंतर्निहित ध्वनियां और कस्टम ऑडियो फ़ाइलों का समर्थन</string>
+    <string name="rel_v1_0_item4">कॉन्फ़िगर करने योग्य स्नूज़ और कंपन टॉगल</string>
+    <string name="rel_v1_0_item5">खाली करने के विकल्प के साथ अलार्म इतिहास लॉग</string>
 </resources>
+

@@ -9,7 +9,7 @@
 
     <!-- First Run Setup -->
     <string name="welcome_title">مرحبًا بك في Cyclic Alarms</string>
-    <string name="first_run_subtitle">اختر لغتك والمظهر المفضل للبدء. يمكنك تغيير ذلك في أي وقت من الإعدادات.</string>
+    <string name="first_run_subtitle">اختر لغتك والمظهر للبدء. يمكنك تغييرها في أي وقت من الإعدادات.</string>
     <string name="select_language">اللغة</string>
     <string name="select_theme">المظهر</string>
     <string name="save_and_continue">حفظ ومتابعة</string>
@@ -17,14 +17,19 @@
     <!-- Settings Page -->
     <string name="settings_title">الإعدادات</string>
     <string name="setting_language_title">لغة التطبيق</string>
-    <string name="setting_language_subtitle">تغيير لغة التطبيق بالكامل بدون إنترنت</string>
+    <string name="setting_language_subtitle">تغيير لغة التطبيق بالكامل دون اتصال بالإنترنت</string>
     <string name="setting_theme_title">المظهر</string>
     <string name="setting_clock_format_title">تنسيق عرض الساعة</string>
-    <string name="setting_clock_format_subtitle">اختر طريقة عرض الوقت في الشاشة الرئيسية</string>
+    <string name="setting_clock_format_subtitle">اختر كيفية عرض الوقت على شاشة الساعة الرئيسية</string>
     <string name="setting_permissions_title">الأذونات والوصول إلى النظام</string>
-    <string name="setting_permissions_subtitle">إدارة الأذونات لضمان رنين المنبه بدقة على شاشة القفل</string>
+    <string name="setting_permissions_subtitle">إدارة أذونات النظام المطلوبة لدقة التنبيه وشاشة القفل</string>
+    <string name="about_cyclic_alarms">حول Cyclic Alarms</string>
+    <string name="about_cyclic_alarms_subtitle">الإصدار 1.6.4 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
+    <string name="tinted">مظلل</string>
+    <string name="pure_white">أبيض ناصع</string>
 
-    <string name="theme_pure_dark">أسود نقي</string>
+    <!-- Theme options -->
+    <string name="theme_pure_dark">داكن خالص</string>
     <string name="theme_dark">داكن</string>
     <string name="theme_system">النظام</string>
     <string name="theme_light">فاتح</string>
@@ -35,30 +40,214 @@
 
     <!-- Permissions -->
     <string name="perm_notifications">الإشعارات</string>
-    <string name="perm_notifications_sub">مطلوب لإصدار صوت التنبيه واللافتات</string>
-    <string name="perm_exact_alarm">جدولة دقيقة للمنبه</string>
-    <string name="perm_exact_alarm_sub">يسمح للمنبه بالرنين في الثانية المحددة بدقة</string>
-    <string name="perm_fullscreen">تنبيهات المنبه بملء الشاشة</string>
-    <string name="perm_fullscreen_sub">يعرض شاشة المنبه فوق شاشة القفل عند قفل الجهاز</string>
+    <string name="perm_notifications_sub">مطلوب لتشغيل أصوات التنبيه العالية واللافتات</string>
+    <string name="perm_exact_alarm">جدولة التنبيه بدقة</string>
+    <string name="perm_exact_alarm_sub">يسمح بانطلاق التنبيه في الوقت المحدد تمامًا</string>
+    <string name="perm_fullscreen">تنبيهات ملء الشاشة</string>
+    <string name="perm_fullscreen_sub">يعرض شاشة الرنين فوق شاشة القفل عند قفل الجهاز</string>
     <string name="perm_overlay">الظهور فوق التطبيقات الأخرى</string>
-    <string name="perm_overlay_sub">يسمح بنوافذ المنبه المنبثقة فوق التطبيقات</string>
+    <string name="perm_overlay_sub">مطلوب لنافذة التنبيه المنبثقة على شاشة القفل</string>
+    <string name="badge_granted">✓ ممنوح</string>
+    <string name="badge_disabled">⚠ معطل</string>
+    <string name="btn_fix">إصلاح</string>
+    <string name="btn_fix_now">إصلاح الآن</string>
+    <string name="btn_manage">إدارة</string>
+    <string name="btn_grant">منح</string>
 
     <!-- Permission Gate Screen -->
     <string name="perm_gate_title">الأذونات مطلوبة</string>
-    <string name="perm_gate_desc">يحتاج التطبيق إلى هذه الأذونات ليعمل المنبه بدقة. يرجى منحها للمتابعة.</string>
+    <string name="perm_gate_desc">يحتاج Cyclic Alarms إلى هذه الأذونات ليعمل المنبه بدقة وموثوقية. يُرجى منحها للمتابعة.</string>
 
     <!-- Common Actions & Alerts -->
     <string name="next_alarm_prefix">التالي:</string>
     <string name="no_active_alarms">لا توجد منبهات نشطة</string>
     <string name="calculating">جارٍ الحساب…</string>
-    <string name="no_alarms_yet">لا توجد منبهات حتى الآن</string>
-    <string name="no_alarms_hint">انقر فوق + لإنشاء أول منبه دوري أو أسبوعي.</string>
-    <string name="silent_banner_text">⚡ ترن المنبهات حتى في وضع الصامت وعدم الإزعاج. ملاحظة: إذا كان الهاتف مغلقًا فلن يرن المنبه.</string>
+    <string name="no_alarms_yet">لا توجد منبهات بعد</string>
+    <string name="no_alarms_hint">اضغط على + لإنشاء أول منبه دوري أو أسبوعي.</string>
+    <string name="notif_off_warning">⚠ الإشعارات متوقفة — لن يرن المنبه</string>
+    <string name="silent_banner_text">⚡ ترن المنبهات حتى في الوضع الصامت ووضع عدم الإزعاج. ملاحظة: إذا كان الهاتف مغلقًا فلن يرن المنبه.</string>
     <string name="delete">حذف</string>
+    <string name="edit">تعديل</string>
     <string name="cancel">إلغاء</string>
     <string name="save">حفظ</string>
+    <string name="clear">مسح</string>
+    <string name="ok">موافق</string>
+    <string name="close">إغلاق</string>
     <string name="select_all">الكل</string>
     <string name="select_none">لا شيء</string>
     <string name="selected_count">تم تحديد %d</string>
     <string name="back_to_settings">العودة إلى الإعدادات</string>
+
+    <!-- Timer tab -->
+    <string name="timers_header">المؤقتات (%d/5)</string>
+    <string name="add_timer">إضافة مؤقت</string>
+    <string name="timer_default_name">مؤقت %d</string>
+    <string name="unit_hh">س</string>
+    <string name="unit_mm">د</string>
+    <string name="unit_ss">ث</string>
+    <string name="times_up">انتهى الوقت!</string>
+    <string name="reset">إعادة ضبط</string>
+    <string name="start">بدء</string>
+    <string name="pause">إيقاف مؤقت</string>
+
+    <!-- Stopwatch tab -->
+    <string name="stopwatch_title">ساعة الإيقاف</string>
+    <string name="lap">دورة</string>
+    <string name="stop">إيقاف</string>
+    <string name="lap_prefix">دورة %d:</string>
+    <string name="table_lap">الدورة</string>
+    <string name="table_lap_time">وقت الدورة</string>
+    <string name="table_overall">الإجمالي</string>
+
+    <!-- Add/Edit Alarm Dialog -->
+    <string name="dialog_new_alarm">منبه جديد</string>
+    <string name="dialog_edit_alarm">تعديل المنبه</string>
+    <string name="alarm_time_section">وقت المنبه</string>
+    <string name="alarm_label_optional">التسمية (اختياري)</string>
+    <string name="alarm_label_placeholder">مثل: وردية العمل</string>
+    <string name="tab_cyclic_days">أيام دورية</string>
+    <string name="tab_weekly_days">أيام الأسبوع</string>
+    <string name="cyclic_config_section">الإعداد الدوري</string>
+    <string name="repeat_on_days_section">التكرار في الأيام</string>
+    <string name="every_word">كل</string>
+    <string name="days_word">أيام</string>
+    <string name="start_date">تاريخ البدء</string>
+    <string name="snooze_duration_section">مدة الغفوة</string>
+    <string name="snooze_duration_hint">حدد مدة الغفوة بالدقائق أو أدخلها</string>
+    <string name="custom_colon">مخصص:</string>
+    <string name="minutes_word">دقائق</string>
+    <string name="alarm_sound_section">صوت المنبه</string>
+    <string name="custom_track">ملف مخصص</string>
+    <string name="custom_track_sub">ملف صوتي من جهازك</string>
+    <string name="pick_from_device">اختيار من الجهاز</string>
+    <string name="change_track">تغيير الملف</string>
+    <string name="volume_vibration_section">مستوى الصوت والاهتزاز</string>
+    <string name="vibrate">اهتزاز</string>
+    <string name="save_alarm">حفظ المنبه</string>
+
+    <!-- Weekday abbreviations -->
+    <string name="day_mo">إث</string>
+    <string name="day_tu">ثل</string>
+    <string name="day_we">أر</string>
+    <string name="day_th">خم</string>
+    <string name="day_fr">جم</string>
+    <string name="day_sa">سب</string>
+    <string name="day_su">أح</string>
+
+    <string name="sched_one_off">مرة واحدة</string>
+    <string name="sched_daily">يوميًا</string>
+    <string name="sched_mon_fri">الإثنين – الجمعة</string>
+    <string name="sched_weekends">عطلة نهاية الأسبوع</string>
+    <string name="sched_cyclic_prefix">دوري · كل %d أيام</string>
+
+    <!-- Alarm History -->
+    <string name="alarm_history_title">سجل المنبهات</string>
+    <string name="no_history_title">لا يوجد سجل</string>
+    <string name="no_history_desc">ستظهر المنبهات التي تم إيقافها أو تأجيلها هنا.</string>
+
+    <!-- About Subpage -->
+    <string name="about_release_notes_header">حول التطبيق وملاحظات الإصدار</string>
+    <string name="hero_tagline">تطبيق منبه ذكي للورديات والمناوبات والدورات المتكررة</string>
+    <string name="support_community_header">الدعم والمجتمع</string>
+    <string name="support_email_title">الآراء أو الاقتراحات أو الإبلاغ عن الأخطاء</string>
+    <string name="release_history_title">سجل الإصدارات والملاحظات</string>
+    <string name="release_history_subtitle">اضغط على أي إصدار لتوسيع الملاحظات أو طيها</string>
+    <string name="badge_latest">الأحدث</string>
+    <string name="badge_current">الإصدار الحالي</string>
+    <string name="creator_ack_header">المطور والتقدير</string>
+    <string name="creator_ack_body1">صُمم خصيصًا لموظفي الورديات والمناوبات ولكل من يحتاج إلى منبهات متكررة بفترات زمنية خارج الجدول الأسبوعي المعتاد.</string>
+    <string name="creator_ack_body2" formatted="false">تطوير 100% بمساعدة الذكاء الاصطناعي. لا تتبع. لا إعلانات. مجاني 100%.</string>
+
+    <!-- Ringing Screen -->
+    <string name="alarm_ringing_title">المنبه يرن</string>
+    <string name="ringing_default_label">منبه دوري</string>
+    <string name="ringing_snooze_duration">مدة الغفوة</string>
+    <string name="ringing_btn_snooze">غفوة</string>
+    <string name="ringing_btn_dismiss">إيقاف</string>
+
+    <!-- Release Notes Titles -->
+    <string name="rel_v1_6_4_title">v1.6.4 (الإصدار الحالي)</string>
+    <string name="rel_v1_6_3_title">ملاحظات الإصدار v1.6.3</string>
+    <string name="rel_v1_6_2_title">ملاحظات الإصدار v1.6.2</string>
+    <string name="rel_v1_6_1_title">ملاحظات الإصدار v1.6.1</string>
+    <string name="rel_v1_6_title">ملاحظات الإصدار v1.6</string>
+    <string name="rel_v1_5_title">ملاحظات الإصدار v1.5</string>
+    <string name="rel_v1_4_title">ملاحظات الإصدار v1.4</string>
+    <string name="rel_v1_3_title">ملاحظات الإصدار v1.3</string>
+    <string name="rel_v1_2_title">ملاحظات الإصدار v1.2</string>
+    <string name="rel_v1_1_title">ملاحظات الإصدار v1.1</string>
+    <string name="rel_v1_0_title">الإصدار الأول v1.0</string>
+
+    <!-- Release Notes Items v1.6.4 -->
+    <string name="rel_v1_6_4_item1">تعريب وترجمة شاملة بدون إنترنت — ترجمة كاملة لجميع الشاشات، علامات التبويب، النوافذ، المؤقتات، ساعة الإيقاف، الإعدادات وملاحظات الإصدار بـ 11 لغة</string>
+    <string name="rel_v1_6_4_item2">أولوية اختيار اللغة عند أول تشغيل — عرض نافذة اختيار اللغة مباشرة قبل طلب أذونات النظام</string>
+    <string name="rel_v1_6_4_item3">أرقام قياسية موحدة — الأرقام تظل بدقة بصيغة 1، 2، 3 عبر جميع الواجهات لسهولة القراءة</string>
+
+    <!-- Release Notes Items v1.6.3 -->
+    <string name="rel_v1_6_3_item1">أساس الدعم متعدد اللغات — أداة اختيار اللغة داخل التطبيق و 11 حزمة ترجمة بدون إنترنت</string>
+    <string name="rel_v1_6_3_item2">نافذة الإعداد الأولي — اختر لغتك ومظهرك المفضل فور التثبيت</string>
+    <string name="rel_v1_6_3_item3">إعدادات اللغة في التطبيق — تغيير لغة العرض بسهولة في أي وقت من الإعدادات</string>
+
+    <!-- Release Notes Items v1.6.2 -->
+    <string name="rel_v1_6_2_item1">توافق مع Android 9 — حل مشكلة الإغلاق المفاجئ على أنظمة Android 9 والإصدارات الأقدم</string>
+    <string name="rel_v1_6_2_item2">حماية خدمة الخلفية — إشعارات الواجهة الأمامية الآمنة لتتبع الوقت بدقة وبدون انقطاع</string>
+    <string name="rel_v1_6_2_item3">إيقاف فوري لتنبيه المؤقت — الضغط على مسح أو إعادة ضبط يوقف صوت الرنين مباشرة</string>
+    <string name="rel_v1_6_2_item4">تنقل ذكي عبر الإشعارات — يعرض عنوان الإشعار المؤقت/ساعة الإيقاف ويفتح التبويب المطلوب بدقة</string>
+    <string name="rel_v1_6_2_item5">دورة حياة منبه نظيفة — إيقاف فوري وعودة سريعة إلى شاشة القفل دون تسريب في الخلفية</string>
+
+    <!-- Release Notes Items v1.6.1 -->
+    <string name="rel_v1_6_1_item1">الامتثال لمعايير F-Droid — بيانات وصفية مفتوحة المصدر ونظيفة، ترخيص Apache-2.0 وبدون فاحص تحديثات شبكي</string>
+    <string name="rel_v1_6_1_item2">تبسيط إدارة الأذونات — واجهة واضحة وبسيطة لإدارة أذونات النظام</string>
+
+    <!-- Release Notes Items v1.6 -->
+    <string name="rel_v1_6_item1">إشعار خلفية ثابت — لا يمكن سحب الإشعار أثناء تشغيل المؤقت، مع زر \'إيقاف الكل\'</string>
+    <string name="rel_v1_6_item2">وضوح وقت المنبه في الوضع الفاتح — ألوان عالية التباين وواضحة جداً لقراءة الوقت</string>
+    <string name="rel_v1_6_item3">تدرج لوني متوازن في الوضع الفاتح — خلفية رمادية مزرقة تجعل التحكم في السطوع أكثر فعالية</string>
+
+    <!-- Release Notes Items v1.5 -->
+    <string name="rel_v1_5_item1">حفظ المسار الصوتي المخصص — تطبيق الملف الصوتي الأخير تلقائيًا على المنبهات الجديدة</string>
+    <string name="rel_v1_5_item2">مؤقتات متعددة — تشغيل حتى 5 مؤقتات تنازلية مستقلة في نفس الوقت</string>
+    <string name="rel_v1_5_item3">الوضع الداكن الخالص — أسود AMOLED لتوفير استهلاك البطارية على شاشات OLED</string>
+    <string name="rel_v1_5_item4">شريط تعديل سطوع الوضع الفاتح — ضبط تدرج الخلفية من الرمادي الخفيف إلى الأبيض النقي</string>
+    <string name="rel_v1_5_item5">مؤقت وساعة إيقاف في الخلفية — متابعة العمل بالخلفية عبر الخدمات الأمامية دون انقطاع</string>
+    <string name="rel_v1_5_item6">الرنين في الوضع الصامت وعدم الإزعاج — يتجاوز المنبه مستوى رنين الهاتف لضمان الاستيقاظ</string>
+
+    <!-- Release Notes Items v1.4 -->
+    <string name="rel_v1_4_item1">تحديث اسم الحزمة الرسمي — تم تحديث الحزمة إلى com.beemasfincon.cyclicalarms</string>
+    <string name="rel_v1_4_item2">تحسينات الموثوقية — جدولة منبهات متطورة وإدارة سلسة لدورة حياة الخدمة</string>
+
+    <!-- Release Notes Items v1.3 -->
+    <string name="rel_v1_3_item1">المؤقت — عد تنازلي مع حلقة تقدم، إعدادات مسبقة سريعة (1 إلى 30 دقيقة)، وتنبيه صوتي مع اهتزاز</string>
+    <string name="rel_v1_3_item2">ساعة الإيقاف — تتبع الوقت بدقة مع جولات، وتحديد أسرع وأبطأ جولة مع أصوات لمس تفاعلية</string>
+    <string name="rel_v1_3_item3">خصوصية صارمة على شاشة القفل — الظهور فوق القفل فقط أثناء رنين المنبه النشط</string>
+    <string name="rel_v1_3_item4">تنقل عبر 4 تبويبات — المنبهات، المؤقت، ساعة الإيقاف، والإعدادات مع صفحة حول التطبيق</string>
+    <string name="rel_v1_3_item5">التبويب الدوري افتراضيًا — تفتح المنبهات الجديدة تلقائيًا على تبويب الأيام الدورية</string>
+    <string name="rel_v1_3_item6">ملاءمة الأيقونة — أيقونة التطبيق تظهر كاملة بدون اقتطاع في المشغل</string>
+
+    <!-- Release Notes Items v1.2 -->
+    <string name="rel_v1_2_item1">أيقونة مرسومة بقلم رصاص — تصميم منبه حلزوني متناسق وأنيق</string>
+    <string name="rel_v1_2_item2">غفوة مخصصة لكل منبه — تحديد مدة غفوة مختلفة لكل منبه على حدة</string>
+    <string name="rel_v1_2_item3">رنين أصيل فوق شاشة القفل — يرن بسلاسة فوق القفل دون طلب رمز PIN</string>
+    <string name="rel_v1_2_item4">تنقل مخصص — تصميم أنيق ومريح مقسم إلى 4 تبويبات</string>
+    <string name="rel_v1_2_item5">تبديل تنسيق 12 / 24 ساعة — اختيار التنسيق المناسب مع إشارة AM / PM بأحرف كبيرة</string>
+    <string name="rel_v1_2_item6">عرض السنة في التاريخ — تعرض ساعة الشاشة الرئيسية السنة كاملة (مثال: السبت، 5 سبتمبر 2026)</string>
+    <string name="rel_v1_2_item7">تنبيه اختيار المظهر عند البدء — وضوح ممتاز لأيقونات شريط الحالة</string>
+    <string name="rel_v1_2_item8">مدير الأذونات داخل التطبيق — إدارة أذونات الإشعارات والمنبهات الدقيقة والظهور فوق التطبيقات</string>
+    <string name="rel_v1_2_item9">بطاقة الدعم والمجتمع — قناة تواصل مباشرة للملاحظات وبلاغات الأخطاء</string>
+
+    <!-- Release Notes Items v1.1 -->
+    <string name="rel_v1_1_item1">اختيار المظهر داكن / فاتح / نظام من الإعدادات</string>
+    <string name="rel_v1_1_item2">محرر المنبه يبدأ الآن بالوقت الحالي تلقائيًا</string>
+    <string name="rel_v1_1_item3">محدد الدقائق مرئي دائمًا دون اختفاء</string>
+    <string name="rel_v1_1_item4">صوت منبه عالي النبرة جديد — نغمة تنبيه قوية ثنائية النغمة</string>
+    <string name="rel_v1_1_item5">ضبط مستوى الصوت إلى الحد الأقصى افتراضيًا للمنبهات الجديدة</string>
+    <string name="rel_v1_1_item6">شعار Beema\'s FINCON على الشاشة الرئيسية</string>
+
+    <!-- Release Notes Items v1.0 -->
+    <string name="rel_v1_0_item1">منبهات دورية — تكرار كل N من الأيام بدءًا من تاريخ محدد</string>
+    <string name="rel_v1_0_item2">منبهات أسبوعية — اختيار أي توليفة من أيام الأسبوع</string>
+    <string name="rel_v1_0_item3">7 أصوات نغمات مدمجة مع دعم المقاطع الصوتية المخصصة</string>
+    <string name="rel_v1_0_item4">غفوة واهتزاز قابلان للتخصيص الكامل</string>
+    <string name="rel_v1_0_item5">سجل لتاريخ المنبهات مع إمكانية المسح</string>
 </resources>
+

@@ -9,7 +9,7 @@
 
     <!-- First Run Setup -->
     <string name="welcome_title">欢迎使用 Cyclic Alarms</string>
-    <string name="first_run_subtitle">请选择您的偏好语言和主题。您可以随时在设置中更改它们。</string>
+    <string name="first_run_subtitle">请选择您的语言和主题以开始使用。您可以随时在设置中更改它们。</string>
     <string name="select_language">语言</string>
     <string name="select_theme">主题</string>
     <string name="save_and_continue">保存并继续</string>
@@ -17,48 +17,237 @@
     <!-- Settings Page -->
     <string name="settings_title">设置</string>
     <string name="setting_language_title">应用语言</string>
-    <string name="setting_language_subtitle">完全离线更改应用语言</string>
+    <string name="setting_language_subtitle">完全离线更改应用程序显示语言</string>
     <string name="setting_theme_title">主题</string>
     <string name="setting_clock_format_title">时钟显示格式</string>
     <string name="setting_clock_format_subtitle">选择主屏幕时钟的显示方式</string>
     <string name="setting_permissions_title">权限与系统访问</string>
-    <string name="setting_permissions_subtitle">管理确保闹钟准时响铃和锁屏弹出所需的权限</string>
+    <string name="setting_permissions_subtitle">管理精准响铃和锁屏弹窗所需的系统权限</string>
+    <string name="about_cyclic_alarms">关于 Cyclic Alarms</string>
+    <string name="about_cyclic_alarms_subtitle">版本 1.6.4 • 发行说明、支持与开发者信息</string>
+    <string name="tinted">淡色</string>
+    <string name="pure_white">纯白</string>
 
+    <!-- Theme options -->
     <string name="theme_pure_dark">纯黑</string>
     <string name="theme_dark">深色</string>
-    <string name="theme_system">系统跟随</string>
+    <string name="theme_system">系统</string>
     <string name="theme_light">浅色</string>
     <string name="background_brightness">背景亮度</string>
 
-    <string name="time_format_12h">12小时制 (上午/下午)</string>
+    <string name="time_format_12h">12小时制 (AM/PM)</string>
     <string name="time_format_24h">24小时制</string>
 
     <!-- Permissions -->
-    <string name="perm_notifications">通知权限</string>
-    <string name="perm_notifications_sub">用于响铃声音和通知横幅</string>
+    <string name="perm_notifications">通知</string>
+    <string name="perm_notifications_sub">用于触发响亮警报声和横幅提醒</string>
     <string name="perm_exact_alarm">精确闹钟调度</string>
-    <string name="perm_exact_alarm_sub">允许闹钟在设定的精确秒数响铃</string>
+    <string name="perm_exact_alarm_sub">允许闹钟在设定的精确时间触发</string>
     <string name="perm_fullscreen">全屏闹钟提醒</string>
-    <string name="perm_fullscreen_sub">在设备锁定时于锁屏上显示全屏闹钟界面</string>
-    <string name="perm_overlay">显示在其他应用上层</string>
-    <string name="perm_overlay_sub">允许在其他应用上显示闹钟弹窗</string>
+    <string name="perm_fullscreen_sub">在设备锁定时于锁屏上方显示响铃界面</string>
+    <string name="perm_overlay">在其他应用上层显示</string>
+    <string name="perm_overlay_sub">用于在锁屏上显示弹窗窗口</string>
+    <string name="badge_granted">✓ 已授予</string>
+    <string name="badge_disabled">⚠ 已禁用</string>
+    <string name="btn_fix">修复</string>
+    <string name="btn_fix_now">立即修复</string>
+    <string name="btn_manage">管理</string>
+    <string name="btn_grant">授予</string>
 
     <!-- Permission Gate Screen -->
     <string name="perm_gate_title">需要权限</string>
-    <string name="perm_gate_desc">Cyclic Alarms 需要这些系统权限才能稳定响铃。请授予所有权限以继续。</string>
+    <string name="perm_gate_desc">Cyclic Alarms 需要这些系统权限才能可靠响铃。请全部授予后继续。</string>
 
     <!-- Common Actions & Alerts -->
-    <string name="next_alarm_prefix">下次响铃：</string>
-    <string name="no_active_alarms">暂无已开启闹钟</string>
+    <string name="next_alarm_prefix">下次：</string>
+    <string name="no_active_alarms">无有效闹钟</string>
     <string name="calculating">计算中…</string>
     <string name="no_alarms_yet">暂无闹钟</string>
-    <string name="no_alarms_hint">点击 + 创建您的第一个周期或每周闹钟。</string>
-    <string name="silent_banner_text">⚡ 即使在静音和勿扰模式下闹钟也会响铃。注意：若手机关机则无法响铃。</string>
+    <string name="no_alarms_hint">轻点 + 创建您的第一个循环或每周闹钟。</string>
+    <string name="notif_off_warning">⚠ 通知已关闭 — 闹钟将无法响铃</string>
+    <string name="silent_banner_text">⚡ 即使在静音和免打扰模式下闹钟也会响铃。注意：关机状态下闹钟无法响铃。</string>
     <string name="delete">删除</string>
+    <string name="edit">编辑</string>
     <string name="cancel">取消</string>
     <string name="save">保存</string>
+    <string name="clear">清除</string>
+    <string name="ok">确定</string>
+    <string name="close">关闭</string>
     <string name="select_all">全选</string>
-    <string name="select_none">取消</string>
-    <string name="selected_count">已选 %d 个</string>
+    <string name="select_none">全不选</string>
+    <string name="selected_count">已选 %d 项</string>
     <string name="back_to_settings">返回设置</string>
+
+    <!-- Timer tab -->
+    <string name="timers_header">计时器 (%d/5)</string>
+    <string name="add_timer">添加计时器</string>
+    <string name="timer_default_name">计时器 %d</string>
+    <string name="unit_hh">时</string>
+    <string name="unit_mm">分</string>
+    <string name="unit_ss">秒</string>
+    <string name="times_up">时间到！</string>
+    <string name="reset">重置</string>
+    <string name="start">开始</string>
+    <string name="pause">暂停</string>
+
+    <!-- Stopwatch tab -->
+    <string name="stopwatch_title">秒表</string>
+    <string name="lap">计次</string>
+    <string name="stop">停止</string>
+    <string name="lap_prefix">第 %d 次：</string>
+    <string name="table_lap">计次</string>
+    <string name="table_lap_time">单次时间</string>
+    <string name="table_overall">累计时间</string>
+
+    <!-- Add/Edit Alarm Dialog -->
+    <string name="dialog_new_alarm">新建闹钟</string>
+    <string name="dialog_edit_alarm">编辑闹钟</string>
+    <string name="alarm_time_section">闹钟时间</string>
+    <string name="alarm_label_optional">标签（可选）</string>
+    <string name="alarm_label_placeholder">例如：白班</string>
+    <string name="tab_cyclic_days">循环天数</string>
+    <string name="tab_weekly_days">星期规律</string>
+    <string name="cyclic_config_section">循环配置</string>
+    <string name="repeat_on_days_section">按周重复</string>
+    <string name="every_word">每隔</string>
+    <string name="days_word">天</string>
+    <string name="start_date">起始日期</string>
+    <string name="snooze_duration_section">贪睡时长</string>
+    <string name="snooze_duration_hint">选择或输入贪睡分钟数</string>
+    <string name="custom_colon">自定义：</string>
+    <string name="minutes_word">分钟</string>
+    <string name="alarm_sound_section">闹钟铃声</string>
+    <string name="custom_track">自定义音频</string>
+    <string name="custom_track_sub">设备上的自定义音频</string>
+    <string name="pick_from_device">从设备选择</string>
+    <string name="change_track">更换音频</string>
+    <string name="volume_vibration_section">音量与振动</string>
+    <string name="vibrate">振动</string>
+    <string name="save_alarm">保存闹钟</string>
+
+    <!-- Weekday abbreviations -->
+    <string name="day_mo">一</string>
+    <string name="day_tu">二</string>
+    <string name="day_we">三</string>
+    <string name="day_th">四</string>
+    <string name="day_fr">五</string>
+    <string name="day_sa">六</string>
+    <string name="day_su">日</string>
+
+    <string name="sched_one_off">单次</string>
+    <string name="sched_daily">每天</string>
+    <string name="sched_mon_fri">周一至周五</string>
+    <string name="sched_weekends">周末</string>
+    <string name="sched_cyclic_prefix">循环 · 每 %d 天</string>
+
+    <!-- Alarm History -->
+    <string name="alarm_history_title">闹钟历史</string>
+    <string name="no_history_title">暂无记录</string>
+    <string name="no_history_desc">已关闭和已贪睡的闹钟将显示在此处。</string>
+
+    <!-- About Subpage -->
+    <string name="about_release_notes_header">关于与更新说明</string>
+    <string name="hero_tagline">适用于倒班、排班与循环周期的智能闹钟</string>
+    <string name="support_community_header">支持与交流</string>
+    <string name="support_email_title">反馈、建议或问题报告</string>
+    <string name="release_history_title">版本历史与说明</string>
+    <string name="release_history_subtitle">轻点任意版本以展开或收起说明</string>
+    <string name="badge_latest">最新</string>
+    <string name="badge_current">当前版本</string>
+    <string name="creator_ack_header">作者与致谢</string>
+    <string name="creator_ack_body1">专为倒班工作者、轮班人员以及需要非传统每周重复闹钟的用户打造。</string>
+    <string name="creator_ack_body2" formatted="false">100% 人工智能辅助开发。无追踪，无广告，100% 免费开源。</string>
+
+    <!-- Ringing Screen -->
+    <string name="alarm_ringing_title">闹钟正在响铃</string>
+    <string name="ringing_default_label">循环闹钟</string>
+    <string name="ringing_snooze_duration">贪睡时长</string>
+    <string name="ringing_btn_snooze">稍后提醒</string>
+    <string name="ringing_btn_dismiss">关闭闹钟</string>
+
+    <!-- Release Notes Titles -->
+    <string name="rel_v1_6_4_title">v1.6.4（当前版本）</string>
+    <string name="rel_v1_6_3_title">v1.6.3 更新说明</string>
+    <string name="rel_v1_6_2_title">v1.6.2 更新说明</string>
+    <string name="rel_v1_6_1_title">v1.6.1 更新说明</string>
+    <string name="rel_v1_6_title">v1.6 更新说明</string>
+    <string name="rel_v1_5_title">v1.5 更新说明</string>
+    <string name="rel_v1_4_title">v1.4 更新说明</string>
+    <string name="rel_v1_3_title">v1.3 更新说明</string>
+    <string name="rel_v1_2_title">v1.2 更新说明</string>
+    <string name="rel_v1_1_title">v1.1 更新说明</string>
+    <string name="rel_v1_0_title">v1.0 首次发布</string>
+
+    <!-- Release Notes Items v1.6.4 -->
+    <string name="rel_v1_6_4_item1">全离线深度本地化 — 所有页面、标签页、弹窗、计时器、秒表、设置、更新历史及响铃界面全面支持 11 种语言</string>
+    <string name="rel_v1_6_4_item2">首次启动优先语言选择 — 在系统权限请求前立即弹出语言与主题配置向导</string>
+    <string name="rel_v1_6_4_item3">统一标准数字显示 — 数字在所有语言下均严格保持 1, 2, 3 格式，确保极佳阅读体验</string>
+
+    <!-- Release Notes Items v1.6.3 -->
+    <string name="rel_v1_6_3_item1">多语言国际化基础 — 新增应用内语言选择器与 11 种离线语言包</string>
+    <string name="rel_v1_6_3_item2">初次启动引导 — 安装后即可直接选择偏好语言与主题配色</string>
+    <string name="rel_v1_6_3_item3">应用内语言设置 — 可在“设置”页面随时快捷切换显示语言</string>
+
+    <!-- Release Notes Items v1.6.2 -->
+    <string name="rel_v1_6_2_item1">Android 9 兼容性修复 — 彻底解决 Android 9 及低版本系统上的闪退问题</string>
+    <string name="rel_v1_6_2_item2">后台服务稳定性守护 — 前台服务通知机制加固，确保计时准确无误</string>
+    <string name="rel_v1_6_2_item3">计时器警报即时静音 — 点击清除或重置立即停止提示音播放</string>
+    <string name="rel_v1_6_2_item4">智能通知交互导航 — 通知标题实时区分计时器与秒表，点击直达对应标签页</string>
+    <string name="rel_v1_6_2_item5">纯净闹钟生命周期 — 闹钟关闭后立即恢复锁屏状态，无后台泄露</string>
+
+    <!-- Release Notes Items v1.6.1 -->
+    <string name="rel_v1_6_1_item1">F-Droid 规范合规 — 纯净开源元数据，Apache-2.0 协议，移除网络检查器</string>
+    <string name="rel_v1_6_1_item2">权限管理精简体验 — 适配现代及早期 Android 的极简权限申请流程</string>
+
+    <!-- Release Notes Items v1.6 -->
+    <string name="rel_v1_6_item1">常驻后台通知保护 — 计时器运行时通知不可滑动清除，附带“全部停止”快捷操作</string>
+    <string name="rel_v1_6_item2">浅色模式时间对比度修复 — 闹钟时间采用深色高对比度色彩，阅读更清晰</string>
+    <string name="rel_v1_6_item3">浅色背景色调优化 — 采用微蓝灰底色，使白色亮度滑块调节更加灵敏自然</string>
+
+    <!-- Release Notes Items v1.5 -->
+    <string name="rel_v1_5_item1">自定义铃声记忆 — 新建闹钟自动沿用上次选取的自定义音频文件</string>
+    <string name="rel_v1_5_item2">多计时器并行 — 支持同时运行多达 5 个独立的倒计时器</string>
+    <string name="rel_v1_5_item3">Pure Dark 纯黑模式 — 采用纯黑 AMOLED 配色，为 OLED 屏幕极致省电</string>
+    <string name="rel_v1_5_item4">浅色模式亮度滑块 — 自由调节背景从微调灰到纯白底色</string>
+    <string name="rel_v1_5_item5">后台计时器与秒表 — 依靠前台服务切入后台依然精准计时</string>
+    <string name="rel_v1_5_item6">静音与勿扰穿透响铃 — 闹钟自动绕过系统静音设置，杜绝错过重要日程</string>
+
+    <!-- Release Notes Items v1.4 -->
+    <string name="rel_v1_4_item1">官方包名重塑 — 包名全新规范为 com.beemasfincon.cyclicalarms</string>
+    <string name="rel_v1_4_item2">稳定性全方位提升 — 优化闹钟定时与服务生命周期调度机制</string>
+
+    <!-- Release Notes Items v1.3 -->
+    <string name="rel_v1_3_item1">倒计时器 — 环形进度显示、常用预设（1至30分钟）以及震动声音提示</string>
+    <string name="rel_v1_3_item2">精准秒表 — 计圈记录、极值圈数高亮标记以及触摸音效反馈</string>
+    <string name="rel_v1_3_item3">锁屏严格隐私模式 — 仅在响铃瞬间置顶，关闭后立即锁屏恢复</string>
+    <string name="rel_v1_3_item4">4 标签页结构导航 — 闹钟、计时器、秒表、以及内嵌关于页的设置</string>
+    <string name="rel_v1_3_item5">默认循环周期标签 — 新建闹钟默认首选“循环天数”模式</string>
+    <string name="rel_v1_3_item6">图标完美居中 — 桌面启动器图标不再被裁切变形</string>
+
+    <!-- Release Notes Items v1.2 -->
+    <string name="rel_v1_2_item1">螺旋素描图标 — 对称优雅的手绘铅笔素描闹钟启动图标</string>
+    <string name="rel_v1_2_item2">独立贪睡时长设定 — 可为每个闹钟个性化指定贪睡提醒间隔</string>
+    <string name="rel_v1_2_item3">系统锁屏原生响铃 — 无需解锁输入 PIN 码即可平稳覆盖响铃</string>
+    <string name="rel_v1_2_item4">独立页面导航 — 干净清晰的 4 栏分类排版</string>
+    <string name="rel_v1_2_item5">12/24 小时制自由切换 — 支持大写 AM/PM 或标准 24 小时制</string>
+    <string name="rel_v1_2_item6">主界面日期完整年份 — 首页时钟显示完整年份（例如：2026年9月5日 周六）</string>
+    <string name="rel_v1_2_item7">首启主题感知提示 — 确保状态栏图标在亮暗背景下均清晰可见</string>
+    <string name="rel_v1_2_item8">应用内权限管理中心 — 一键查验与开启通知、精确闹钟及悬浮窗权限</string>
+    <string name="rel_v1_2_item9">支持与社区卡片 — 便捷反馈意见和提交缺陷报告</string>
+
+    <!-- Release Notes Items v1.1 -->
+    <string name="rel_v1_1_item1">深色 / 浅色 / 跟随系统主题切换</string>
+    <string name="rel_v1_1_item2">闹钟编辑器默认定位当前系统时间</string>
+    <string name="rel_v1_1_item3">分钟微调轮盘持久可见</string>
+    <string name="rel_v1_1_item4">新增高频清脆铃声 — 响亮清晰的双音调提示</string>
+    <string name="rel_v1_1_item5">新闹钟音量默认设为最大音量</string>
+    <string name="rel_v1_1_item6">主界面印刻 Beema\'s FINCON 专属标志</string>
+
+    <!-- Release Notes Items v1.0 -->
+    <string name="rel_v1_0_item1">循环闹钟 — 从基准日起每隔 N 天规律响铃</string>
+    <string name="rel_v1_0_item2">周闹钟 — 支持自由勾选一周内的任意几天</string>
+    <string name="rel_v1_0_item3">7 款内置合成铃声，支持自定义本地音频</string>
+    <string name="rel_v1_0_item4">可配置贪睡时长与震动开关</string>
+    <string name="rel_v1_0_item5">闹钟历史记录与一键清除功能</string>
 </resources>
+

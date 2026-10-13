@@ -1,0 +1,3 @@
+- Comprehensive offline localization across all screens, dialogs, timers, stopwatch, and ringing UI in 11 global languages plus System Default.
+- First-run language and theme selection dialog now displays immediately before system permission setup.
+- Kept all numerals strictly in standard digits (1, 2, 3...) for clear and universal readability.

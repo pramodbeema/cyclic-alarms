@@ -23,7 +23,12 @@
     <string name="setting_clock_format_subtitle">Ana ekranda saatin nasıl görüntüleneceğini seçin</string>
     <string name="setting_permissions_title">İzinler ve Sistem Erişimi</string>
     <string name="setting_permissions_subtitle">Güvenilir alarm çalması ve kilit ekranı pencereleri için gereken izinleri yönetin</string>
+    <string name="about_cyclic_alarms">Cyclic Alarms Hakkında</string>
+    <string name="about_cyclic_alarms_subtitle">Sürüm 1.6.4 • Sürüm notları, destek ve yapımcı bilgisi</string>
+    <string name="tinted">Tonlu</string>
+    <string name="pure_white">Saf Beyaz</string>
 
+    <!-- Theme options -->
     <string name="theme_pure_dark">Tam Karanlık</string>
     <string name="theme_dark">Karanlık</string>
     <string name="theme_system">Sistem</string>
@@ -37,11 +42,17 @@
     <string name="perm_notifications">Bildirimler</string>
     <string name="perm_notifications_sub">Yüksek sesli alarm ve başlıklar için gereklidir</string>
     <string name="perm_exact_alarm">Tam Zamanlı Alarm Planlama</string>
-    <string name="perm_exact_alarm_sub">Alarmın tam ayarlanan saniyede çalmasını sağlar</string>
+    <string name="perm_exact_alarm_sub">Alarmların ayarladığınız tam saatte çalmasını sağlar</string>
     <string name="perm_fullscreen">Tam Ekran Alarm Uyarıları</string>
-    <string name="perm_fullscreen_sub">Cihaz kilitliyken kilit ekranında tam ekran alarmı gösterir</string>
+    <string name="perm_fullscreen_sub">Kilit ekranınızın üzerinde çalan ekranı gösterir</string>
     <string name="perm_overlay">Diğer Uygulamaların Üzerinde Göster</string>
-    <string name="perm_overlay_sub">Açılır pencerenin diğer uygulamaların üzerinde görünmesini sağlar</string>
+    <string name="perm_overlay_sub">Kilit ekranı alarm açılır penceresi için gereklidir</string>
+    <string name="badge_granted">✓ Verildi</string>
+    <string name="badge_disabled">⚠ Devre Dışı</string>
+    <string name="btn_fix">Düzelt</string>
+    <string name="btn_fix_now">Şimdi Düzelt</string>
+    <string name="btn_manage">Yönet</string>
+    <string name="btn_grant">İzin Ver</string>
 
     <!-- Permission Gate Screen -->
     <string name="perm_gate_title">İzinler Gerekli</string>
@@ -52,13 +63,190 @@
     <string name="no_active_alarms">Aktif alarm yok</string>
     <string name="calculating">Hesaplanıyor…</string>
     <string name="no_alarms_yet">Henüz Alarm Yok</string>
-    <string name="no_alarms_hint">İlk döngüsel veya haftalık alarmınızı oluşturmak için + düğmesine dokunun.</string>
+    <string name="no_alarms_hint">İlk döngüsel veya haftalık alarmınızı oluşturmak için + simgesine dokunun.</string>
+    <string name="notif_off_warning">⚠ Bildirimler kapalı — alarmlar çalmayacak</string>
     <string name="silent_banner_text">⚡ Alarmlar Sessiz ve Rahatsız Etmeyin modunda bile çalar. Not: Telefon kapalıysa alarmlar çalamaz.</string>
     <string name="delete">Sil</string>
+    <string name="edit">Düzenle</string>
     <string name="cancel">İptal</string>
     <string name="save">Kaydet</string>
+    <string name="clear">Temizle</string>
+    <string name="ok">Tamam</string>
+    <string name="close">Kapat</string>
     <string name="select_all">Tümü</string>
     <string name="select_none">Hiçbiri</string>
     <string name="selected_count">%d seçildi</string>
     <string name="back_to_settings">Ayarlara Geri Dön</string>
+
+    <!-- Timer tab -->
+    <string name="timers_header">ZAMANLAYICILAR (%d/5)</string>
+    <string name="add_timer">Zamanlayıcı Ekle</string>
+    <string name="timer_default_name">Zamanlayıcı %d</string>
+    <string name="unit_hh">SA</string>
+    <string name="unit_mm">DK</string>
+    <string name="unit_ss">SN</string>
+    <string name="times_up">Süre Doldu!</string>
+    <string name="reset">Sıfırla</string>
+    <string name="start">Başlat</string>
+    <string name="pause">Duraklat</string>
+
+    <!-- Stopwatch tab -->
+    <string name="stopwatch_title">KRONOMETRE</string>
+    <string name="lap">Tur</string>
+    <string name="stop">Durdur</string>
+    <string name="lap_prefix">Tur %d:</string>
+    <string name="table_lap">TUR</string>
+    <string name="table_lap_time">TUR SÜRESİ</string>
+    <string name="table_overall">TOPLAM</string>
+
+    <!-- Add/Edit Alarm Dialog -->
+    <string name="dialog_new_alarm">Yeni Alarm</string>
+    <string name="dialog_edit_alarm">Alarmı Düzenle</string>
+    <string name="alarm_time_section">Alarm Saati</string>
+    <string name="alarm_label_optional">Etiket (isteğe bağlı)</string>
+    <string name="alarm_label_placeholder">örn. Vardiya</string>
+    <string name="tab_cyclic_days">Döngüsel Günler</string>
+    <string name="tab_weekly_days">Haftalık Günler</string>
+    <string name="cyclic_config_section">Döngüsel Yapılandırma</string>
+    <string name="repeat_on_days_section">Günlerde Tekrarla</string>
+    <string name="every_word">Her</string>
+    <string name="days_word">günde bir</string>
+    <string name="start_date">Başlangıç Tarihi</string>
+    <string name="snooze_duration_section">Erteleme Süresi</string>
+    <string name="snooze_duration_hint">Dakika cinsinden erteleme süresi seçin veya girin</string>
+    <string name="custom_colon">Özel:</string>
+    <string name="minutes_word">dakika</string>
+    <string name="alarm_sound_section">Alarm Sesi</string>
+    <string name="custom_track">Özel Parça</string>
+    <string name="custom_track_sub">Özel ses parçası</string>
+    <string name="pick_from_device">Cihazdan seç</string>
+    <string name="change_track">Parçayı değiştir</string>
+    <string name="volume_vibration_section">Ses Düzeyi ve Titreşim</string>
+    <string name="vibrate">Titreşim</string>
+    <string name="save_alarm">Alarmı Kaydet</string>
+
+    <!-- Weekday abbreviations -->
+    <string name="day_mo">Pt</string>
+    <string name="day_tu">Sa</string>
+    <string name="day_we">Ça</string>
+    <string name="day_th">Pe</string>
+    <string name="day_fr">Cu</string>
+    <string name="day_sa">Ct</string>
+    <string name="day_su">Pz</string>
+
+    <string name="sched_one_off">TEK SEFERLİK</string>
+    <string name="sched_daily">GÜNLÜK</string>
+    <string name="sched_mon_fri">PZT – CUM</string>
+    <string name="sched_weekends">HAFTA SONU</string>
+    <string name="sched_cyclic_prefix">DÖNGÜSEL · HER %d GÜNDE</string>
+
+    <!-- Alarm History -->
+    <string name="alarm_history_title">Alarm Geçmişi</string>
+    <string name="no_history_title">Geçmiş Yok</string>
+    <string name="no_history_desc">Kapatılan ve ertelenen alarmlar burada görünür.</string>
+
+    <!-- About Subpage -->
+    <string name="about_release_notes_header">HAKKINDA VE SÜRÜM NOTLARI</string>
+    <string name="hero_tagline">Vardiya ve tekrarlayan döngü alarmları için akıllı uygulama</string>
+    <string name="support_community_header">DESTEK VE TOPLULUK</string>
+    <string name="support_email_title">Geri Bildirimler, Öneriler veya Hata Bildirimi</string>
+    <string name="release_history_title">Sürüm Geçmişi ve Notlar</string>
+    <string name="release_history_subtitle">Notları genişletmek veya daraltmak için herhangi bir sürüme dokunun</string>
+    <string name="badge_latest">En Yeni</string>
+    <string name="badge_current">Geçerli Sürüm</string>
+    <string name="creator_ack_header">GELİŞTİRİCİ VE TEŞEKKÜRLER</string>
+    <string name="creator_ack_body1">Vardiyalı çalışanlar ve standart haftalık programların ötesinde tekrarlayan aralıklı alarmlara ihtiyaç duyan herkes için üretildi.</string>
+    <string name="creator_ack_body2" formatted="false">%100 yapay zeka destekli geliştirme. Sıfır takip. Sıfır reklam. %100 ücretsiz.</string>
+
+    <!-- Ringing Screen -->
+    <string name="alarm_ringing_title">ALARM ÇALIYOR</string>
+    <string name="ringing_default_label">Döngüsel Alarm</string>
+    <string name="ringing_snooze_duration">Erteleme Süresi</string>
+    <string name="ringing_btn_snooze">Ertele</string>
+    <string name="ringing_btn_dismiss">Kapat</string>
+
+    <!-- Release Notes Titles -->
+    <string name="rel_v1_6_4_title">v1.6.4 (Geçerli Sürüm)</string>
+    <string name="rel_v1_6_3_title">v1.6.3 Sürüm Notları</string>
+    <string name="rel_v1_6_2_title">v1.6.2 Sürüm Notları</string>
+    <string name="rel_v1_6_1_title">v1.6.1 Sürüm Notları</string>
+    <string name="rel_v1_6_title">v1.6 Sürüm Notları</string>
+    <string name="rel_v1_5_title">v1.5 Sürüm Notları</string>
+    <string name="rel_v1_4_title">v1.4 Sürüm Notları</string>
+    <string name="rel_v1_3_title">v1.3 Sürüm Notları</string>
+    <string name="rel_v1_2_title">v1.2 Sürüm Notları</string>
+    <string name="rel_v1_1_title">v1.1 Sürüm Notları</string>
+    <string name="rel_v1_0_title">v1.0 İlk Sürüm</string>
+
+    <!-- Release Notes Items v1.6.4 -->
+    <string name="rel_v1_6_4_item1">Kapsamlı Çevrimdışı Yerelleştirme — tüm ekranlar, sekmeler, iletişim pencereleri, sayaçlar, kronometre, ayarlar, sürüm notları ve çalma arayüzü 11 dilde eksiksiz çevrildi</string>
+    <string name="rel_v1_6_4_item2">İlk Açılışta Öncelikli Dil Seçimi — dil seçici penceresi sistem izinlerinden önce doğrudan gösterilir</string>
+    <string name="rel_v1_6_4_item3">Evrensel Standart Rakamlar — sayılar net ve kolay okunabilirlik için kesinlikle 1, 2, 3 olarak korunur</string>
+
+    <!-- Release Notes Items v1.6.3 -->
+    <string name="rel_v1_6_3_item1">Çok Dilli Destek Temeli — uygulama içi dil seçici ve 11 çevrimdışı dil paketi</string>
+    <string name="rel_v1_6_3_item2">İlk Kurulum Diyaloğu — ilk açılışta tercih edilen dil ve temayı seçme imkanı</string>
+    <string name="rel_v1_6_3_item3">Uygulama İçi Dil Ayarları — Ayarlar sayfasından ekran dilini dilediğiniz an değiştirme</string>
+
+    <!-- Release Notes Items v1.6.2 -->
+    <string name="rel_v1_6_2_item1">Android 9 Uyumluluk Düzeltmesi — Android 9 ve eski sürümlerdeki ani kapanmalar giderildi</string>
+    <string name="rel_v1_6_2_item2">Ön Plan Servisi Koruması — arka planda kesintisiz sayaç takibi sağlandı</string>
+    <string name="rel_v1_6_2_item3">Sayaç Uyarısını Anında Susturma — Temizle veya Sıfırla ses çalmayı anında durdurur</string>
+    <string name="rel_v1_6_2_item4">Akıllı Bildirim Yönlendirmesi — bildirim başlığı Sayaç/Kronometre durumunu gösterir ve ilgili sekmeyi açar</string>
+    <string name="rel_v1_6_2_item5">Temiz Alarm Döngüsü — arka plana sızmadan anında kapatma ve kilit ekranına dönüş</string>
+
+    <!-- Release Notes Items v1.6.1 -->
+    <string name="rel_v1_6_1_item1">F-Droid Uyumluluğu — temiz açık kaynak meta verileri, Apache-2.0 lisansı, ağ denetleyicisi kaldırıldı</string>
+    <string name="rel_v1_6_1_item2">İzin Akışı Sadeleştirmesi — modern ve eski Android sürümleri için basitleştirilmiş izin yönetimi</string>
+
+    <!-- Release Notes Items v1.6 -->
+    <string name="rel_v1_6_item1">Kapatılamayan Arka Plan Bildirimi — sayaç ve kronometre çalışırken bildirim kaydırılamaz, \'Tümünü Durdur\' butonu eklendi</string>
+    <string name="rel_v1_6_item2">Açık Mod Alarm Saati Kontrastı — alarm saatleri için yüksek kontrastlı net renkler</string>
+    <string name="rel_v1_6_item3">Açık Mod Arka Plan Dengesi — parlaklık kaydırıcısının daha işlevsel olması için ideal zemin tonu</string>
+
+    <!-- Release Notes Items v1.5 -->
+    <string name="rel_v1_5_item1">Kalıcı Özel Parça — en son seçilen müzik dosyası yeni alarmlara otomatik uygulanır</string>
+    <string name="rel_v1_5_item2">Çoklu Sayaçlar — aynı anda 5 adede kadar bağımsız geri sayım sayacı çalıştırın</string>
+    <string name="rel_v1_5_item3">Pure Dark Modu — OLED ekranlarda pil tasarrufu sağlayan gerçek AMOLED siyah tema</string>
+    <string name="rel_v1_5_item4">Açık Mod Parlaklık Ayarı — arka planı griden saf beyaza kadar ayarlayın</string>
+    <string name="rel_v1_5_item5">Arka Plan Sayaç ve Kronometre — uygulama arka plandayken ön plan servisiyle çalışmaya devam eder</string>
+    <string name="rel_v1_5_item6">Sessiz ve Rahatsız Etmeyin Modunda Çalar — alarmlar zil sesi seviyesini aşarak mutlaka çalar</string>
+
+    <!-- Release Notes Items v1.4 -->
+    <string name="rel_v1_4_item1">Resmi Paket Adı — paket kimliği com.beemasfincon.cyclicalarms olarak güncellendi</string>
+    <string name="rel_v1_4_item2">Güvenilirlik İyileştirmeleri — alarm zamanlama ve servis yaşam döngüsü güçlendirildi</string>
+
+    <!-- Release Notes Items v1.3 -->
+    <string name="rel_v1_3_item1">Sayaç — ilerleme halkalı geri sayım sayacı, hızlı ön ayarlar (1dk–30dk), ses ve titreşim uyarısı</string>
+    <string name="rel_v1_3_item2">Kronometre — tur kayıtlı zaman takibi, en hızlı/yavaş tur vurguları ve sesli dokunma geri bildirimi</string>
+    <string name="rel_v1_3_item3">Sıkı Kilit Ekranı Gizliliği — kilit ekranı üzerinde yalnızca alarm aktif çalarken görünür</string>
+    <string name="rel_v1_3_item4">4 Sekmeli Gezinme — Alarmlar, Sayaç, Kronometre ve Hakkında sayfası içeren Ayarlar</string>
+    <string name="rel_v1_3_item5">Varsayılan Döngüsel Sekme — yeni alarmlar doğrudan Döngüsel Günler sekmesinde açılır</string>
+    <string name="rel_v1_3_item6">Simge Uyumluluğu — uygulama simgesi başlatıcıda tam ve düzgün görünür</string>
+
+    <!-- Release Notes Items v1.2 -->
+    <string name="rel_v1_2_item1">Spiral Çizim Simgesi — simetrik kalem çizimi çalar saat başlatıcı simgesi</string>
+    <string name="rel_v1_2_item2">Her Alarma Özel Erteleme — her alarm için ayrı erteleme süresi belirleme</string>
+    <string name="rel_v1_2_item3">Yerel Kilit Ekranı Çalma — kilit üzerinde PIN istemeden doğrudan çalar</string>
+    <string name="rel_v1_2_item4">Özel Sayfa Düzeni — 4 sekmeli temiz arayüz</string>
+    <string name="rel_v1_2_item5">12S / 24S Saat Formatı — büyük harfli AM/PM veya 24 saat seçeneği</string>
+    <string name="rel_v1_2_item6">Tarihte Yıl Gösterimi — ana ekranda tam yıl gösterimi (örn. Cts, 5 Eyl 2026)</string>
+    <string name="rel_v1_2_item7">İlk Açılış Tema Uyarısı — durum çubuğu simgelerinin kusursuz görünürlüğü</string>
+    <string name="rel_v1_2_item8">Uygulama İçi İzin Yöneticisi — bildirim, kesin alarm ve pencere izinlerini yönetme</string>
+    <string name="rel_v1_2_item9">Destek ve Topluluk Kartı — geri bildirim ve hata bildirimi için doğrudan iletişim</string>
+
+    <!-- Release Notes Items v1.1 -->
+    <string name="rel_v1_1_item1">Ayarlarda Koyu / Açık / Sistem teması seçici</string>
+    <string name="rel_v1_1_item2">Alarm düzenleyici mevcut saatle başlar</string>
+    <string name="rel_v1_1_item3">Dakika seçici daima görünür</string>
+    <string name="rel_v1_1_item4">Yeni Yüksek Tonlu alarm sesi — iki tonlu uyarı sesi</string>
+    <string name="rel_v1_1_item5">Yeni alarmlar için ses seviyesi varsayılan olarak maksimumda</string>
+    <string name="rel_v1_1_item6">Ana ekranda Beema\'s FINCON imzası</string>
+
+    <!-- Release Notes Items v1.0 -->
+    <string name="rel_v1_0_item1">Döngüsel alarmlar — başlangıç tarihinden itibaren her N günde bir tekrar</string>
+    <string name="rel_v1_0_item2">Haftalık alarmlar — haftanın günlerini serbestçe seçin</string>
+    <string name="rel_v1_0_item3">7 dahili ses ve özel ses dosyası desteği</string>
+    <string name="rel_v1_0_item4">Ayarlanabilir erteleme ve titreşim</string>
+    <string name="rel_v1_0_item5">Temizlenebilir alarm geçmişi kaydı</string>
 </resources>
