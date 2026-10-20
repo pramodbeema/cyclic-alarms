@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">権限とシステムアクセス</string>
     <string name="setting_permissions_subtitle">正確なアラーム鳴動とロック画面表示に必要な権限を管理</string>
     <string name="about_cyclic_alarms">Cyclic Alarms について</string>
-    <string name="about_cyclic_alarms_subtitle">バージョン 1.6.4 • リリースノート、サポート、開発者情報</string>
+    <string name="about_cyclic_alarms_subtitle">バージョン 1.6.5 • リリースノート、サポート、開発者情報</string>
     <string name="tinted">色付き</string>
     <string name="pure_white">ピュアホワイト</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">停止</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4 (現在のバージョン)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 (現在のバージョン)</string>
+    <string name="rel_v1_6_4_title">v1.6.4 リリースノート</string>
     <string name="rel_v1_6_3_title">v1.6.3 リリースノート</string>
     <string name="rel_v1_6_2_title">v1.6.2 リリースノート</string>
     <string name="rel_v1_6_1_title">v1.6.1 リリースノート</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">v1.2 リリースノート</string>
     <string name="rel_v1_1_title">v1.1 リリースノート</string>
     <string name="rel_v1_0_title">v1.0 初回リリース</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">1回のみのアラームの不具合修正 — 1回限りのアラームが鳴動および停止後に自動的にオフになり、意図しない毎日の繰り返し鳴動を防ぐよう修正しました</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">完全オフライン多言語対応 — 全画面、タブ、ダイアログ、タイマー、ストップウォッチ、設定、更新ノート、アラーム鳴動画面を11言語で完全に翻訳</string>

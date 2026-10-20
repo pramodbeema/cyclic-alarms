@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Berechtigungen &amp; App-Zugriff</string>
     <string name="setting_permissions_subtitle">Systemzugriff für zuverlässiges Klingeln und Sperrbildschirm-Popups verwalten</string>
     <string name="about_cyclic_alarms">Über Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.6.4 • Versionshinweise, Support &amp; Entwickler-Info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.6.5 • Versionshinweise, Support &amp; Entwickler-Info</string>
     <string name="tinted">Getönt</string>
     <string name="pure_white">Reinweiß</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">Ausschalten</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4 (Aktuelle Version)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 (Aktuelle Version)</string>
+    <string name="rel_v1_6_4_title">Versionshinweise v1.6.4</string>
     <string name="rel_v1_6_3_title">Versionshinweise v1.6.3</string>
     <string name="rel_v1_6_2_title">Versionshinweise v1.6.2</string>
     <string name="rel_v1_6_1_title">Versionshinweise v1.6.1</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">Versionshinweise v1.2</string>
     <string name="rel_v1_1_title">Versionshinweise v1.1</string>
     <string name="rel_v1_0_title">Erste Veröffentlichung v1.0</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">Korrektur für einmalige Wecker — einmalige Wecker deaktivieren sich nun nach dem Klingeln und Ausschalten automatisch, wodurch unerwünschtes tägliches Klingeln verhindert wird</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">Vollständige Offline-Lokalisierung — komplette Übersetzung über alle Ansichten, Registerkarten, Dialoge, Timer, Stoppuhr, Einstellungen, Versionshinweise und Klingelansicht in 11 Sprachen</string>

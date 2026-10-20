@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">İzinler ve Sistem Erişimi</string>
     <string name="setting_permissions_subtitle">Güvenilir alarm çalması ve kilit ekranı pencereleri için gereken izinleri yönetin</string>
     <string name="about_cyclic_alarms">Cyclic Alarms Hakkında</string>
-    <string name="about_cyclic_alarms_subtitle">Sürüm 1.6.4 • Sürüm notları, destek ve yapımcı bilgisi</string>
+    <string name="about_cyclic_alarms_subtitle">Sürüm 1.6.5 • Sürüm notları, destek ve yapımcı bilgisi</string>
     <string name="tinted">Tonlu</string>
     <string name="pure_white">Saf Beyaz</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">Kapat</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4 (Geçerli Sürüm)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 (Geçerli Sürüm)</string>
+    <string name="rel_v1_6_4_title">v1.6.4 Sürüm Notları</string>
     <string name="rel_v1_6_3_title">v1.6.3 Sürüm Notları</string>
     <string name="rel_v1_6_2_title">v1.6.2 Sürüm Notları</string>
     <string name="rel_v1_6_1_title">v1.6.1 Sürüm Notları</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">v1.2 Sürüm Notları</string>
     <string name="rel_v1_1_title">v1.1 Sürüm Notları</string>
     <string name="rel_v1_0_title">v1.0 İlk Sürüm</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">Tek Seferlik Alarm Düzeltmesi — tek seferlik alarmlar artık çaldıktan ve kapatıldıktan sonra otomatik olarak devre dışı kalır, istenmeyen günlük tekrarlar önlenir</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">Kapsamlı Çevrimdışı Yerelleştirme — tüm ekranlar, sekmeler, iletişim pencereleri, sayaçlar, kronometre, ayarlar, sürüm notları ve çalma arayüzü 11 dilde eksiksiz çevrildi</string>

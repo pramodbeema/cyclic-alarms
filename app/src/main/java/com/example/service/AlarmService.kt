@@ -188,6 +188,17 @@ class AlarmService : Service() {
             )
         )
 
+        // For ONE-OFF alarms, automatically mark as disabled immediately when ringing begins
+        if (alarmId != -1) {
+            serviceScope.launch {
+                val alarm = repository.getAlarmById(alarmId)
+                if (alarm != null && alarm.isOneOff && alarm.isEnabled) {
+                    val updated = alarm.copy(isEnabled = false)
+                    repository.updateAlarm(updated)
+                }
+            }
+        }
+
         if (vibrate) {
             vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -312,6 +323,7 @@ class AlarmService : Service() {
                 val alarm = repository.getAlarmById(alarmId)
                 if (alarm != null) {
                     val updated = alarm.copy(
+                        isEnabled = if (alarm.isOneOff) false else alarm.isEnabled,
                         lastTriggeredTime = System.currentTimeMillis(),
                         snoozeCount = 0
                     )

@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Autorisations et accès système</string>
     <string name="setting_permissions_subtitle">Gérer les accès nécessaires pour la sonnerie fiable et l\'écran de verrouillage</string>
     <string name="about_cyclic_alarms">À propos de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.6.4 • Notes de version, support et infos créateur</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.6.5 • Notes de version, support et infos créateur</string>
     <string name="tinted">Teinté</string>
     <string name="pure_white">Blanc Pur</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">Arrêter</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4 (Version actuelle)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 (Version actuelle)</string>
+    <string name="rel_v1_6_4_title">Notes de version v1.6.4</string>
     <string name="rel_v1_6_3_title">Notes de version v1.6.3</string>
     <string name="rel_v1_6_2_title">Notes de version v1.6.2</string>
     <string name="rel_v1_6_1_title">Notes de version v1.6.1</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">Notes de version v1.2</string>
     <string name="rel_v1_1_title">Notes de version v1.1</string>
     <string name="rel_v1_0_title">Version initiale v1.0</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">Correction d\'alarme ponctuelle — les alarmes ponctuelles se désactivent désormais automatiquement après avoir sonné et été arrêtées, empêchant toute sonnerie quotidienne non souhaitée</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">Localisation complète hors ligne — traduction intégrale sur tous les écrans, onglets, fenêtres, minuteurs, chronomètre, paramètres, notes de version et écran de sonnerie en 11 langues</string>

@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permissões e acesso ao sistema</string>
     <string name="setting_permissions_subtitle">Gerencie o acesso do sistema necessário para alarmes pontuais e tela de bloqueio</string>
     <string name="about_cyclic_alarms">Sobre o Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Versão 1.6.4 • Notas da versão, suporte e criador</string>
+    <string name="about_cyclic_alarms_subtitle">Versão 1.6.5 • Notas da versão, suporte e criador</string>
     <string name="tinted">Matizado</string>
     <string name="pure_white">Branco Puro</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">Dispensar</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4 (Versão Atual)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 (Versão Atual)</string>
+    <string name="rel_v1_6_4_title">Notas da Versão v1.6.4</string>
     <string name="rel_v1_6_3_title">Notas da Versão v1.6.3</string>
     <string name="rel_v1_6_2_title">Notas da Versão v1.6.2</string>
     <string name="rel_v1_6_1_title">Notas da Versão v1.6.1</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">Notas da Versão v1.2</string>
     <string name="rel_v1_1_title">Notas da Versão v1.1</string>
     <string name="rel_v1_0_title">Lançamento Inicial v1.0</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">Correção de alarme único — alarmes de execução única agora são desativados automaticamente após tocarem e serem dispensados, evitando repetição diária indesejada</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">Localização Completa Offline — tradução integral em todas as telas, abas, diálogos, temporizadores, cronômetro, configurações, notas de versão e tela de toque em 11 idiomas</string>

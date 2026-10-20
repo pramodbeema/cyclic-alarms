@@ -2515,7 +2515,7 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.6.4", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.6.5", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
@@ -2582,11 +2582,21 @@ fun AboutPageView() {
             Text(stringResource(R.string.release_history_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.6.4 — Expanded by default (current release)
+            // v1.6.5 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = stringResource(R.string.rel_v1_6_4_title),
+                version = stringResource(R.string.rel_v1_6_5_title),
                 badgeText = stringResource(R.string.badge_latest),
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "⏰" to stringResource(R.string.rel_v1_6_5_item1)
+                )
+            )
+
+            // v1.6.4 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = stringResource(R.string.rel_v1_6_4_title),
+                badgeText = "v1.6.4",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "🌐" to stringResource(R.string.rel_v1_6_4_item1),
                     "🚀" to stringResource(R.string.rel_v1_6_4_item2),

@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">权限与系统访问</string>
     <string name="setting_permissions_subtitle">管理精准响铃和锁屏弹窗所需的系统权限</string>
     <string name="about_cyclic_alarms">关于 Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">版本 1.6.4 • 发行说明、支持与开发者信息</string>
+    <string name="about_cyclic_alarms_subtitle">版本 1.6.5 • 发行说明、支持与开发者信息</string>
     <string name="tinted">淡色</string>
     <string name="pure_white">纯白</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">关闭闹钟</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4（当前版本）</string>
+    <string name="rel_v1_6_5_title">v1.6.5（当前版本）</string>
+    <string name="rel_v1_6_4_title">v1.6.4 更新说明</string>
     <string name="rel_v1_6_3_title">v1.6.3 更新说明</string>
     <string name="rel_v1_6_2_title">v1.6.2 更新说明</string>
     <string name="rel_v1_6_1_title">v1.6.1 更新说明</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">v1.2 更新说明</string>
     <string name="rel_v1_1_title">v1.1 更新说明</string>
     <string name="rel_v1_0_title">v1.0 首次发布</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">单次闹钟问题修复 — 单次闹钟在响铃并关闭后将自动关闭，防止出现非预期的每日重复响铃</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">全离线深度本地化 — 所有页面、标签页、弹窗、计时器、秒表、设置、更新历史及响铃界面全面支持 11 种语言</string>

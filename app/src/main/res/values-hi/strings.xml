@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">अनुमतियाँ और ऐप एक्सेस</string>
     <string name="setting_permissions_subtitle">सटीक अलार्म बजने और लॉक-स्क्रीन पॉपअप के लिए सिस्टम अनुमतियाँ प्रबंधित करें</string>
     <string name="about_cyclic_alarms">Cyclic Alarms के बारे में</string>
-    <string name="about_cyclic_alarms_subtitle">संस्करण 1.6.4 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
+    <string name="about_cyclic_alarms_subtitle">संस्करण 1.6.5 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
     <string name="tinted">टिंटेड</string>
     <string name="pure_white">प्योर व्हाइट</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">बंद करें</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_6_4_title">v1.6.4 रिलीज़ नोट्स</string>
     <string name="rel_v1_6_3_title">v1.6.3 रिलीज़ नोट्स</string>
     <string name="rel_v1_6_2_title">v1.6.2 रिलीज़ नोट्स</string>
     <string name="rel_v1_6_1_title">v1.6.1 रिलीज़ नोट्स</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">v1.2 रिलीज़ नोट्स</string>
     <string name="rel_v1_1_title">v1.1 रिलीज़ नोट्स</string>
     <string name="rel_v1_0_title">v1.0 पहली रिलीज़</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">एक बार वाले अलार्म का समाधान — एक बार वाले अलार्म बजने और बंद होने के बाद अब स्वतः अक्षम हो जाते हैं, जिससे अवांछित दैनिक पुनरावृत्ति रुकती है</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">व्यापक ऑफ़लाइन स्थानीयकरण — 11 भाषाओं में सभी स्क्रीन, टैब, डायलॉग, टाइमर, स्टॉपवॉच, सेटिंग्स, रिलीज़ नोट्स और रिंगिंग स्क्रीन का संपूर्ण अनुवाद</string>

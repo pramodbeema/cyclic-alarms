@@ -83,6 +83,10 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 
 ---
 
+## What's new — v1.6.5
+
+- ⏰ **One-Off Alarm Fix** — alarms set without weekdays or cyclic days (ONE-OFF) now automatically disable upon ringing and dismissal, properly executing once instead of recurring daily.
+
 ## What's new — v1.6.4
 
 - 🌐 **Comprehensive End-to-End Offline Localization** — all screens, tabs, dialogs, empty states, history logs, alarms editor, timers, stopwatch, settings, and lock-screen ringing UI are 100% translated across 11 languages (English, Turkish, Spanish, German, French, Hindi, Portuguese, Russian, Chinese, Japanese, Arabic) and System Default.

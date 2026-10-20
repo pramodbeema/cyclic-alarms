@@ -36,4 +36,7 @@ data class Alarm(
         if (weeklyDays.isEmpty()) return emptySet()
         return weeklyDays.split(",").mapNotNull { it.trim().toIntOrNull() }.toSet()
     }
+
+    val isOneOff: Boolean
+        get() = alarmType != "CYCLIC" && getWeeklyDaysSet().isEmpty()
 }

@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permisos y acceso del sistema</string>
     <string name="setting_permissions_subtitle">Administre el acceso necesario para alarmas fiables y avisos en pantalla de bloqueo</string>
     <string name="about_cyclic_alarms">Acerca de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Versión 1.6.4 • Notas de la versión, soporte e info del creador</string>
+    <string name="about_cyclic_alarms_subtitle">Versión 1.6.5 • Notas de la versión, soporte e info del creador</string>
     <string name="tinted">Matizado</string>
     <string name="pure_white">Blanco Puro</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">Descartar</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4 (Versión actual)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 (Versión actual)</string>
+    <string name="rel_v1_6_4_title">Notas de la versión v1.6.4</string>
     <string name="rel_v1_6_3_title">Notas de la versión v1.6.3</string>
     <string name="rel_v1_6_2_title">Notas de la versión v1.6.2</string>
     <string name="rel_v1_6_1_title">Notas de la versión v1.6.1</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">Notas de la versión v1.2</string>
     <string name="rel_v1_1_title">Notas de la versión v1.1</string>
     <string name="rel_v1_0_title">Lanzamiento inicial v1.0</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">Corrección de alarma única — las alarmas de una sola vez ahora se desactivan automáticamente al sonar y descartarse, evitando repeticiones diarias no deseadas</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">Localización integral sin conexión — traducción completa en todas las pantallas, pestañas, diálogos, temporizadores, cronómetro, ajustes, notas de versión y pantalla de timbre en 11 idiomas</string>

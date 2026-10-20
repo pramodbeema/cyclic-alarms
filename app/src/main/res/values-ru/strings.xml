@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Разрешения и доступ к системе</string>
     <string name="setting_permissions_subtitle">Управление доступом для надежного срабатывания будильника и экрана блокировки</string>
     <string name="about_cyclic_alarms">О приложении Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Версия 1.6.4 • Примечания к выпуску, поддержка и автор</string>
+    <string name="about_cyclic_alarms_subtitle">Версия 1.6.5 • Примечания к выпуску, поддержка и автор</string>
     <string name="tinted">С оттенком</string>
     <string name="pure_white">Чистый белый</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">Выключить</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4 (Текущая версия)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 (Текущая версия)</string>
+    <string name="rel_v1_6_4_title">Примечания к версии v1.6.4</string>
     <string name="rel_v1_6_3_title">Примечания к версии v1.6.3</string>
     <string name="rel_v1_6_2_title">Примечания к версии v1.6.2</string>
     <string name="rel_v1_6_1_title">Примечания к версии v1.6.1</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">Примечания к версии v1.2</string>
     <string name="rel_v1_1_title">Примечания к версии v1.1</string>
     <string name="rel_v1_0_title">Первый выпуск v1.0</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">Исправление однократного будильника — однократные будильники теперь автоматически отключаются после звонка и выключения, предотвращая нежелательные ежедневные повторы</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">Полная офлайн-локализация — полный перевод всех экранов, вкладок, диалогов, таймеров, секундомера, настроек, примечаний к выпуску и экрана звонка на 11 языков</string>

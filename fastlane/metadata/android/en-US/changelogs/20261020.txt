@@ -1,0 +1,1 @@
+- One-off alarms now automatically disable upon ringing and dismissal, properly working as a single event instead of repeating daily.

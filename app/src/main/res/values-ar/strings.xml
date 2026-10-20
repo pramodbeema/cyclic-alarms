@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">الأذونات والوصول إلى النظام</string>
     <string name="setting_permissions_subtitle">إدارة أذونات النظام المطلوبة لدقة التنبيه وشاشة القفل</string>
     <string name="about_cyclic_alarms">حول Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">الإصدار 1.6.4 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
+    <string name="about_cyclic_alarms_subtitle">الإصدار 1.6.5 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
     <string name="tinted">مظلل</string>
     <string name="pure_white">أبيض ناصع</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">إيقاف</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4 (الإصدار الحالي)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 (الإصدار الحالي)</string>
+    <string name="rel_v1_6_4_title">ملاحظات الإصدار v1.6.4</string>
     <string name="rel_v1_6_3_title">ملاحظات الإصدار v1.6.3</string>
     <string name="rel_v1_6_2_title">ملاحظات الإصدار v1.6.2</string>
     <string name="rel_v1_6_1_title">ملاحظات الإصدار v1.6.1</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">ملاحظات الإصدار v1.2</string>
     <string name="rel_v1_1_title">ملاحظات الإصدار v1.1</string>
     <string name="rel_v1_0_title">الإصدار الأول v1.0</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">إصلاح المنبه لمرة واحدة — يتم الآن تعطيل المنبه لمرة واحدة تلقائيًا بعد الرنين والإيقاف، مما يمنع التكرار اليومي غير المرغوب فيه</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">تعريب وترجمة شاملة بدون إنترنت — ترجمة كاملة لجميع الشاشات، علامات التبويب، النوافذ، المؤقتات، ساعة الإيقاف، الإعدادات وملاحظات الإصدار بـ 11 لغة</string>

@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permissions &amp; App Access</string>
     <string name="setting_permissions_subtitle">Manage system access required for reliable alarm ringing and lock-screen popups</string>
     <string name="about_cyclic_alarms">About Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.6.4 • Release notes, support &amp; creator info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.6.5 • Release notes, support &amp; creator info</string>
     <string name="tinted">Tinted</string>
     <string name="pure_white">Pure White</string>
 
@@ -166,7 +166,8 @@
     <string name="ringing_btn_dismiss">Dismiss</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_4_title">v1.6.4 (Current Release)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 (Current Release)</string>
+    <string name="rel_v1_6_4_title">v1.6.4 Release Notes</string>
     <string name="rel_v1_6_3_title">v1.6.3 Release Notes</string>
     <string name="rel_v1_6_2_title">v1.6.2 Release Notes</string>
     <string name="rel_v1_6_1_title">v1.6.1 Release Notes</string>
@@ -177,6 +178,9 @@
     <string name="rel_v1_2_title">v1.2 Release Notes</string>
     <string name="rel_v1_1_title">v1.1 Release Notes</string>
     <string name="rel_v1_0_title">v1.0 Initial Release</string>
+
+    <!-- Release Notes Items v1.6.5 -->
+    <string name="rel_v1_6_5_item1">One-Off Alarm Fix — one-off alarms now automatically disable upon ringing and dismissal, preventing unwanted daily recurring ringing</string>
 
     <!-- Release Notes Items v1.6.4 -->
     <string name="rel_v1_6_4_item1">Comprehensive Offline Localization — complete translation across all screens, tabs, dialogs, timers, stopwatch, settings, release notes and ringing UI in 11 languages</string>
