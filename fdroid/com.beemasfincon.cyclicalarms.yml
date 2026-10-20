@@ -33,8 +33,15 @@ Builds:
     gradle:
       - yes
 
+  - versionName: 1.6.5
+    versionCode: 20261020
+    commit: aa427b3b28be2e3443a69a89abf2e682e092f023
+    subdir: app
+    gradle:
+      - yes
+
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.6.4
-CurrentVersionCode: 20261013
+CurrentVersion: 1.6.5
+CurrentVersionCode: 20261020
 
