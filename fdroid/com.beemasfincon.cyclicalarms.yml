@@ -35,7 +35,7 @@ Builds:
 
   - versionName: 1.6.5
     versionCode: 20261020
-    commit: aa427b3b28be2e3443a69a89abf2e682e092f023
+    commit: 9aac902c6cd3cc17a657ff07ddeb9136b531e40b
     subdir: app
     gradle:
       - yes
