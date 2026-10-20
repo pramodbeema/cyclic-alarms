@@ -272,11 +272,16 @@ class TimerStopwatchService : Service() {
 
     private var alertWakeLock: PowerManager.WakeLock? = null
     private var isPlayingAlert = false
+    // True once the full-screen timer-finish activity has been successfully launched.
+    // While true the foreground notification is rebuilt without a fullScreenIntent so
+    // the system does not show a redundant heads-up pop-up on top of the full-screen UI.
+    private var isFullScreenActivityActive = false
 
     private fun stopAlertSound() {
         try {
             SynthPlayer.stop()
             isPlayingAlert = false
+            isFullScreenActivityActive = false
             alertWakeLock?.let {
                 if (it.isHeld) it.release()
             }
@@ -317,7 +322,7 @@ class TimerStopwatchService : Service() {
                 vibrator.vibrate(longArrayOf(0, 500, 300, 500), -1)
             }
 
-            // Launch MainActivity to show timer on lock screen
+            // Launch MainActivity full-screen to show timer-finish UI on the lock screen.
             val launchIntent = Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                         Intent.FLAG_ACTIVITY_SINGLE_TOP or
@@ -326,6 +331,13 @@ class TimerStopwatchService : Service() {
                 putExtra("NAVIGATE_TO_TAB", 1)
             }
             startActivity(launchIntent)
+            // Mark the full-screen activity as active so buildNotification() skips the
+            // fullScreenIntent, preventing a redundant heads-up notification from appearing
+            // on top of the already-visible full-screen ringing UI.
+            isFullScreenActivityActive = true
+            // Immediately refresh the foreground notification without fullScreenIntent.
+            val notifMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notifMgr.notify(NOTIF_ID, buildNotification())
         } catch (_: Exception) {}
     }
 
@@ -362,7 +374,10 @@ class TimerStopwatchService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val fullScreenIntent = if (hasFinished) {
+        // Only set fullScreenIntent when the full-screen activity has NOT yet been launched.
+        // Once the activity is showing, omit it so the system does not show a redundant
+        // heads-up / peek notification on top of the full-screen timer-finish UI.
+        val fullScreenIntent = if (hasFinished && !isFullScreenActivityActive) {
             PendingIntent.getActivity(
                 this, 8888,
                 launchIntent,
@@ -403,10 +418,19 @@ class TimerStopwatchService : Service() {
             .setContentIntent(contentIntent)
 
         if (hasFinished) {
-            builder.setPriority(NotificationCompat.PRIORITY_MAX)
+            // Use PRIORITY_MAX only when we still need the system to pop up the fullScreenIntent
+            // (i.e. before the activity is launched). Once the full-screen UI is already showing,
+            // drop to DEFAULT priority to avoid a redundant heads-up notification.
+            val finishedPriority = if (isFullScreenActivityActive)
+                NotificationCompat.PRIORITY_DEFAULT
+            else
+                NotificationCompat.PRIORITY_MAX
+            builder.setPriority(finishedPriority)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setFullScreenIntent(fullScreenIntent, true)
+            if (fullScreenIntent != null) {
+                builder.setFullScreenIntent(fullScreenIntent, true)
+            }
         } else {
             builder.setPriority(NotificationCompat.PRIORITY_LOW)
         }

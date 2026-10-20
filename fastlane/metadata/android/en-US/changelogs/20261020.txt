@@ -1,1 +1,2 @@
 - One-off alarms now automatically disable upon ringing and dismissal, properly working as a single event instead of repeating daily.
+- Fixed duplicate notification appearing when a timer rings full-screen; the notification no longer pops up as a heads-up when the full-screen timer alert is already visible.
