@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permissions &amp; App Access</string>
     <string name="setting_permissions_subtitle">Manage system access required for reliable alarm ringing and lock-screen popups</string>
     <string name="about_cyclic_alarms">About Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.6.5 • Release notes, support &amp; creator info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.7 • Release notes, support &amp; creator info</string>
     <string name="tinted">Tinted</string>
     <string name="pure_white">Pure White</string>
 
@@ -158,15 +158,29 @@
     <string name="creator_ack_body1">Built for shift workers, roster personnel, and anyone needing recurring interval alarms beyond standard weekly schedules.</string>
     <string name="creator_ack_body2" formatted="false">100% AI-assisted development. Zero tracking. Zero ads. 100% free.</string>
 
-    <!-- Ringing Screen -->
+    <!-- Ringing Screen & Snooze Details -->
     <string name="alarm_ringing_title">ALARM RINGING</string>
+    <string name="snoozed_alarm_ringing_title">SNOOZED ALARM RINGING</string>
+    <string name="current_time_label">Current Time</string>
     <string name="ringing_default_label">Cyclic Alarm</string>
     <string name="ringing_snooze_duration">Snooze Duration</string>
     <string name="ringing_btn_snooze">Snooze</string>
     <string name="ringing_btn_dismiss">Dismiss</string>
+    <string name="ringing_snoozed_info">Snoozed at %s</string>
+    <string name="ringing_snoozed_subinfo">Snoozed for %1$dm • Scheduled: %2$s</string>
+    <string name="ringing_original_time">Scheduled: %s</string>
+    <string name="ringing_snoozed_notif_title">Alarm (Snoozed): %s</string>
+    <string name="ringing_snoozed_notif_text">Ringing now • Snoozed at %1$s for %2$dm</string>
+
+    <!-- Snooze Active Notification -->
+    <string name="snooze_notif_title">Alarm Snoozed: %s</string>
+    <string name="snooze_notif_content">Snoozed at %1$s for %2$dm • Rings at %3$s</string>
+    <string name="snooze_notif_subtext">Snoozed (%dm)</string>
+    <string name="snooze_notif_big_text">Snoozed at %1$s for %2$d min\nRings at %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_5_title">v1.6.5 (Current Release)</string>
+    <string name="rel_v1_7_title">v1.7 (Current Release)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 Release Notes</string>
     <string name="rel_v1_6_4_title">v1.6.4 Release Notes</string>
     <string name="rel_v1_6_3_title">v1.6.3 Release Notes</string>
     <string name="rel_v1_6_2_title">v1.6.2 Release Notes</string>
@@ -178,6 +192,10 @@
     <string name="rel_v1_2_title">v1.2 Release Notes</string>
     <string name="rel_v1_1_title">v1.1 Release Notes</string>
     <string name="rel_v1_0_title">v1.0 Initial Release</string>
+
+    <!-- Release Notes Items v1.7 -->
+    <string name="rel_v1_7_item1">Live Snooze Notification — displays live remaining countdown, exact time snoozed, and snooze duration with instant dismiss</string>
+    <string name="rel_v1_7_item2">Enhanced Snoozed Ringing Screen — full-screen ringing now displays live current time and timestamp of when the alarm was snoozed</string>
 
     <!-- Release Notes Items v1.6.5 -->
     <string name="rel_v1_6_5_item1">One-Off Alarm Fix — one-off alarms now automatically disable upon ringing and dismissal, preventing unwanted daily recurring ringing</string>

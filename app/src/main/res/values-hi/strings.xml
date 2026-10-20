@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">अनुमतियाँ और ऐप एक्सेस</string>
     <string name="setting_permissions_subtitle">सटीक अलार्म बजने और लॉक-स्क्रीन पॉपअप के लिए सिस्टम अनुमतियाँ प्रबंधित करें</string>
     <string name="about_cyclic_alarms">Cyclic Alarms के बारे में</string>
-    <string name="about_cyclic_alarms_subtitle">संस्करण 1.6.5 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
+    <string name="about_cyclic_alarms_subtitle">संस्करण 1.7 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
     <string name="tinted">टिंटेड</string>
     <string name="pure_white">प्योर व्हाइट</string>
 
@@ -158,15 +158,29 @@
     <string name="creator_ack_body1">शिफ्ट कर्मियों और मानक साप्ताहिक कार्यक्रम से परे आवर्ती अंतराल अलार्म की आवश्यकता वाले किसी भी व्यक्ति के लिए निर्मित।</string>
     <string name="creator_ack_body2" formatted="false">100% AI-सहायता प्राप्त विकास। कोई ट्रैकिंग नहीं। कोई विज्ञापन नहीं। 100% मुफ़्त।</string>
 
-    <!-- Ringing Screen -->
+    <!-- Ringing Screen & Snooze Details -->
     <string name="alarm_ringing_title">अलार्म बज रहा है</string>
+    <string name="snoozed_alarm_ringing_title">स्नूज़ अलार्म बज रहा है</string>
+    <string name="current_time_label">वर्तमान समय</string>
     <string name="ringing_default_label">चक्रीय अलार्म</string>
     <string name="ringing_snooze_duration">स्नूज़ अवधि</string>
     <string name="ringing_btn_snooze">स्नूज़ करें</string>
     <string name="ringing_btn_dismiss">बंद करें</string>
+    <string name="ringing_snoozed_info">%s पर स्नूज़ किया गया</string>
+    <string name="ringing_snoozed_subinfo">%1$d मि के लिए स्नूज़ • निर्धारित: %2$s</string>
+    <string name="ringing_original_time">निर्धारित: %s</string>
+    <string name="ringing_snoozed_notif_title">अलार्म (स्नूज़ किया गया): %s</string>
+    <string name="ringing_snoozed_notif_text">अब बज रहा है • %1$s पर %2$d मि के लिए स्नूज़</string>
+
+    <!-- Snooze Active Notification -->
+    <string name="snooze_notif_title">अलार्म स्नूज़ किया गया: %s</string>
+    <string name="snooze_notif_content">%1$s पर %2$d मिनट के लिए स्नूज़ किया गया • %3$s पर बजेगा</string>
+    <string name="snooze_notif_subtext">स्नूज़ किया गया (%d मि)</string>
+    <string name="snooze_notif_big_text">%1$s पर %2$d मिनट के लिए स्नूज़ किया गया\n%3$s पर बजेगा</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_5_title">v1.6.5 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_7_title">v1.7 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 रिलीज़ नोट्स</string>
     <string name="rel_v1_6_4_title">v1.6.4 रिलीज़ नोट्स</string>
     <string name="rel_v1_6_3_title">v1.6.3 रिलीज़ नोट्स</string>
     <string name="rel_v1_6_2_title">v1.6.2 रिलीज़ नोट्स</string>
@@ -178,6 +192,10 @@
     <string name="rel_v1_2_title">v1.2 रिलीज़ नोट्स</string>
     <string name="rel_v1_1_title">v1.1 रिलीज़ नोट्स</string>
     <string name="rel_v1_0_title">v1.0 पहली रिलीज़</string>
+
+    <!-- Release Notes Items v1.7 -->
+    <string name="rel_v1_7_item1">लाइव स्नूज़ सूचना — लाइव उलटी गिनती, स्नूज़ का सटीक समय और अवधि सीधे ख़ारिज करने के विकल्प के साथ</string>
+    <string name="rel_v1_7_item2">उन्नत रिंगिंग स्क्रीन — पूर्ण स्क्रीन में वर्तमान समय और स्नूज़ किए जाने का समय प्रदर्शित होता है</string>
 
     <!-- Release Notes Items v1.6.5 -->
     <string name="rel_v1_6_5_item1">एक बार वाले अलार्म का समाधान — एक बार वाले अलार्म बजने और बंद होने के बाद अब स्वतः अक्षम हो जाते हैं, जिससे अवांछित दैनिक पुनरावृत्ति रुकती है</string>

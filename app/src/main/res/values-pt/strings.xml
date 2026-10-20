@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permissões e acesso ao sistema</string>
     <string name="setting_permissions_subtitle">Gerencie o acesso do sistema necessário para alarmes pontuais e tela de bloqueio</string>
     <string name="about_cyclic_alarms">Sobre o Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Versão 1.6.5 • Notas da versão, suporte e criador</string>
+    <string name="about_cyclic_alarms_subtitle">Versão 1.7 • Notas da versão, suporte e criador</string>
     <string name="tinted">Matizado</string>
     <string name="pure_white">Branco Puro</string>
 
@@ -158,15 +158,29 @@
     <string name="creator_ack_body1">Criado para trabalhadores de turnos e qualquer pessoa que precise de alarmes com intervalos além do padrão semanal.</string>
     <string name="creator_ack_body2" formatted="false">Desenvolvimento 100% assistido por IA. Zero rastreamento. Zero anúncios. 100% gratuito.</string>
 
-    <!-- Ringing Screen -->
+    <!-- Ringing Screen & Snooze Details -->
     <string name="alarm_ringing_title">ALARME TOCANDO</string>
+    <string name="snoozed_alarm_ringing_title">ALARME ADIADO TOCANDO</string>
+    <string name="current_time_label">Hora atual</string>
     <string name="ringing_default_label">Alarme Cíclico</string>
     <string name="ringing_snooze_duration">Duração do Soneca</string>
     <string name="ringing_btn_snooze">Soneca</string>
     <string name="ringing_btn_dismiss">Dispensar</string>
+    <string name="ringing_snoozed_info">Adiado às %s</string>
+    <string name="ringing_snoozed_subinfo">Adiado por %1$dm • Programado: %2$s</string>
+    <string name="ringing_original_time">Programado: %s</string>
+    <string name="ringing_snoozed_notif_title">Alarme (Adiado): %s</string>
+    <string name="ringing_snoozed_notif_text">Tocando agora • Adiado às %1$s por %2$dm</string>
+
+    <!-- Snooze Active Notification -->
+    <string name="snooze_notif_title">Alarme adiado: %s</string>
+    <string name="snooze_notif_content">Adiado às %1$s por %2$dm • Tocará às %3$s</string>
+    <string name="snooze_notif_subtext">Adiado (%dm)</string>
+    <string name="snooze_notif_big_text">Adiado às %1$s por %2$d min\nTocará às %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_5_title">v1.6.5 (Versão Atual)</string>
+    <string name="rel_v1_7_title">v1.7 (Versão Atual)</string>
+    <string name="rel_v1_6_5_title">Notas da Versão v1.6.5</string>
     <string name="rel_v1_6_4_title">Notas da Versão v1.6.4</string>
     <string name="rel_v1_6_3_title">Notas da Versão v1.6.3</string>
     <string name="rel_v1_6_2_title">Notas da Versão v1.6.2</string>
@@ -178,6 +192,10 @@
     <string name="rel_v1_2_title">Notas da Versão v1.2</string>
     <string name="rel_v1_1_title">Notas da Versão v1.1</string>
     <string name="rel_v1_0_title">Lançamento Inicial v1.0</string>
+
+    <!-- Release Notes Items v1.7 -->
+    <string name="rel_v1_7_item1">Notificação de soneca em tempo real — contagem regressiva ao vivo, horário exato do adiamento e duração com dispensa rápida</string>
+    <string name="rel_v1_7_item2">Tela de alarme aprimorada — exibição em tela cheia com hora atual e registro do momento em que foi adiado</string>
 
     <!-- Release Notes Items v1.6.5 -->
     <string name="rel_v1_6_5_item1">Correção de alarme único — alarmes de execução única agora são desativados automaticamente após tocarem e serem dispensados, evitando repetição diária indesejada</string>

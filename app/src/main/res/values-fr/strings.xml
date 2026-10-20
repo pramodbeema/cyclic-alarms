@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Autorisations et accès système</string>
     <string name="setting_permissions_subtitle">Gérer les accès nécessaires pour la sonnerie fiable et l\'écran de verrouillage</string>
     <string name="about_cyclic_alarms">À propos de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.6.5 • Notes de version, support et infos créateur</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.7 • Notes de version, support et infos créateur</string>
     <string name="tinted">Teinté</string>
     <string name="pure_white">Blanc Pur</string>
 
@@ -158,15 +158,29 @@
     <string name="creator_ack_body1">Conçu pour les travailleurs postés, le personnel en roulement et toute personne ayant besoin d\'alarmes à intervalles répétés hors schéma hebdomadaire classique.</string>
     <string name="creator_ack_body2" formatted="false">Développement 100% assisté par IA. Zéro pistage. Zéro pub. 100% gratuit.</string>
 
-    <!-- Ringing Screen -->
+    <!-- Ringing Screen & Snooze Details -->
     <string name="alarm_ringing_title">ALARME EN COURS</string>
+    <string name="snoozed_alarm_ringing_title">ALARME RÉPÉTÉE EN COURS</string>
+    <string name="current_time_label">Heure actuelle</string>
     <string name="ringing_default_label">Alarme Cyclique</string>
     <string name="ringing_snooze_duration">Durée du rappel</string>
     <string name="ringing_btn_snooze">Répéter</string>
     <string name="ringing_btn_dismiss">Arrêter</string>
+    <string name="ringing_snoozed_info">Répétée à %s</string>
+    <string name="ringing_snoozed_subinfo">Répétée pour %1$dm • Prévue : %2$s</string>
+    <string name="ringing_original_time">Prévue : %s</string>
+    <string name="ringing_snoozed_notif_title">Alarme (Répétée) : %s</string>
+    <string name="ringing_snoozed_notif_text">Sonne actuellement • Répétée à %1$s pour %2$dm</string>
+
+    <!-- Snooze Active Notification -->
+    <string name="snooze_notif_title">Alarme répétée : %s</string>
+    <string name="snooze_notif_content">Répétée à %1$s pour %2$dm • Sonnera à %3$s</string>
+    <string name="snooze_notif_subtext">Répétée (%dm)</string>
+    <string name="snooze_notif_big_text">Répétée à %1$s pour %2$d min\nSonnera à %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_5_title">v1.6.5 (Version actuelle)</string>
+    <string name="rel_v1_7_title">v1.7 (Version actuelle)</string>
+    <string name="rel_v1_6_5_title">Notes de version v1.6.5</string>
     <string name="rel_v1_6_4_title">Notes de version v1.6.4</string>
     <string name="rel_v1_6_3_title">Notes de version v1.6.3</string>
     <string name="rel_v1_6_2_title">Notes de version v1.6.2</string>
@@ -178,6 +192,10 @@
     <string name="rel_v1_2_title">Notes de version v1.2</string>
     <string name="rel_v1_1_title">Notes de version v1.1</string>
     <string name="rel_v1_0_title">Version initiale v1.0</string>
+
+    <!-- Release Notes Items v1.7 -->
+    <string name="rel_v1_7_item1">Notification de rappel en direct — compte à rebours en temps réel, heure exacte du rappel et durée avec arrêt direct</string>
+    <string name="rel_v1_7_item2">Écran de sonnerie enrichi — affichage en plein écran de l\'heure actuelle et de l\'heure à laquelle l\'alarme a été répétée</string>
 
     <!-- Release Notes Items v1.6.5 -->
     <string name="rel_v1_6_5_item1">Correction d\'alarme ponctuelle — les alarmes ponctuelles se désactivent désormais automatiquement après avoir sonné et été arrêtées, empêchant toute sonnerie quotidienne non souhaitée</string>

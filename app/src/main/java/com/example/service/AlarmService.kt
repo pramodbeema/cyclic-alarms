@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import com.example.MainActivity
+import com.example.R
 import com.example.audio.SynthPlayer
 import com.example.data.AlarmLog
 import com.example.data.AppDatabase
@@ -24,6 +25,9 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 object RingingState {
     data class ActiveAlarm(
@@ -35,7 +39,10 @@ object RingingState {
         val customTrackUri: String = "",
         val vibrate: Boolean,
         val volume: Float,
-        val snoozeMinutes: Int = 5
+        val snoozeMinutes: Int = 5,
+        val isSnoozed: Boolean = false,
+        val snoozedAt: Long = 0L,
+        val snoozedDurationMinutes: Int = 0
     )
     
     private val _activeAlarm = MutableStateFlow<ActiveAlarm?>(null)
@@ -60,6 +67,8 @@ class AlarmService : Service() {
     private var savedRingerMode: Int = AudioManager.RINGER_MODE_NORMAL
 
     companion object {
+        fun getSnoozeNotificationId(alarmId: Int): Int = (if (alarmId != -1) alarmId else 9999) + 4000
+
         fun dismissAlarm(context: Context, alarmId: Int, label: String, hour: Int, minute: Int) {
             val intent = Intent(context, AlarmService::class.java).apply {
                 action = "DISMISS_ALARM"
@@ -80,7 +89,8 @@ class AlarmService : Service() {
             sound: String,
             vibrate: Boolean,
             volume: Float,
-            snoozeMinutes: Int = 5
+            snoozeMinutes: Int = 5,
+            customTrackUri: String = ""
         ) {
             val intent = Intent(context, AlarmService::class.java).apply {
                 action = "SNOOZE_ALARM"
@@ -89,9 +99,21 @@ class AlarmService : Service() {
                 putExtra("ALARM_HOUR", hour)
                 putExtra("ALARM_MINUTE", minute)
                 putExtra("ALARM_SOUND", sound)
+                putExtra("ALARM_CUSTOM_URI", customTrackUri)
                 putExtra("ALARM_VIBRATE", vibrate)
                 putExtra("ALARM_VOLUME", volume)
                 putExtra("ALARM_SNOOZE_MINUTES", snoozeMinutes)
+            }
+            context.startService(intent)
+        }
+
+        fun dismissSnoozedAlarm(context: Context, alarmId: Int, label: String, hour: Int, minute: Int) {
+            val intent = Intent(context, AlarmService::class.java).apply {
+                action = "DISMISS_SNOOZED_ALARM"
+                putExtra("ALARM_ID", alarmId)
+                putExtra("ALARM_LABEL", label)
+                putExtra("ALARM_HOUR", hour)
+                putExtra("ALARM_MINUTE", minute)
             }
             context.startService(intent)
         }
@@ -114,16 +136,45 @@ class AlarmService : Service() {
         val vibrate = intent?.getBooleanExtra("ALARM_VIBRATE", true) ?: true
         val volume = intent?.getFloatExtra("ALARM_VOLUME", 0.8f) ?: 0.8f
         val snoozeMinutes = intent?.getIntExtra("ALARM_SNOOZE_MINUTES", 5) ?: 5
+        val isSnoozed = intent?.getBooleanExtra("ALARM_IS_SNOOZED", false) ?: false
+        val snoozedAt = intent?.getLongExtra("ALARM_SNOOZED_AT", 0L) ?: 0L
+        val snoozedDurationMinutes = intent?.getIntExtra("ALARM_SNOOZED_DURATION", 0) ?: 0
 
         when (action) {
             "START_ALARM" -> {
-                startAlarmMode(alarmId, label, hour, minute, soundPreset, customTrackUri, vibrate, volume, snoozeMinutes)
+                startAlarmMode(
+                    alarmId = alarmId,
+                    label = label,
+                    hour = hour,
+                    minute = minute,
+                    soundPreset = soundPreset,
+                    customTrackUri = customTrackUri,
+                    vibrate = vibrate,
+                    volume = volume,
+                    snoozeMinutes = snoozeMinutes,
+                    isSnoozed = isSnoozed,
+                    snoozedAt = snoozedAt,
+                    snoozedDurationMinutes = snoozedDurationMinutes
+                )
             }
             "DISMISS_ALARM" -> {
                 dismissAlarmMode(alarmId, label, hour, minute)
             }
             "SNOOZE_ALARM" -> {
-                snoozeAlarmMode(alarmId, label, hour, minute, soundPreset, vibrate, volume, snoozeMinutes)
+                snoozeAlarmMode(
+                    alarmId = alarmId,
+                    label = label,
+                    hour = hour,
+                    minute = minute,
+                    soundPreset = soundPreset,
+                    customTrackUri = customTrackUri,
+                    vibrate = vibrate,
+                    volume = volume,
+                    snoozeMinutes = snoozeMinutes
+                )
+            }
+            "DISMISS_SNOOZED_ALARM" -> {
+                dismissSnoozedAlarmMode(alarmId, label, hour, minute)
             }
         }
 
@@ -139,8 +190,17 @@ class AlarmService : Service() {
         customTrackUri: String,
         vibrate: Boolean,
         volume: Float,
-        snoozeMinutes: Int = 5
+        snoozeMinutes: Int = 5,
+        isSnoozed: Boolean = false,
+        snoozedAt: Long = 0L,
+        snoozedDurationMinutes: Int = 0
     ) {
+        // Cancel any pending snooze notification since alarm is now ringing
+        try {
+            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.cancel(getSnoozeNotificationId(alarmId))
+        } catch (_: Exception) {}
+
         // Acquire a FULL WakeLock to turn on the screen when the alarm fires on a locked device.
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock?.release()
@@ -184,7 +244,10 @@ class AlarmService : Service() {
                 customTrackUri = customTrackUri,
                 vibrate = vibrate,
                 volume = volume,
-                snoozeMinutes = snoozeMinutes
+                snoozeMinutes = snoozeMinutes,
+                isSnoozed = isSnoozed,
+                snoozedAt = snoozedAt,
+                snoozedDurationMinutes = snoozedDurationMinutes
             )
         )
 
@@ -270,11 +333,24 @@ class AlarmService : Service() {
         )
 
         val timeStr = String.format("%02d:%02d", hour, minute)
+        val displayLabel = label.ifEmpty { getString(R.string.ringing_default_label) }
+        val notifTitle = if (isSnoozed) {
+            getString(R.string.ringing_snoozed_notif_title, displayLabel)
+        } else {
+            "Alarm: $displayLabel"
+        }
+
+        val notifText = if (isSnoozed && snoozedAt > 0) {
+            val snoozedAtStr = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(snoozedAt))
+            getString(R.string.ringing_snoozed_notif_text, snoozedAtStr, snoozedDurationMinutes)
+        } else {
+            "Ringing since $timeStr"
+        }
 
         val notification = NotificationCompat.Builder(this, "alarm_channel")
             .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
-            .setContentTitle("Alarm: $label")
-            .setContentText("Ringing since $timeStr")
+            .setContentTitle(notifTitle)
+            .setContentText(notifText)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -283,8 +359,8 @@ class AlarmService : Service() {
             .setShowWhen(false)
             .setContentIntent(contentPendingIntent)
             .setFullScreenIntent(contentPendingIntent, true)
-            .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Dismiss", dismissPendingIntent)
-            .addAction(android.R.drawable.ic_menu_send, "Snooze (${snoozeMinutes}m)", snoozePendingIntent)
+            .addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.ringing_btn_dismiss), dismissPendingIntent)
+            .addAction(android.R.drawable.ic_menu_send, "${getString(R.string.ringing_btn_snooze)} (${snoozeMinutes}m)", snoozePendingIntent)
             .build()
 
         startForeground(1001, notification)
@@ -306,6 +382,64 @@ class AlarmService : Service() {
 
     private fun dismissAlarmMode(alarmId: Int, label: String, hour: Int, minute: Int) {
         stopAlarmResources()
+
+        // Cancel any snooze notification
+        try {
+            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.cancel(getSnoozeNotificationId(alarmId))
+        } catch (_: Exception) {}
+
+        serviceScope.launch {
+            repository.insertLog(
+                AlarmLog(
+                    alarmId = alarmId,
+                    label = label,
+                    hour = hour,
+                    minute = minute,
+                    triggerTime = System.currentTimeMillis(),
+                    action = "DISMISSED"
+                )
+            )
+
+            if (alarmId != -1) {
+                val alarm = repository.getAlarmById(alarmId)
+                if (alarm != null) {
+                    val updated = alarm.copy(
+                        isEnabled = if (alarm.isOneOff) false else alarm.isEnabled,
+                        lastTriggeredTime = System.currentTimeMillis(),
+                        snoozeCount = 0
+                    )
+                    repository.updateAlarm(updated)
+                }
+            }
+        }
+
+        stopSelf()
+    }
+
+    private fun dismissSnoozedAlarmMode(alarmId: Int, label: String, hour: Int, minute: Int) {
+        // Cancel the scheduled AlarmReceiver broadcast
+        try {
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(applicationContext, com.example.receiver.AlarmReceiver::class.java).apply {
+                action = "START_ALARM"
+            }
+            val snoozePendingIntent = PendingIntent.getBroadcast(
+                applicationContext,
+                alarmId + 5000,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            alarmManager.cancel(snoozePendingIntent)
+        } catch (e: Exception) {
+            Log.e("AlarmService", "Failed to cancel snooze AlarmManager intent", e)
+        }
+
+        // Cancel the snooze notification
+        try {
+            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.cancel(getSnoozeNotificationId(alarmId))
+        } catch (_: Exception) {}
 
         serviceScope.launch {
             repository.insertLog(
@@ -341,11 +475,13 @@ class AlarmService : Service() {
         hour: Int,
         minute: Int,
         soundPreset: String,
+        customTrackUri: String = "",
         vibrate: Boolean,
         volume: Float,
         snoozeMinutes: Int = 5
     ) {
         stopAlarmResources()
+        val nowMs = System.currentTimeMillis()
 
         serviceScope.launch {
             repository.insertLog(
@@ -354,25 +490,30 @@ class AlarmService : Service() {
                     label = label,
                     hour = hour,
                     minute = minute,
-                    triggerTime = System.currentTimeMillis(),
+                    triggerTime = nowMs,
                     action = "SNOOZED"
                 )
             )
 
             val alarm = if (alarmId != -1) repository.getAlarmById(alarmId) else null
             val effectiveSnoozeMins = if (snoozeMinutes > 0) snoozeMinutes else (alarm?.snoozeMinutes ?: 5)
-            val snoozeTimeMs = System.currentTimeMillis() + effectiveSnoozeMins * 60 * 1000
+            val snoozeTimeMs = nowMs + effectiveSnoozeMins * 60 * 1000L
 
             val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(applicationContext, com.example.receiver.AlarmReceiver::class.java).apply {
+                action = "START_ALARM"
                 putExtra("ALARM_ID", alarmId)
-                putExtra("ALARM_LABEL", "$label (Snoozed)")
+                putExtra("ALARM_LABEL", label)
                 putExtra("ALARM_HOUR", hour)
                 putExtra("ALARM_MINUTE", minute)
                 putExtra("ALARM_SOUND", soundPreset)
+                putExtra("ALARM_CUSTOM_URI", customTrackUri)
                 putExtra("ALARM_VIBRATE", vibrate)
                 putExtra("ALARM_VOLUME", volume)
                 putExtra("ALARM_SNOOZE_MINUTES", effectiveSnoozeMins)
+                putExtra("ALARM_IS_SNOOZED", true)
+                putExtra("ALARM_SNOOZED_AT", nowMs)
+                putExtra("ALARM_SNOOZED_DURATION", effectiveSnoozeMins)
             }
 
             val snoozePendingIntent = PendingIntent.getBroadcast(
@@ -413,14 +554,100 @@ class AlarmService : Service() {
             }
 
             if (alarmId != -1) {
-                val alarm = repository.getAlarmById(alarmId)
-                if (alarm != null) {
-                    repository.updateAlarm(alarm.copy(snoozeCount = alarm.snoozeCount + 1))
+                val dbAlarm = repository.getAlarmById(alarmId)
+                if (dbAlarm != null) {
+                    repository.updateAlarm(dbAlarm.copy(snoozeCount = dbAlarm.snoozeCount + 1))
                 }
             }
+
+            // Show active snooze notification with countdown, snoozed-at time, and duration
+            showSnoozeNotification(
+                alarmId = alarmId,
+                label = label,
+                hour = hour,
+                minute = minute,
+                snoozedAtMs = nowMs,
+                snoozeTargetMs = snoozeTimeMs,
+                snoozeMinutes = effectiveSnoozeMins
+            )
         }
 
         stopSelf()
+    }
+
+    private fun showSnoozeNotification(
+        alarmId: Int,
+        label: String,
+        hour: Int,
+        minute: Int,
+        snoozedAtMs: Long,
+        snoozeTargetMs: Long,
+        snoozeMinutes: Int
+    ) {
+        createNotificationChannel()
+
+        val snoozedAtStr = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(snoozedAtMs))
+        val ringsAtStr = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(snoozeTargetMs))
+        val displayLabel = label.ifEmpty { getString(R.string.ringing_default_label) }
+
+        val contentIntent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        val contentPendingIntent = PendingIntent.getActivity(
+            this,
+            alarmId + 6000,
+            contentIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val dismissIntent = Intent(this, AlarmService::class.java).apply {
+            action = "DISMISS_SNOOZED_ALARM"
+            putExtra("ALARM_ID", alarmId)
+            putExtra("ALARM_LABEL", label)
+            putExtra("ALARM_HOUR", hour)
+            putExtra("ALARM_MINUTE", minute)
+        }
+        val dismissPendingIntent = PendingIntent.getService(
+            this,
+            alarmId + 7000,
+            dismissIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val title = getString(R.string.snooze_notif_title, displayLabel)
+        val contentText = getString(R.string.snooze_notif_content, snoozedAtStr, snoozeMinutes, ringsAtStr)
+        val subText = getString(R.string.snooze_notif_subtext, snoozeMinutes)
+        val bigText = getString(R.string.snooze_notif_big_text, snoozedAtStr, snoozeMinutes, ringsAtStr)
+
+        val builder = NotificationCompat.Builder(this, "alarm_channel")
+            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+            .setContentTitle(title)
+            .setContentText(contentText)
+            .setSubText(subText)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
+            .setWhen(snoozeTargetMs)
+            .setUsesChronometer(true)
+            .setShowWhen(true)
+            .setOngoing(true)
+            .setAutoCancel(false)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setContentIntent(contentPendingIntent)
+            .addAction(
+                android.R.drawable.ic_menu_close_clear_cancel,
+                getString(R.string.ringing_btn_dismiss),
+                dismissPendingIntent
+            )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            builder.setChronometerCountDown(true)
+        }
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(getSnoozeNotificationId(alarmId), builder.build())
     }
 
     private fun stopAlarmResources() {

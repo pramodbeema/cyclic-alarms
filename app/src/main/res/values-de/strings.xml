@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Berechtigungen &amp; App-Zugriff</string>
     <string name="setting_permissions_subtitle">Systemzugriff für zuverlässiges Klingeln und Sperrbildschirm-Popups verwalten</string>
     <string name="about_cyclic_alarms">Über Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.6.5 • Versionshinweise, Support &amp; Entwickler-Info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.7 • Versionshinweise, Support &amp; Entwickler-Info</string>
     <string name="tinted">Getönt</string>
     <string name="pure_white">Reinweiß</string>
 
@@ -158,15 +158,29 @@
     <string name="creator_ack_body1">Entwickelt für Schichtarbeiter, Einsatzpersonal und alle, die Wecker mit flexiblen Intervallen jenseits klassischer Wochenmuster benötigen.</string>
     <string name="creator_ack_body2" formatted="false">100% KI-unterstützte Entwicklung. Keine Tracker. Keine Werbung. 100% kostenlos.</string>
 
-    <!-- Ringing Screen -->
+    <!-- Ringing Screen & Snooze Details -->
     <string name="alarm_ringing_title">WECKER KLINGELT</string>
+    <string name="snoozed_alarm_ringing_title">GESCHLUMMERTER WECKER KLINGELT</string>
+    <string name="current_time_label">Aktuelle Uhrzeit</string>
     <string name="ringing_default_label">Zyklischer Wecker</string>
     <string name="ringing_snooze_duration">Schlummerdauer</string>
     <string name="ringing_btn_snooze">Schlummern</string>
     <string name="ringing_btn_dismiss">Ausschalten</string>
+    <string name="ringing_snoozed_info">Geschlummert um %s</string>
+    <string name="ringing_snoozed_subinfo">Geschlummert für %1$dm • Geplant: %2$s</string>
+    <string name="ringing_original_time">Geplant: %s</string>
+    <string name="ringing_snoozed_notif_title">Wecker (Geschlummert): %s</string>
+    <string name="ringing_snoozed_notif_text">Klingelt jetzt • Geschlummert um %1$s für %2$dm</string>
+
+    <!-- Snooze Active Notification -->
+    <string name="snooze_notif_title">Wecker geschlummert: %s</string>
+    <string name="snooze_notif_content">Geschlummert um %1$s für %2$dm • Klingelt um %3$s</string>
+    <string name="snooze_notif_subtext">Schlummern (%dm)</string>
+    <string name="snooze_notif_big_text">Geschlummert um %1$s für %2$d Min.\nKlingelt um %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_5_title">v1.6.5 (Aktuelle Version)</string>
+    <string name="rel_v1_7_title">v1.7 (Aktuelle Version)</string>
+    <string name="rel_v1_6_5_title">v1.6.5 Versionshinweise</string>
     <string name="rel_v1_6_4_title">Versionshinweise v1.6.4</string>
     <string name="rel_v1_6_3_title">Versionshinweise v1.6.3</string>
     <string name="rel_v1_6_2_title">Versionshinweise v1.6.2</string>
@@ -178,6 +192,10 @@
     <string name="rel_v1_2_title">Versionshinweise v1.2</string>
     <string name="rel_v1_1_title">Versionshinweise v1.1</string>
     <string name="rel_v1_0_title">Erste Veröffentlichung v1.0</string>
+
+    <!-- Release Notes Items v1.7 -->
+    <string name="rel_v1_7_item1">Live-Schlummerbenachrichtigung — Live-Countdown der verbleibenden Zeit, Schlummerzeitpunkt und Dauer mit Direkt-Verwerfen</string>
+    <string name="rel_v1_7_item2">Erweiterter Weckbildschirm — Vollbildanzeige zeigt aktuelle Uhrzeit und genauen Schlummerzeitpunkt</string>
 
     <!-- Release Notes Items v1.6.5 -->
     <string name="rel_v1_6_5_item1">Korrektur für einmalige Wecker — einmalige Wecker deaktivieren sich nun nach dem Klingeln und Ausschalten automatisch, wodurch unerwünschtes tägliches Klingeln verhindert wird</string>

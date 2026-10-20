@@ -2515,7 +2515,7 @@ fun AboutPageView() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.6.5", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.7", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
@@ -2582,11 +2582,22 @@ fun AboutPageView() {
             Text(stringResource(R.string.release_history_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.6.5 — Expanded by default (current release)
+            // v1.7 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = stringResource(R.string.rel_v1_6_5_title),
+                version = stringResource(R.string.rel_v1_7_title),
                 badgeText = stringResource(R.string.badge_latest),
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "🔔" to stringResource(R.string.rel_v1_7_item1),
+                    "⏰" to stringResource(R.string.rel_v1_7_item2)
+                )
+            )
+
+            // v1.6.5 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = stringResource(R.string.rel_v1_6_5_title),
+                badgeText = "v1.6.5",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "⏰" to stringResource(R.string.rel_v1_6_5_item1)
                 )
@@ -2836,28 +2847,159 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
     var ticks by remember { mutableStateOf(0) }
     LaunchedEffect(Unit) { while (true) { delay(800); ticks++ } }
 
-    val pulse by animateFloatAsState(targetValue = if (ticks % 2 == 0) 1.1f else 0.92f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMedium), label = "pulse")
+    var currentTimeMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            currentTimeMillis = System.currentTimeMillis()
+            delay(1000L)
+        }
+    }
 
-    Box(modifier = Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(AppBackground, Color(0xFF0D1B3E), Color(0xFF160D2E)))).padding(24.dp), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight().padding(vertical = 40.dp)) {
+    val currentTimeStr = remember(currentTimeMillis) {
+        SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(currentTimeMillis))
+    }
+    val currentDateStr = remember(currentTimeMillis) {
+        SimpleDateFormat("EEE, MMM d", Locale.getDefault()).format(Date(currentTimeMillis))
+    }
+    val originalTimeStr = remember(activeAlarm.hour, activeAlarm.minute) {
+        val dh = if (activeAlarm.hour == 0) 12 else if (activeAlarm.hour > 12) activeAlarm.hour - 12 else activeAlarm.hour
+        String.format("%02d:%02d %s", dh, activeAlarm.minute, if (activeAlarm.hour >= 12) "PM" else "AM")
+    }
+    val snoozedAtStr = remember(activeAlarm.snoozedAt) {
+        if (activeAlarm.snoozedAt > 0) {
+            SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(activeAlarm.snoozedAt))
+        } else ""
+    }
+
+    val accentColor = if (activeAlarm.isSnoozed) BrandPurple else BrandBlue
+
+    val pulse by animateFloatAsState(
+        targetValue = if (ticks % 2 == 0) 1.1f else 0.92f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMedium),
+        label = "pulse"
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Brush.verticalGradient(listOf(AppBackground, Color(0xFF0D1B3E), Color(0xFF160D2E))))
+            .padding(24.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxHeight().padding(vertical = 36.dp)
+        ) {
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(stringResource(R.string.alarm_ringing_title), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = BrandBlue, letterSpacing = 2.sp)
-                Spacer(Modifier.height(24.dp))
-                Box(modifier = Modifier.size(160.dp).graphicsLayer(scaleX = pulse, scaleY = pulse).background(BrandBlue.copy(alpha = 0.15f), CircleShape).border(BorderStroke(2.dp, BrandBlue.copy(alpha = 0.3f)), CircleShape), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(80.dp))
+                Text(
+                    text = if (activeAlarm.isSnoozed) {
+                        stringResource(R.string.snoozed_alarm_ringing_title)
+                    } else {
+                        stringResource(R.string.alarm_ringing_title)
+                    },
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = accentColor,
+                    letterSpacing = 2.sp
+                )
+                Spacer(Modifier.height(20.dp))
+                Box(
+                    modifier = Modifier
+                        .size(140.dp)
+                        .graphicsLayer(scaleX = pulse, scaleY = pulse)
+                        .background(accentColor.copy(alpha = 0.15f), CircleShape)
+                        .border(BorderStroke(2.dp, accentColor.copy(alpha = 0.35f)), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = if (activeAlarm.isSnoozed) Icons.Default.Refresh else Icons.Default.Notifications,
+                        contentDescription = null,
+                        tint = accentColor,
+                        modifier = Modifier.size(70.dp)
+                    )
                 }
             }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                val timeStr = remember(activeAlarm.hour, activeAlarm.minute) {
-                    val dh = if (activeAlarm.hour == 0) 12 else if (activeAlarm.hour > 12) activeAlarm.hour - 12 else activeAlarm.hour
-                    String.format("%02d:%02d %s", dh, activeAlarm.minute, if (activeAlarm.hour >= 12) "PM" else "AM")
+                Text(
+                    stringResource(R.string.current_time_label).uppercase(),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = accentColor,
+                    letterSpacing = 1.5.sp
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    currentTimeStr,
+                    fontSize = 54.sp,
+                    fontWeight = FontWeight.Black,
+                    color = TextPrimary,
+                    fontFamily = FontFamily.Monospace
+                )
+                Text(
+                    currentDateStr,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextSecondary
+                )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    activeAlarm.label.ifEmpty { stringResource(R.string.ringing_default_label) },
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TextPrimary,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(Modifier.height(10.dp))
+
+                if (activeAlarm.isSnoozed && snoozedAtStr.isNotEmpty()) {
+                    Surface(
+                        shape = RoundedCornerShape(16.dp),
+                        color = BrandPurple.copy(alpha = 0.18f),
+                        border = BorderStroke(1.dp, BrandPurple.copy(alpha = 0.45f)),
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.Refresh,
+                                contentDescription = null,
+                                tint = BrandPurple,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Column {
+                                Text(
+                                    text = stringResource(R.string.ringing_snoozed_info, snoozedAtStr),
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = TextPrimary
+                                )
+                                Text(
+                                    text = if (activeAlarm.snoozedDurationMinutes > 0) {
+                                        stringResource(R.string.ringing_snoozed_subinfo, activeAlarm.snoozedDurationMinutes, originalTimeStr)
+                                    } else {
+                                        stringResource(R.string.ringing_original_time, originalTimeStr)
+                                    },
+                                    fontSize = 11.sp,
+                                    color = TextSecondary
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    Text(
+                        stringResource(R.string.ringing_original_time, originalTimeStr),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = TextSecondary
+                    )
                 }
-                Text(timeStr, fontSize = 60.sp, fontWeight = FontWeight.Black, color = TextPrimary, fontFamily = FontFamily.Monospace)
-                Spacer(Modifier.height(8.dp))
-                Text(activeAlarm.label.ifEmpty { stringResource(R.string.ringing_default_label) }, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = TextSecondary, textAlign = TextAlign.Center)
             }
 
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -2891,9 +3033,9 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
                             },
                             modifier = Modifier
                                 .size(38.dp)
-                                .background(BrandBlue.copy(alpha = 0.2f), CircleShape)
+                                .background(accentColor.copy(alpha = 0.2f), CircleShape)
                         ) {
-                            Icon(Icons.Default.Remove, contentDescription = "Decrease Snooze", tint = BrandBlue, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Remove, contentDescription = "Decrease Snooze", tint = accentColor, modifier = Modifier.size(20.dp))
                         }
 
                         Spacer(Modifier.width(12.dp))
@@ -2915,9 +3057,9 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
                             },
                             modifier = Modifier
                                 .size(38.dp)
-                                .background(BrandBlue.copy(alpha = 0.2f), CircleShape)
+                                .background(accentColor.copy(alpha = 0.2f), CircleShape)
                         ) {
-                            Icon(Icons.Default.Add, contentDescription = "Increase Snooze", tint = BrandBlue, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Add, contentDescription = "Increase Snooze", tint = accentColor, modifier = Modifier.size(20.dp))
                         }
                     }
                 }
@@ -2925,19 +3067,20 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
                 Button(
                     onClick = {
                         com.example.service.AlarmService.snoozeAlarm(
-                            context,
-                            activeAlarm.alarmId,
-                            activeAlarm.label,
-                            activeAlarm.hour,
-                            activeAlarm.minute,
-                            activeAlarm.soundPreset,
-                            activeAlarm.vibrate,
-                            activeAlarm.volume,
-                            selectedSnoozeMins
+                            context = context,
+                            alarmId = activeAlarm.alarmId,
+                            label = activeAlarm.label,
+                            hour = activeAlarm.hour,
+                            minute = activeAlarm.minute,
+                            sound = activeAlarm.soundPreset,
+                            vibrate = activeAlarm.vibrate,
+                            volume = activeAlarm.volume,
+                            snoozeMinutes = selectedSnoozeMins,
+                            customTrackUri = activeAlarm.customTrackUri
                         )
                     },
                     modifier = Modifier.fillMaxWidth().height(60.dp).testTag("snooze_active_button"),
-                    colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166)),
+                    colors = ButtonDefaults.buttonColors(containerColor = accentColor, contentColor = Color(0xFF003166)),
                     shape = RoundedCornerShape(30.dp)
                 ) {
                     Icon(Icons.Default.Refresh, contentDescription = null)

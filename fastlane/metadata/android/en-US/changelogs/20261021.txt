@@ -1,0 +1,2 @@
+- Live Snooze Notification: Active snooze now displays a live countdown timer, exact time snoozed, and snooze duration, with an instant Dismiss button in the notification.
+- Enhanced Full-Screen Ringing Screen: Displays the live current time, date, and detailed badge showing when the alarm was snoozed and for how long.

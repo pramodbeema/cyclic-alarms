@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permisos y acceso del sistema</string>
     <string name="setting_permissions_subtitle">Administre el acceso necesario para alarmas fiables y avisos en pantalla de bloqueo</string>
     <string name="about_cyclic_alarms">Acerca de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Versión 1.6.5 • Notas de la versión, soporte e info del creador</string>
+    <string name="about_cyclic_alarms_subtitle">Versión 1.7 • Notas de la versión, soporte e info del creador</string>
     <string name="tinted">Matizado</string>
     <string name="pure_white">Blanco Puro</string>
 
@@ -158,15 +158,29 @@
     <string name="creator_ack_body1">Creado para trabajadores por turnos, personal de guardias y cualquiera que necesite alarmas periódicas más allá del esquema semanal estándar.</string>
     <string name="creator_ack_body2" formatted="false">Desarrollo 100% asistido por IA. Cero rastreo. Cero anuncios. 100% gratis.</string>
 
-    <!-- Ringing Screen -->
+    <!-- Ringing Screen & Snooze Details -->
     <string name="alarm_ringing_title">ALARMA SONANDO</string>
+    <string name="snoozed_alarm_ringing_title">ALARMA POSPUESTA SONANDO</string>
+    <string name="current_time_label">Hora actual</string>
     <string name="ringing_default_label">Alarma Cíclica</string>
     <string name="ringing_snooze_duration">Duración de posposición</string>
     <string name="ringing_btn_snooze">Posponer</string>
     <string name="ringing_btn_dismiss">Descartar</string>
+    <string name="ringing_snoozed_info">Pospuesta a las %s</string>
+    <string name="ringing_snoozed_subinfo">Pospuesta por %1$dm • Programada: %2$s</string>
+    <string name="ringing_original_time">Programada: %s</string>
+    <string name="ringing_snoozed_notif_title">Alarma (Pospuesta): %s</string>
+    <string name="ringing_snoozed_notif_text">Sonando ahora • Pospuesta a las %1$s por %2$dm</string>
+
+    <!-- Snooze Active Notification -->
+    <string name="snooze_notif_title">Alarma pospuesta: %s</string>
+    <string name="snooze_notif_content">Pospuesta a las %1$s por %2$dm • Sonará a las %3$s</string>
+    <string name="snooze_notif_subtext">Pospuesta (%dm)</string>
+    <string name="snooze_notif_big_text">Pospuesta a las %1$s por %2$d min\nSonará a las %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_5_title">v1.6.5 (Versión actual)</string>
+    <string name="rel_v1_7_title">v1.7 (Versión actual)</string>
+    <string name="rel_v1_6_5_title">Notas de la versión v1.6.5</string>
     <string name="rel_v1_6_4_title">Notas de la versión v1.6.4</string>
     <string name="rel_v1_6_3_title">Notas de la versión v1.6.3</string>
     <string name="rel_v1_6_2_title">Notas de la versión v1.6.2</string>
@@ -178,6 +192,10 @@
     <string name="rel_v1_2_title">Notas de la versión v1.2</string>
     <string name="rel_v1_1_title">Notas de la versión v1.1</string>
     <string name="rel_v1_0_title">Lanzamiento inicial v1.0</string>
+
+    <!-- Release Notes Items v1.7 -->
+    <string name="rel_v1_7_item1">Notificación de posposición en vivo — muestra cuenta regresiva en vivo, hora exacta de posposición y duración con descarte directo</string>
+    <string name="rel_v1_7_item2">Pantalla de timbre mejorada — la pantalla completa muestra la hora actual y la hora en que fue pospuesta la alarma</string>
 
     <!-- Release Notes Items v1.6.5 -->
     <string name="rel_v1_6_5_item1">Corrección de alarma única — las alarmas de una sola vez ahora se desactivan automáticamente al sonar y descartarse, evitando repeticiones diarias no deseadas</string>

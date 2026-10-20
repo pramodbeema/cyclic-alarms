@@ -83,6 +83,11 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 
 ---
 
+## What's new — v1.7
+
+- 🔔 **Live Snooze Notification with Countdown** — when an alarm is snoozed, an ongoing notification displays a live ticking countdown of remaining time, the exact time it was snoozed, the snooze duration, and an instant Dismiss button.
+- ⏰ **Enhanced Snoozed Ringing Screen** — full-screen ringing now prominently displays the live current time, date, and a dedicated badge showing the exact timestamp when the alarm was snoozed and the snooze duration.
+
 ## What's new — v1.6.5
 
 - ⏰ **One-Off Alarm Fix** — alarms set without weekdays or cyclic days (ONE-OFF) now automatically disable upon ringing and dismissal, properly executing once instead of recurring daily.

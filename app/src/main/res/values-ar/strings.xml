@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">الأذونات والوصول إلى النظام</string>
     <string name="setting_permissions_subtitle">إدارة أذونات النظام المطلوبة لدقة التنبيه وشاشة القفل</string>
     <string name="about_cyclic_alarms">حول Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">الإصدار 1.6.5 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
+    <string name="about_cyclic_alarms_subtitle">الإصدار 1.7 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
     <string name="tinted">مظلل</string>
     <string name="pure_white">أبيض ناصع</string>
 
@@ -158,15 +158,29 @@
     <string name="creator_ack_body1">صُمم خصيصًا لموظفي الورديات والمناوبات ولكل من يحتاج إلى منبهات متكررة بفترات زمنية خارج الجدول الأسبوعي المعتاد.</string>
     <string name="creator_ack_body2" formatted="false">تطوير 100% بمساعدة الذكاء الاصطناعي. لا تتبع. لا إعلانات. مجاني 100%.</string>
 
-    <!-- Ringing Screen -->
+    <!-- Ringing Screen & Snooze Details -->
     <string name="alarm_ringing_title">المنبه يرن</string>
+    <string name="snoozed_alarm_ringing_title">رنين المنبه المؤجل</string>
+    <string name="current_time_label">الوقت الحالي</string>
     <string name="ringing_default_label">منبه دوري</string>
     <string name="ringing_snooze_duration">مدة الغفوة</string>
     <string name="ringing_btn_snooze">غفوة</string>
     <string name="ringing_btn_dismiss">إيقاف</string>
+    <string name="ringing_snoozed_info">تم التأجيل في %s</string>
+    <string name="ringing_snoozed_subinfo">مؤجل لمدة %1$d د • الموعد المحدد: %2$s</string>
+    <string name="ringing_original_time">الموعد المحدد: %s</string>
+    <string name="ringing_snoozed_notif_title">منبه (مؤجل): %s</string>
+    <string name="ringing_snoozed_notif_text">يرن الآن • تم التأجيل في %1$s لمدة %2$d د</string>
+
+    <!-- Snooze Active Notification -->
+    <string name="snooze_notif_title">تم تأجيل المنبه: %s</string>
+    <string name="snooze_notif_content">تم التأجيل في %1$s لمدة %2$d د • يرن في %3$s</string>
+    <string name="snooze_notif_subtext">تم التأجيل (%d د)</string>
+    <string name="snooze_notif_big_text">تم التأجيل في %1$s لمدة %2$d دقيقة\nيرن في %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_5_title">v1.6.5 (الإصدار الحالي)</string>
+    <string name="rel_v1_7_title">v1.7 (الإصدار الحالي)</string>
+    <string name="rel_v1_6_5_title">ملاحظات الإصدار v1.6.5</string>
     <string name="rel_v1_6_4_title">ملاحظات الإصدار v1.6.4</string>
     <string name="rel_v1_6_3_title">ملاحظات الإصدار v1.6.3</string>
     <string name="rel_v1_6_2_title">ملاحظات الإصدار v1.6.2</string>
@@ -178,6 +192,10 @@
     <string name="rel_v1_2_title">ملاحظات الإصدار v1.2</string>
     <string name="rel_v1_1_title">ملاحظات الإصدار v1.1</string>
     <string name="rel_v1_0_title">الإصدار الأول v1.0</string>
+
+    <!-- Release Notes Items v1.7 -->
+    <string name="rel_v1_7_item1">إشعار الغفوة المباشر — عد تنازلي حي للوقت المتبقي ووقت التأجيل الدقيق والمدة مع خيار الإلغاء السريع</string>
+    <string name="rel_v1_7_item2">شاشة رنين محسنة — شاشة كاملة تعرض الوقت الحالي وتوقيت تأجيل المنبه</string>
 
     <!-- Release Notes Items v1.6.5 -->
     <string name="rel_v1_6_5_item1">إصلاح المنبه لمرة واحدة — يتم الآن تعطيل المنبه لمرة واحدة تلقائيًا بعد الرنين والإيقاف، مما يمنع التكرار اليومي غير المرغوب فيه</string>

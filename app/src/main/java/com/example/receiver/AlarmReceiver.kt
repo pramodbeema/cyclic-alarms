@@ -22,6 +22,9 @@ class AlarmReceiver : BroadcastReceiver() {
             putExtra("ALARM_VIBRATE", intent.getBooleanExtra("ALARM_VIBRATE", true))
             putExtra("ALARM_VOLUME", intent.getFloatExtra("ALARM_VOLUME", 0.8f))
             putExtra("ALARM_SNOOZE_MINUTES", intent.getIntExtra("ALARM_SNOOZE_MINUTES", 5))
+            putExtra("ALARM_IS_SNOOZED", intent.getBooleanExtra("ALARM_IS_SNOOZED", false))
+            putExtra("ALARM_SNOOZED_AT", intent.getLongExtra("ALARM_SNOOZED_AT", 0L))
+            putExtra("ALARM_SNOOZED_DURATION", intent.getIntExtra("ALARM_SNOOZED_DURATION", 0))
         }
 
         try {

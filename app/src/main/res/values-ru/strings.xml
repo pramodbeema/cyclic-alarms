@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Разрешения и доступ к системе</string>
     <string name="setting_permissions_subtitle">Управление доступом для надежного срабатывания будильника и экрана блокировки</string>
     <string name="about_cyclic_alarms">О приложении Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Версия 1.6.5 • Примечания к выпуску, поддержка и автор</string>
+    <string name="about_cyclic_alarms_subtitle">Версия 1.7 • Примечания к выпуску, поддержка и автор</string>
     <string name="tinted">С оттенком</string>
     <string name="pure_white">Чистый белый</string>
 
@@ -158,15 +158,29 @@
     <string name="creator_ack_body1">Создано для сменных работников, дежурного персонала и всех, кому нужны периодические будильники за пределами стандартной недели.</string>
     <string name="creator_ack_body2" formatted="false">Разработано на 100% с помощью ИИ. Без слежки. Без рекламы. 100% бесплатно.</string>
 
-    <!-- Ringing Screen -->
+    <!-- Ringing Screen & Snooze Details -->
     <string name="alarm_ringing_title">БУДИЛЬНИК ЗВОНИТ</string>
+    <string name="snoozed_alarm_ringing_title">ЗВОНИТ ОТЛОЖЕННЫЙ БУДИЛЬНИК</string>
+    <string name="current_time_label">Текущее время</string>
     <string name="ringing_default_label">Циклический будильник</string>
     <string name="ringing_snooze_duration">Длительность повтора</string>
     <string name="ringing_btn_snooze">Отложить</string>
     <string name="ringing_btn_dismiss">Выключить</string>
+    <string name="ringing_snoozed_info">Отложен в %s</string>
+    <string name="ringing_snoozed_subinfo">Отложен на %1$dм • По плану: %2$s</string>
+    <string name="ringing_original_time">По плану: %s</string>
+    <string name="ringing_snoozed_notif_title">Будильник (Отложен): %s</string>
+    <string name="ringing_snoozed_notif_text">Звонит сейчас • Отложен в %1$s на %2$dм</string>
+
+    <!-- Snooze Active Notification -->
+    <string name="snooze_notif_title">Будильник отложен: %s</string>
+    <string name="snooze_notif_content">Отложен в %1$s на %2$dм • Зазвонит в %3$s</string>
+    <string name="snooze_notif_subtext">Отложено (%dм)</string>
+    <string name="snooze_notif_big_text">Отложен в %1$s на %2$d мин\nЗазвонит в %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_6_5_title">v1.6.5 (Текущая версия)</string>
+    <string name="rel_v1_7_title">v1.7 (Текущая версия)</string>
+    <string name="rel_v1_6_5_title">Примечания к версии v1.6.5</string>
     <string name="rel_v1_6_4_title">Примечания к версии v1.6.4</string>
     <string name="rel_v1_6_3_title">Примечания к версии v1.6.3</string>
     <string name="rel_v1_6_2_title">Примечания к версии v1.6.2</string>
@@ -178,6 +192,10 @@
     <string name="rel_v1_2_title">Примечания к версии v1.2</string>
     <string name="rel_v1_1_title">Примечания к версии v1.1</string>
     <string name="rel_v1_0_title">Первый выпуск v1.0</string>
+
+    <!-- Release Notes Items v1.7 -->
+    <string name="rel_v1_7_item1">Живое уведомление о повторе — обратный отсчет в реальном времени, точное время откладывания и длительность с быстрым отклонением</string>
+    <string name="rel_v1_7_item2">Улучшенный экран будильника — полноэкранное отображение текущего времени и времени откладывания</string>
 
     <!-- Release Notes Items v1.6.5 -->
     <string name="rel_v1_6_5_item1">Исправление однократного будильника — однократные будильники теперь автоматически отключаются после звонка и выключения, предотвращая нежелательные ежедневные повторы</string>
