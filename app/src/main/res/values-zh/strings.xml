@@ -105,8 +105,25 @@
     <string name="alarm_time_section">闹钟时间</string>
     <string name="alarm_label_optional">标签（可选）</string>
     <string name="alarm_label_placeholder">例如：白班</string>
+    <string name="tab_daily">每日</string>
+    <string name="tab_weekly">每周</string>
+    <string name="tab_monthly">每月</string>
+    <string name="tab_yearly">每年</string>
     <string name="tab_cyclic_days">循环天数</string>
     <string name="tab_weekly_days">星期规律</string>
+    <string name="repeat_daily_everyday">每天</string>
+    <string name="repeat_daily_interval">固定间隔（每 N 天）</string>
+    <string name="repeat_monthly_date">每月 %s 日</string>
+    <string name="repeat_monthly_day_of_week">每月 %1$s%2$s</string>
+    <string name="repeat_monthly_selected_dates">指定日期</string>
+    <string name="repeat_yearly_date">每年 %2$s %1$s 日</string>
+    <string name="repeat_yearly_day_of_week">每年 %3$s 的 %1$s%2$s</string>
+    <string name="repeat_yearly_selected_months">指定月份的 %s 日</string>
+    <string name="base_date_label">基准日期</string>
+    <string name="select_dates_hint">选择每月重复日期：</string>
+    <string name="select_months_hint">选择在 %s 日重复的月份：</string>
+    <string name="sched_monthly_prefix">每月</string>
+    <string name="sched_yearly_prefix">每年</string>
     <string name="cyclic_config_section">循环配置</string>
     <string name="repeat_on_days_section">按周重复</string>
     <string name="every_word">每隔</string>
@@ -179,8 +196,13 @@
     <string name="snooze_notif_big_text">于 %1$s 稍后提醒 %2$d 分钟\n将于 %3$s 响铃</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_title">v1.7（当前版本）</string>
+    <string name="rel_v1_7_1_title">v1.7.1（当前版本）</string>
+    <string name="rel_v1_7_title">v1.7 更新说明</string>
     <string name="rel_v1_6_5_title">v1.6.5 发行说明</string>
+
+    <!-- Release Notes Items v1.7.1 -->
+    <string name="rel_v1_7_1_item1">12 / 24 小时制全局统一 — 闹钟列表、弹窗设置、试听预览与系统通知的时间显示完全遵循所选时间格式</string>
+    <string name="rel_v1_7_1_item2">灵活重复周期引擎 — 现已全面支持每日、每周、每月（如 20 日、第 3 个周二、指定日期）以及每年（如 10 月 20 日、10 月第 3 个周二、指定月份）多种周期循环模式</string>
     <string name="rel_v1_6_4_title">v1.6.4 更新说明</string>
     <string name="rel_v1_6_3_title">v1.6.3 更新说明</string>
     <string name="rel_v1_6_2_title">v1.6.2 更新说明</string>

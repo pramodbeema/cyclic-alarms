@@ -105,8 +105,25 @@
     <string name="alarm_time_section">Hora do Alarme</string>
     <string name="alarm_label_optional">Rótulo (opcional)</string>
     <string name="alarm_label_placeholder">ex. Turno de Trabalho</string>
+    <string name="tab_daily">Diário</string>
+    <string name="tab_weekly">Semanal</string>
+    <string name="tab_monthly">Mensal</string>
+    <string name="tab_yearly">Anual</string>
     <string name="tab_cyclic_days">Dias Cíclicos</string>
     <string name="tab_weekly_days">Dias Semanais</string>
+    <string name="repeat_daily_everyday">Todos os dias</string>
+    <string name="repeat_daily_interval">Intervalo (A cada N dias)</string>
+    <string name="repeat_monthly_date">No dia %s</string>
+    <string name="repeat_monthly_day_of_week">Na %1$s %2$s</string>
+    <string name="repeat_monthly_selected_dates">Datas selecionadas</string>
+    <string name="repeat_yearly_date">Em %1$s de %2$s</string>
+    <string name="repeat_yearly_day_of_week">Na %1$s %2$s de %3$s</string>
+    <string name="repeat_yearly_selected_months">No dia %s dos meses selecionados</string>
+    <string name="base_date_label">Data base</string>
+    <string name="select_dates_hint">Selecione as datas do mês para repetir:</string>
+    <string name="select_months_hint">Selecione os meses para repetir no dia %s:</string>
+    <string name="sched_monthly_prefix">MENSAL</string>
+    <string name="sched_yearly_prefix">ANUAL</string>
     <string name="cyclic_config_section">Configuração Cíclica</string>
     <string name="repeat_on_days_section">Repetir nos dias</string>
     <string name="every_word">A cada</string>
@@ -179,8 +196,13 @@
     <string name="snooze_notif_big_text">Adiado às %1$s por %2$d min\nTocará às %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_title">v1.7 (Versão Atual)</string>
+    <string name="rel_v1_7_1_title">v1.7.1 (Versão atual)</string>
+    <string name="rel_v1_7_title">Notas da versão v1.7</string>
     <string name="rel_v1_6_5_title">Notas da Versão v1.6.5</string>
+
+    <!-- Release Notes Items v1.7.1 -->
+    <string name="rel_v1_7_1_item1">Consistência do formato 12h / 24h — horários na lista de alarmes, diálogos, pré-visualizações e notificações agora seguem fielmente o formato escolhido</string>
+    <string name="rel_v1_7_1_item2">Mecanismo flexível de recorrência — suporte para ciclos diários, semanais, mensais (ex.: dia 20, 3ª terça-feira, datas selecionadas) e anuais (ex.: 20 de out, 3ª terça de out, meses selecionados)</string>
     <string name="rel_v1_6_4_title">Notas da Versão v1.6.4</string>
     <string name="rel_v1_6_3_title">Notas da Versão v1.6.3</string>
     <string name="rel_v1_6_2_title">Notas da Versão v1.6.2</string>

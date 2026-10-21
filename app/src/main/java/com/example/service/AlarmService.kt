@@ -332,7 +332,14 @@ class AlarmService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val timeStr = String.format("%02d:%02d", hour, minute)
+        val prefs = getSharedPreferences("alarm_settings", Context.MODE_PRIVATE)
+        val timeFormat = prefs.getString("time_format", "12H") ?: "12H"
+        val timeStr = if (timeFormat == "24H") {
+            String.format("%02d:%02d", hour, minute)
+        } else {
+            val dh = if (hour == 0) 12 else if (hour > 12) hour - 12 else hour
+            String.format("%02d:%02d %s", dh, minute, if (hour >= 12) "PM" else "AM")
+        }
         val displayLabel = label.ifEmpty { getString(R.string.ringing_default_label) }
         val notifTitle = if (isSnoozed) {
             getString(R.string.ringing_snoozed_notif_title, displayLabel)
@@ -341,7 +348,8 @@ class AlarmService : Service() {
         }
 
         val notifText = if (isSnoozed && snoozedAt > 0) {
-            val snoozedAtStr = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(snoozedAt))
+            val tfPattern = if (timeFormat == "24H") "HH:mm" else "hh:mm a"
+            val snoozedAtStr = SimpleDateFormat(tfPattern, Locale.getDefault()).format(Date(snoozedAt))
             getString(R.string.ringing_snoozed_notif_text, snoozedAtStr, snoozedDurationMinutes)
         } else {
             "Ringing since $timeStr"
@@ -586,8 +594,11 @@ class AlarmService : Service() {
     ) {
         createNotificationChannel()
 
-        val snoozedAtStr = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(snoozedAtMs))
-        val ringsAtStr = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(snoozeTargetMs))
+        val prefs = getSharedPreferences("alarm_settings", Context.MODE_PRIVATE)
+        val timeFormat = prefs.getString("time_format", "12H") ?: "12H"
+        val tfPattern = if (timeFormat == "24H") "HH:mm" else "hh:mm a"
+        val snoozedAtStr = SimpleDateFormat(tfPattern, Locale.getDefault()).format(Date(snoozedAtMs))
+        val ringsAtStr = SimpleDateFormat(tfPattern, Locale.getDefault()).format(Date(snoozeTargetMs))
         val displayLabel = label.ifEmpty { getString(R.string.ringing_default_label) }
 
         val contentIntent = Intent(this, MainActivity::class.java).apply {

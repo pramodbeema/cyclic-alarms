@@ -18,6 +18,7 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 
 ## Features
 
+- **Flexible Recurrence Cycles** — Daily (everyday or N-day interval), Weekly (weekdays), Monthly (e.g. 20th, 3rd Tuesday, or selected dates grid), and Yearly (e.g. 20th Oct, 3rd Tuesday of Oct, or selected months)
 - **Cyclic alarms** — repeat every N days from a start date (e.g. every 3 days, every 14 days)
 - **Weekly alarms** — pick any combination of weekdays
 - **Multiple Timers** — run up to 5 independent countdown timers simultaneously, each with its own label and progress bar
@@ -29,7 +30,7 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 - **Dark / Light / System themes** — with a brightness slider in Light mode to dial background from tinted grey to pure white
 - **Strict Lock Screen Security** — app ONLY displays over keyguard while actively ringing; dismiss/snooze immediately returns to lock screen
 - **4-Tab Navigation** — Alarms, Timer, Stopwatch, Settings
-- **12H / 24H Clock Toggle** — with capital AM/PM and full year on the home screen date
+- **12H / 24H Clock Consistency** — alarm times across the alarms list, Next Alarm pill, Add/Edit dialogs, sound previews, full-screen ringing, and notifications strictly follow your chosen clock format
 - **Per-Alarm Snooze Duration** — set snooze minutes per alarm (quick presets + custom input)
 - **First-launch Theme Prompt** — pick your theme on first install, with correct status bar contrast
 - **In-App Permissions Manager** — view and manage all critical permissions live in Settings
@@ -82,6 +83,11 @@ This app was built **100% using AI assistance** (Google Antigravity AI / Claude)
 I'm not a software developer. I'm just someone who needed a specific alarm app, couldn't find one that did exactly what I wanted, and used AI to build it. The ideas, requirements, and testing are mine — the code is the AI's.
 
 ---
+
+## What's new — v1.7.1
+
+- 🕒 **Comprehensive 12H / 24H Time Format Consistency** — all alarm times across dashboard alarm cards, next alarm header pill, edit dialogs, sound preview, full-screen ringing, and system notifications now strictly respect the 12-hour or 24-hour clock setting.
+- 🔄 **Flexible Recurrence Engine** — support for Daily (everyday or interval), Weekly, Monthly (repeat on the 20th, the 3rd Tuesday, or selected dates grid), and Yearly recurrence cycles (repeat on 20th October, the 3rd Tuesday of October, or the 20th of selected months).
 
 ## What's new — v1.7
 

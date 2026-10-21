@@ -105,8 +105,25 @@
     <string name="alarm_time_section">अलार्म का समय</string>
     <string name="alarm_label_optional">लेबल (वैकल्पिक)</string>
     <string name="alarm_label_placeholder">उदा. कार्य शिफ्ट</string>
+    <string name="tab_daily">दैनिक</string>
+    <string name="tab_weekly">साप्ताहिक</string>
+    <string name="tab_monthly">मासिक</string>
+    <string name="tab_yearly">वार्षिक</string>
     <string name="tab_cyclic_days">चक्रीय दिन</string>
     <string name="tab_weekly_days">साप्ताहिक दिन</string>
+    <string name="repeat_daily_everyday">हर दिन</string>
+    <string name="repeat_daily_interval">अंतराल (प्रत्येक N दिन)</string>
+    <string name="repeat_monthly_date">%s तारीख को</string>
+    <string name="repeat_monthly_day_of_week">%1$s %2$s को</string>
+    <string name="repeat_monthly_selected_dates">चयनित तिथियाँ</string>
+    <string name="repeat_yearly_date">%1$s %2$s को</string>
+    <string name="repeat_yearly_day_of_week">%3$s के %1$s %2$s को</string>
+    <string name="repeat_yearly_selected_months">चयनित महीनों की %s तारीख को</string>
+    <string name="base_date_label">आधार तिथि</string>
+    <string name="select_dates_hint">दोहराने के लिए महीने की तारीखें चुनें:</string>
+    <string name="select_months_hint">%s तारीख को दोहराने के लिए महीने चुनें:</string>
+    <string name="sched_monthly_prefix">मासिक</string>
+    <string name="sched_yearly_prefix">वार्षिक</string>
     <string name="cyclic_config_section">चक्रीय विन्यास</string>
     <string name="repeat_on_days_section">दिनों में दोहराएं</string>
     <string name="every_word">प्रत्येक</string>
@@ -179,8 +196,13 @@
     <string name="snooze_notif_big_text">%1$s पर %2$d मिनट के लिए स्नूज़ किया गया\n%3$s पर बजेगा</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_title">v1.7 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_7_1_title">v1.7.1 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_7_title">v1.7 संस्करण विवरण</string>
     <string name="rel_v1_6_5_title">v1.6.5 रिलीज़ नोट्स</string>
+
+    <!-- Release Notes Items v1.7.1 -->
+    <string name="rel_v1_7_1_item1">12-घंटे / 24-घंटे समय प्रारूप संगति — अलार्म सूची, डायलॉग, पूर्वावलोकन और सूचनाओं में सभी अलार्म समय आपके चुने हुए प्रारूप का कड़ाई से पालन करते हैं</string>
+    <string name="rel_v1_7_1_item2">लचीला दोहराव इंजन — दैनिक, साप्ताहिक, मासिक (उदा. 20 तारीख, तीसरा मंगलवार, चयनित तारीखें) और वार्षिक चक्र (उदा. 20 अक्टूबर, अक्टूबर का तीसरा मंगलवार, चयनित महीने) का समर्थन</string>
     <string name="rel_v1_6_4_title">v1.6.4 रिलीज़ नोट्स</string>
     <string name="rel_v1_6_3_title">v1.6.3 रिलीज़ नोट्स</string>
     <string name="rel_v1_6_2_title">v1.6.2 रिलीज़ नोट्स</string>

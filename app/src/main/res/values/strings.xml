@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permissions &amp; App Access</string>
     <string name="setting_permissions_subtitle">Manage system access required for reliable alarm ringing and lock-screen popups</string>
     <string name="about_cyclic_alarms">About Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.7 • Release notes, support &amp; creator info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.7.1 • Release notes, support &amp; creator info</string>
     <string name="tinted">Tinted</string>
     <string name="pure_white">Pure White</string>
 
@@ -105,8 +105,26 @@
     <string name="alarm_time_section">Alarm Time</string>
     <string name="alarm_label_optional">Label (optional)</string>
     <string name="alarm_label_placeholder">e.g. Work Shift</string>
+    <!-- Recurrence Frequency Tabs & Options -->
+    <string name="tab_daily">Daily</string>
+    <string name="tab_weekly">Weekly</string>
+    <string name="tab_monthly">Monthly</string>
+    <string name="tab_yearly">Yearly</string>
     <string name="tab_cyclic_days">Cyclic Days</string>
     <string name="tab_weekly_days">Weekly Days</string>
+    <string name="repeat_daily_everyday">Every day</string>
+    <string name="repeat_daily_interval">Interval (Every N days)</string>
+    <string name="repeat_monthly_date">On the %s</string>
+    <string name="repeat_monthly_day_of_week">On the %1$s %2$s</string>
+    <string name="repeat_monthly_selected_dates">Selected dates</string>
+    <string name="repeat_yearly_date">On %1$s %2$s</string>
+    <string name="repeat_yearly_day_of_week">On the %1$s %2$s of %3$s</string>
+    <string name="repeat_yearly_selected_months">On the %s of selected months</string>
+    <string name="base_date_label">Base Date</string>
+    <string name="select_dates_hint">Select dates of month to repeat:</string>
+    <string name="select_months_hint">Select months to repeat on day %s:</string>
+    <string name="sched_monthly_prefix">MONTHLY</string>
+    <string name="sched_yearly_prefix">YEARLY</string>
     <string name="cyclic_config_section">Cyclic Configuration</string>
     <string name="repeat_on_days_section">Repeat on Days</string>
     <string name="every_word">Every</string>
@@ -179,7 +197,8 @@
     <string name="snooze_notif_big_text">Snoozed at %1$s for %2$d min\nRings at %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_title">v1.7 (Current Release)</string>
+    <string name="rel_v1_7_1_title">v1.7.1 (Current Release)</string>
+    <string name="rel_v1_7_title">v1.7 Release Notes</string>
     <string name="rel_v1_6_5_title">v1.6.5 Release Notes</string>
     <string name="rel_v1_6_4_title">v1.6.4 Release Notes</string>
     <string name="rel_v1_6_3_title">v1.6.3 Release Notes</string>
@@ -192,6 +211,10 @@
     <string name="rel_v1_2_title">v1.2 Release Notes</string>
     <string name="rel_v1_1_title">v1.1 Release Notes</string>
     <string name="rel_v1_0_title">v1.0 Initial Release</string>
+
+    <!-- Release Notes Items v1.7.1 -->
+    <string name="rel_v1_7_1_item1">12H / 24H Alarm Format Consistency — alarm times across dashboard list, dialogs, preview, and notifications now strictly follow your chosen clock format</string>
+    <string name="rel_v1_7_1_item2">Flexible Recurrence Engine — support for Daily, Weekly, Monthly (e.g. 20th, 3rd Tuesday, selected dates), and Yearly cycles (e.g. 20th Oct, 3rd Tuesday of Oct, selected months)</string>
 
     <!-- Release Notes Items v1.7 -->
     <string name="rel_v1_7_item1">Live Snooze Notification — displays live remaining countdown, exact time snoozed, and snooze duration with instant dismiss</string>

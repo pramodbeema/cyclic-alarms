@@ -93,79 +93,312 @@ class AlarmScheduler(private val context: Context) {
     companion object {
         fun calculateNextTriggerTime(alarm: Alarm): Long {
             val now = System.currentTimeMillis()
+            return when (alarm.alarmType) {
+                "DAILY" -> calculateDailyNextTrigger(alarm, now)
+                "CYCLIC" -> calculateCyclicNextTrigger(alarm, now)
+                "WEEKLY" -> calculateWeeklyNextTrigger(alarm, now)
+                "MONTHLY" -> calculateMonthlyNextTrigger(alarm, now)
+                "YEARLY" -> calculateYearlyNextTrigger(alarm, now)
+                else -> calculateWeeklyNextTrigger(alarm, now)
+            }
+        }
+
+        private fun calculateDailyNextTrigger(alarm: Alarm, now: Long): Long {
+            if (alarm.cyclicIntervalDays > 1) {
+                return calculateCyclicNextTrigger(alarm, now)
+            }
+            val targetCal = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, alarm.hour)
+                set(Calendar.MINUTE, alarm.minute)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            if (targetCal.timeInMillis <= now) {
+                targetCal.add(Calendar.DAY_OF_YEAR, 1)
+            }
+            return targetCal.timeInMillis
+        }
+
+        private fun calculateCyclicNextTrigger(alarm: Alarm, now: Long): Long {
+            val interval = if (alarm.cyclicIntervalDays <= 0) 1 else alarm.cyclicIntervalDays
+            val startCal = Calendar.getInstance().apply {
+                timeInMillis = alarm.cyclicStartDate
+                set(Calendar.HOUR_OF_DAY, alarm.hour)
+                set(Calendar.MINUTE, alarm.minute)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
             
-            if (alarm.alarmType == "CYCLIC") {
-                val startCal = Calendar.getInstance().apply {
-                    timeInMillis = alarm.cyclicStartDate
+            if (startCal.timeInMillis > now) {
+                return startCal.timeInMillis
+            }
+            
+            val diffMs = now - startCal.timeInMillis
+            val intervalMs = interval * 24L * 60 * 60 * 1000
+            val numIntervals = (diffMs / intervalMs)
+            startCal.add(Calendar.DAY_OF_YEAR, (numIntervals * interval).toInt())
+            
+            while (startCal.timeInMillis <= now) {
+                startCal.add(Calendar.DAY_OF_YEAR, interval)
+            }
+            return startCal.timeInMillis
+        }
+
+        private fun calculateWeeklyNextTrigger(alarm: Alarm, now: Long): Long {
+            val daysSet = alarm.getWeeklyDaysSet()
+            
+            if (daysSet.isEmpty()) {
+                // One-off alarm
+                val targetCal = Calendar.getInstance().apply {
                     set(Calendar.HOUR_OF_DAY, alarm.hour)
                     set(Calendar.MINUTE, alarm.minute)
                     set(Calendar.SECOND, 0)
                     set(Calendar.MILLISECOND, 0)
                 }
-                
-                if (startCal.timeInMillis > now) {
-                    return startCal.timeInMillis
+                if (targetCal.timeInMillis <= now) {
+                    targetCal.add(Calendar.DAY_OF_YEAR, 1)
                 }
-                
-                val diffMs = now - startCal.timeInMillis
-                val intervalMs = alarm.cyclicIntervalDays * 24L * 60 * 60 * 1000
-                val numIntervals = (diffMs / intervalMs) + 1
-                startCal.add(Calendar.DAY_OF_YEAR, (numIntervals * alarm.cyclicIntervalDays).toInt())
-                
-                while (startCal.timeInMillis <= now) {
-                    startCal.add(Calendar.DAY_OF_YEAR, alarm.cyclicIntervalDays)
-                }
-                return startCal.timeInMillis
+                return targetCal.timeInMillis
             } else {
-                // WEEKLY RECURRING OR ONE-OFF
-                val daysSet = alarm.getWeeklyDaysSet()
+                // Find the next active day of the week
+                val calActiveDays = daysSet.map { mapToCalendarDay(it) }.toSet()
+                val tempCal = Calendar.getInstance()
                 
-                if (daysSet.isEmpty()) {
-                    // One-off alarm
-                    val targetCal = Calendar.getInstance().apply {
-                        set(Calendar.HOUR_OF_DAY, alarm.hour)
-                        set(Calendar.MINUTE, alarm.minute)
-                        set(Calendar.SECOND, 0)
-                        set(Calendar.MILLISECOND, 0)
-                    }
-                    if (targetCal.timeInMillis <= now) {
-                        targetCal.add(Calendar.DAY_OF_YEAR, 1)
-                    }
-                    return targetCal.timeInMillis
-                } else {
-                    // Find the next active day of the week
-                    // Map daysSet from ISO (1=Mon..7=Sun) to Calendar days
-                    val calActiveDays = daysSet.map { mapToCalendarDay(it) }.toSet()
+                for (i in 0..7) {
+                    tempCal.timeInMillis = now + i * 24L * 60 * 60 * 1000
+                    tempCal.set(Calendar.HOUR_OF_DAY, alarm.hour)
+                    tempCal.set(Calendar.MINUTE, alarm.minute)
+                    tempCal.set(Calendar.SECOND, 0)
+                    tempCal.set(Calendar.MILLISECOND, 0)
                     
-                    val tempCal = Calendar.getInstance()
-                    
-                    // We check up to 7 days into the future
-                    for (i in 0..7) {
-                        tempCal.timeInMillis = now + i * 24L * 60 * 60 * 1000
-                        tempCal.set(Calendar.HOUR_OF_DAY, alarm.hour)
-                        tempCal.set(Calendar.MINUTE, alarm.minute)
-                        tempCal.set(Calendar.SECOND, 0)
-                        tempCal.set(Calendar.MILLISECOND, 0)
-                        
-                        val dayOfWeek = tempCal.get(Calendar.DAY_OF_WEEK)
-                        if (calActiveDays.contains(dayOfWeek)) {
-                            if (tempCal.timeInMillis > now) {
-                                return tempCal.timeInMillis
-                            }
+                    val dayOfWeek = tempCal.get(Calendar.DAY_OF_WEEK)
+                    if (calActiveDays.contains(dayOfWeek)) {
+                        if (tempCal.timeInMillis > now) {
+                            return tempCal.timeInMillis
                         }
                     }
-                    
-                    // Fallback
-                    val fallbackCal = Calendar.getInstance().apply {
-                        set(Calendar.HOUR_OF_DAY, alarm.hour)
-                        set(Calendar.MINUTE, alarm.minute)
-                        set(Calendar.SECOND, 0)
-                        set(Calendar.MILLISECOND, 0)
+                }
+                
+                val fallbackCal = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, alarm.hour)
+                    set(Calendar.MINUTE, alarm.minute)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                if (fallbackCal.timeInMillis <= now) {
+                    fallbackCal.add(Calendar.DAY_OF_YEAR, 1)
+                }
+                return fallbackCal.timeInMillis
+            }
+        }
+
+        private fun calculateMonthlyNextTrigger(alarm: Alarm, now: Long): Long {
+            val baseCal = Calendar.getInstance().apply { timeInMillis = alarm.cyclicStartDate }
+
+            return when (alarm.recurrenceSubtype) {
+                "DAY_OF_WEEK" -> {
+                    // e.g. 3rd Tuesday of every month
+                    val ordinal = if (alarm.monthlyDayOrdinal != 0) alarm.monthlyDayOrdinal
+                    else ((baseCal.get(Calendar.DAY_OF_MONTH) - 1) / 7 + 1)
+                    val dayOfWeek = if (alarm.monthlyDayOfWeek != 0) alarm.monthlyDayOfWeek
+                    else baseCal.get(Calendar.DAY_OF_WEEK)
+
+                    for (m in 0..120) {
+                        val refCal = Calendar.getInstance().apply {
+                            timeInMillis = now
+                            add(Calendar.MONTH, m)
+                        }
+                        val targetMonth = refCal.get(Calendar.MONTH)
+                        val targetYear = refCal.get(Calendar.YEAR)
+
+                        val testCal = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, targetYear)
+                            set(Calendar.MONTH, targetMonth)
+                            set(Calendar.DAY_OF_MONTH, 1)
+                            set(Calendar.HOUR_OF_DAY, alarm.hour)
+                            set(Calendar.MINUTE, alarm.minute)
+                            set(Calendar.SECOND, 0)
+                            set(Calendar.MILLISECOND, 0)
+                        }
+                        val firstDow = testCal.get(Calendar.DAY_OF_WEEK)
+                        val daysUntilFirst = (dayOfWeek - firstDow + 7) % 7
+                        testCal.add(Calendar.DAY_OF_MONTH, daysUntilFirst)
+                        if (ordinal > 1) {
+                            testCal.add(Calendar.DAY_OF_MONTH, (ordinal - 1) * 7)
+                        }
+                        if (testCal.get(Calendar.MONTH) == targetMonth && testCal.timeInMillis > now) {
+                            return testCal.timeInMillis
+                        }
                     }
-                    if (fallbackCal.timeInMillis <= now) {
-                        fallbackCal.add(Calendar.DAY_OF_YEAR, 1)
+                    now + 24 * 60 * 60 * 1000L
+                }
+                "SELECTED_DATES" -> {
+                    // e.g. 5th, 20th, 25th of every month
+                    val dates = alarm.getMonthlyDatesSet().sorted()
+                    val effectiveDates = if (dates.isEmpty()) {
+                        listOf(baseCal.get(Calendar.DAY_OF_MONTH))
+                    } else dates
+
+                    for (m in 0..120) {
+                        val refCal = Calendar.getInstance().apply {
+                            timeInMillis = now
+                            add(Calendar.MONTH, m)
+                        }
+                        val targetMonth = refCal.get(Calendar.MONTH)
+                        val targetYear = refCal.get(Calendar.YEAR)
+                        val maxDay = refCal.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+                        var earliestInMonth = Long.MAX_VALUE
+                        for (d in effectiveDates) {
+                            if (d <= maxDay) {
+                                val testCal = Calendar.getInstance().apply {
+                                    set(Calendar.YEAR, targetYear)
+                                    set(Calendar.MONTH, targetMonth)
+                                    set(Calendar.DAY_OF_MONTH, d)
+                                    set(Calendar.HOUR_OF_DAY, alarm.hour)
+                                    set(Calendar.MINUTE, alarm.minute)
+                                    set(Calendar.SECOND, 0)
+                                    set(Calendar.MILLISECOND, 0)
+                                }
+                                if (testCal.timeInMillis > now && testCal.timeInMillis < earliestInMonth) {
+                                    earliestInMonth = testCal.timeInMillis
+                                }
+                            }
+                        }
+                        if (earliestInMonth != Long.MAX_VALUE) {
+                            return earliestInMonth
+                        }
                     }
-                    return fallbackCal.timeInMillis
+                    now + 24 * 60 * 60 * 1000L
+                }
+                else -> {
+                    // "DATE" - e.g. on the 20th of every month
+                    val targetDay = alarm.monthlyDates.split(",").firstOrNull()?.trim()?.toIntOrNull()
+                        ?: baseCal.get(Calendar.DAY_OF_MONTH)
+
+                    for (m in 0..120) {
+                        val testCal = Calendar.getInstance().apply {
+                            timeInMillis = now
+                            add(Calendar.MONTH, m)
+                            val maxDay = getActualMaximum(Calendar.DAY_OF_MONTH)
+                            set(Calendar.DAY_OF_MONTH, targetDay.coerceAtMost(maxDay))
+                            set(Calendar.HOUR_OF_DAY, alarm.hour)
+                            set(Calendar.MINUTE, alarm.minute)
+                            set(Calendar.SECOND, 0)
+                            set(Calendar.MILLISECOND, 0)
+                        }
+                        if (testCal.timeInMillis > now) {
+                            return testCal.timeInMillis
+                        }
+                    }
+                    now + 24 * 60 * 60 * 1000L
+                }
+            }
+        }
+
+        private fun calculateYearlyNextTrigger(alarm: Alarm, now: Long): Long {
+            val baseCal = Calendar.getInstance().apply { timeInMillis = alarm.cyclicStartDate }
+
+            return when (alarm.recurrenceSubtype) {
+                "DAY_OF_WEEK" -> {
+                    // e.g. 3rd Tuesday of October
+                    val targetMonth = baseCal.get(Calendar.MONTH)
+                    val ordinal = if (alarm.monthlyDayOrdinal != 0) alarm.monthlyDayOrdinal
+                    else ((baseCal.get(Calendar.DAY_OF_MONTH) - 1) / 7 + 1)
+                    val dayOfWeek = if (alarm.monthlyDayOfWeek != 0) alarm.monthlyDayOfWeek
+                    else baseCal.get(Calendar.DAY_OF_WEEK)
+
+                    for (y in 0..10) {
+                        val refCal = Calendar.getInstance().apply {
+                            timeInMillis = now
+                            add(Calendar.YEAR, y)
+                        }
+                        val targetYear = refCal.get(Calendar.YEAR)
+                        val testCal = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, targetYear)
+                            set(Calendar.MONTH, targetMonth)
+                            set(Calendar.DAY_OF_MONTH, 1)
+                            set(Calendar.HOUR_OF_DAY, alarm.hour)
+                            set(Calendar.MINUTE, alarm.minute)
+                            set(Calendar.SECOND, 0)
+                            set(Calendar.MILLISECOND, 0)
+                        }
+                        val firstDow = testCal.get(Calendar.DAY_OF_WEEK)
+                        val daysUntilFirst = (dayOfWeek - firstDow + 7) % 7
+                        testCal.add(Calendar.DAY_OF_MONTH, daysUntilFirst)
+                        if (ordinal > 1) {
+                            testCal.add(Calendar.DAY_OF_MONTH, (ordinal - 1) * 7)
+                        }
+                        if (testCal.get(Calendar.MONTH) == targetMonth && testCal.timeInMillis > now) {
+                            return testCal.timeInMillis
+                        }
+                    }
+                    now + 24 * 60 * 60 * 1000L
+                }
+                "SELECTED_MONTHS" -> {
+                    // e.g. 20th of selected months
+                    val targetDay = alarm.monthlyDates.split(",").firstOrNull()?.trim()?.toIntOrNull()
+                        ?: baseCal.get(Calendar.DAY_OF_MONTH)
+                    val months = alarm.getYearlyMonthsSet().sorted()
+                    val targetMonths = if (months.isEmpty()) listOf(baseCal.get(Calendar.MONTH) + 1) else months
+
+                    for (y in 0..10) {
+                        val refCal = Calendar.getInstance().apply {
+                            timeInMillis = now
+                            add(Calendar.YEAR, y)
+                        }
+                        val targetYear = refCal.get(Calendar.YEAR)
+
+                        var earliestInYear = Long.MAX_VALUE
+                        for (m in targetMonths) {
+                            val mZero = m - 1
+                            val testCal = Calendar.getInstance().apply {
+                                set(Calendar.YEAR, targetYear)
+                                set(Calendar.MONTH, mZero)
+                                val maxDay = getActualMaximum(Calendar.DAY_OF_MONTH)
+                                set(Calendar.DAY_OF_MONTH, targetDay.coerceAtMost(maxDay))
+                                set(Calendar.HOUR_OF_DAY, alarm.hour)
+                                set(Calendar.MINUTE, alarm.minute)
+                                set(Calendar.SECOND, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }
+                            if (testCal.timeInMillis > now && testCal.timeInMillis < earliestInYear) {
+                                earliestInYear = testCal.timeInMillis
+                            }
+                        }
+                        if (earliestInYear != Long.MAX_VALUE) {
+                            return earliestInYear
+                        }
+                    }
+                    now + 24 * 60 * 60 * 1000L
+                }
+                else -> {
+                    // "DATE" - e.g. 20th October
+                    val targetMonth = baseCal.get(Calendar.MONTH)
+                    val targetDay = alarm.monthlyDates.split(",").firstOrNull()?.trim()?.toIntOrNull()
+                        ?: baseCal.get(Calendar.DAY_OF_MONTH)
+
+                    for (y in 0..10) {
+                        val refCal = Calendar.getInstance().apply {
+                            timeInMillis = now
+                            add(Calendar.YEAR, y)
+                        }
+                        val targetYear = refCal.get(Calendar.YEAR)
+                        val testCal = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, targetYear)
+                            set(Calendar.MONTH, targetMonth)
+                            val maxDay = getActualMaximum(Calendar.DAY_OF_MONTH)
+                            set(Calendar.DAY_OF_MONTH, targetDay.coerceAtMost(maxDay))
+                            set(Calendar.HOUR_OF_DAY, alarm.hour)
+                            set(Calendar.MINUTE, alarm.minute)
+                            set(Calendar.SECOND, 0)
+                            set(Calendar.MILLISECOND, 0)
+                        }
+                        if (testCal.timeInMillis > now) {
+                            return testCal.timeInMillis
+                        }
+                    }
+                    now + 24 * 60 * 60 * 1000L
                 }
             }
         }

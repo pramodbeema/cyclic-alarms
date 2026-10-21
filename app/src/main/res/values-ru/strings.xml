@@ -105,8 +105,25 @@
     <string name="alarm_time_section">Время сигнала</string>
     <string name="alarm_label_optional">Название (необязательно)</string>
     <string name="alarm_label_placeholder">напр., Рабочая смена</string>
+    <string name="tab_daily">Ежедневно</string>
+    <string name="tab_weekly">Еженедельно</string>
+    <string name="tab_monthly">Ежемесячно</string>
+    <string name="tab_yearly">Ежегодно</string>
     <string name="tab_cyclic_days">Циклические дни</string>
     <string name="tab_weekly_days">Дни недели</string>
+    <string name="repeat_daily_everyday">Каждый день</string>
+    <string name="repeat_daily_interval">Интервал (Каждые N дней)</string>
+    <string name="repeat_monthly_date">%s числа</string>
+    <string name="repeat_monthly_day_of_week">Каждый %1$s %2$s</string>
+    <string name="repeat_monthly_selected_dates">Выбранные даты</string>
+    <string name="repeat_yearly_date">%1$s %2$s</string>
+    <string name="repeat_yearly_day_of_week">%1$s %2$s месяца %3$s</string>
+    <string name="repeat_yearly_selected_months">%s числа выбранных месяцев</string>
+    <string name="base_date_label">Базовая дата</string>
+    <string name="select_dates_hint">Выберите числа месяца для повторения:</string>
+    <string name="select_months_hint">Выберите месяцы для повторения %s числа:</string>
+    <string name="sched_monthly_prefix">ЕЖЕМЕСЯЧНО</string>
+    <string name="sched_yearly_prefix">ЕЖЕГОДНО</string>
     <string name="cyclic_config_section">Настройка цикла</string>
     <string name="repeat_on_days_section">Повторять по дням</string>
     <string name="every_word">Каждые</string>
@@ -179,8 +196,13 @@
     <string name="snooze_notif_big_text">Отложен в %1$s на %2$d мин\nЗазвонит в %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_title">v1.7 (Текущая версия)</string>
+    <string name="rel_v1_7_1_title">v1.7.1 (Текущая версия)</string>
+    <string name="rel_v1_7_title">Примечания к версии v1.7</string>
     <string name="rel_v1_6_5_title">Примечания к версии v1.6.5</string>
+
+    <!-- Release Notes Items v1.7.1 -->
+    <string name="rel_v1_7_1_item1">Согласованность формата 12ч / 24ч — время будильников в списке, диалогах, предпросмотре и уведомлениях строго следует выбранному формату</string>
+    <string name="rel_v1_7_1_item2">Гибкий механизм повторения — поддержка ежедневных, еженедельных, ежемесячных (например, 20-го числа, 3-й вторник, выбранные числа) и ежегодных циклов (например, 20 октября, 3-й вторник октября, выбранные месяцы)</string>
     <string name="rel_v1_6_4_title">Примечания к версии v1.6.4</string>
     <string name="rel_v1_6_3_title">Примечания к версии v1.6.3</string>
     <string name="rel_v1_6_2_title">Примечания к версии v1.6.2</string>

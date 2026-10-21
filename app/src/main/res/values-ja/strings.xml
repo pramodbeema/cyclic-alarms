@@ -105,8 +105,25 @@
     <string name="alarm_time_section">アラーム時刻</string>
     <string name="alarm_label_optional">ラベル（任意）</string>
     <string name="alarm_label_placeholder">例：早番シフト</string>
+    <string name="tab_daily">毎日</string>
+    <string name="tab_weekly">毎週</string>
+    <string name="tab_monthly">毎月</string>
+    <string name="tab_yearly">毎年</string>
     <string name="tab_cyclic_days">周期日数</string>
     <string name="tab_weekly_days">曜日指定</string>
+    <string name="repeat_daily_everyday">毎日</string>
+    <string name="repeat_daily_interval">間隔（N日ごと）</string>
+    <string name="repeat_monthly_date">毎月 %s 日</string>
+    <string name="repeat_monthly_day_of_week">毎月 %1$s %2$s</string>
+    <string name="repeat_monthly_selected_dates">指定した日付</string>
+    <string name="repeat_yearly_date">毎年 %2$s %1$s 日</string>
+    <string name="repeat_yearly_day_of_week">毎年 %3$s の %1$s %2$s</string>
+    <string name="repeat_yearly_selected_months">指定月の %s 日</string>
+    <string name="base_date_label">基準日</string>
+    <string name="select_dates_hint">繰り返す日を選択：</string>
+    <string name="select_months_hint">%s 日に繰り返す月を選択：</string>
+    <string name="sched_monthly_prefix">毎月</string>
+    <string name="sched_yearly_prefix">毎年</string>
     <string name="cyclic_config_section">周期設定</string>
     <string name="repeat_on_days_section">繰り返す曜日</string>
     <string name="every_word">毎</string>
@@ -179,8 +196,13 @@
     <string name="snooze_notif_big_text">%1$s に %2$d 分間スヌーズ\n%3$s に鳴動</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_title">v1.7 (現在のバージョン)</string>
+    <string name="rel_v1_7_1_title">v1.7.1（現在のバージョン）</string>
+    <string name="rel_v1_7_title">v1.7 更新情報</string>
     <string name="rel_v1_6_5_title">v1.6.5 リリースノート</string>
+
+    <!-- Release Notes Items v1.7.1 -->
+    <string name="rel_v1_7_1_item1">12時間／24時間表示の完全統一 — アラーム一覧、設定ダイアログ、試聴プレビュー、通知のすべてが選択した時間形式に厳格に従います</string>
+    <string name="rel_v1_7_1_item2">柔軟な繰り返し周期エンジン — 毎日、毎週、毎月（例：20日、第3火曜日、指定日）、毎年（例：10月20日、10月第3火曜日、指定月）のアラーム設定に対応</string>
     <string name="rel_v1_6_4_title">v1.6.4 リリースノート</string>
     <string name="rel_v1_6_3_title">v1.6.3 リリースノート</string>
     <string name="rel_v1_6_2_title">v1.6.2 リリースノート</string>

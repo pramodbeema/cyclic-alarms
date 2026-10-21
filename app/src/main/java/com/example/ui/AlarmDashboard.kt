@@ -193,7 +193,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
         onDispose { dashLifecycle.removeObserver(observer) }
     }
 
-    val nextAlarmText = remember(alarms) {
+    val nextAlarmText = remember(alarms, timeFormat) {
         val enabled = alarms.filter { it.isEnabled }
         if (enabled.isEmpty()) return@remember "No active alarms"
         val next = enabled.map { it to AlarmScheduler.calculateNextTriggerTime(it) }.minByOrNull { it.second }
@@ -201,12 +201,13 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             val diff = it.second - System.currentTimeMillis()
             if (diff > 0) {
                 val h = diff / 3_600_000; val m = (diff / 60_000) % 60
-                "Next: ${SimpleDateFormat("E hh:mm a", Locale.getDefault()).format(Date(it.second))}  (${h}h ${m}m)"
+                val pattern = if (timeFormat == "24H") "E HH:mm" else "E hh:mm a"
+                "Next: ${SimpleDateFormat(pattern, Locale.getDefault()).format(Date(it.second))}  (${h}h ${m}m)"
             } else "Calculating…"
         } ?: "No active alarms"
     }
 
-    if (activeAlarm != null) { RingingScreen(activeAlarm = activeAlarm!!); return }
+    if (activeAlarm != null) { RingingScreen(activeAlarm = activeAlarm!!, timeFormat = timeFormat); return }
 
     // ── FIRST LAUNCH SETUP DIALOG (Language & Theme Selection) ──
     // Displayed immediately on fresh install before any permission blocks
@@ -547,7 +548,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                 val nextPrefix = stringResource(R.string.next_alarm_prefix)
                 val noActiveStr = stringResource(R.string.no_active_alarms)
                 val calcStr = stringResource(R.string.calculating)
-                val nextAlarmDisplay = remember(alarms, nextPrefix, noActiveStr, calcStr) {
+                val nextAlarmDisplay = remember(alarms, nextPrefix, noActiveStr, calcStr, timeFormat) {
                     val enabled = alarms.filter { it.isEnabled }
                     if (enabled.isEmpty()) return@remember noActiveStr
                     val next = enabled.map { it to AlarmScheduler.calculateNextTriggerTime(it) }.minByOrNull { it.second }
@@ -555,7 +556,8 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         val diff = it.second - System.currentTimeMillis()
                         if (diff > 0) {
                             val h = diff / 3_600_000; val m = (diff / 60_000) % 60
-                            "$nextPrefix ${SimpleDateFormat("E hh:mm a", Locale.getDefault()).format(Date(it.second))}  (${h}h ${m}m)"
+                            val tf = if (timeFormat == "24H") "E HH:mm" else "E hh:mm a"
+                            "$nextPrefix ${SimpleDateFormat(tf, Locale.getDefault()).format(Date(it.second))}  (${h}h ${m}m)"
                         } else calcStr
                     } ?: noActiveStr
                 }
@@ -649,6 +651,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                                     val isSel = selectedIds.contains(alarm.id)
                                     AlarmCard(
                                         alarm = alarm, isSelected = isSel, isSelectionMode = selectionMode,
+                                        timeFormat = timeFormat,
                                         onToggle = { if (!selectionMode) viewModel.toggleAlarm(alarm) },
                                         onEdit = { editTarget = alarm; showAddEdit = true },
                                         onDelete = { viewModel.deleteAlarm(alarm) },
@@ -685,6 +688,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     if (showAddEdit) {
         AlarmAddEditDialog(
             alarm = editTarget,
+            timeFormat = timeFormat,
             lastCustomTrackUri = if (editTarget == null) lastCustomTrackUri else "",
             onDismiss = { viewModel.stopPreview(); showAddEdit = false },
             onSave = { a -> viewModel.stopPreview(); if (editTarget == null) viewModel.addAlarm(a) else viewModel.updateAlarm(a); showAddEdit = false },
@@ -721,7 +725,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         EmptyStateView(Icons.AutoMirrored.Filled.List, stringResource(R.string.no_history_title), stringResource(R.string.no_history_desc))
                     } else {
                         LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxSize()) {
-                            items(logs, key = { it.id }) { LogItem(it) }
+                            items(logs, key = { it.id }) { LogItem(it, timeFormat) }
                         }
                     }
                 }
@@ -749,44 +753,190 @@ private fun BottomTab(label: String, icon: ImageVector, selected: Boolean, onCli
 }
 
 // ════════════════════════════════════════════════════════
+//  RECURRENCE HELPERS
+// ════════════════════════════════════════════════════════
+private fun getOrdinalSuffix(n: Int): String {
+    return when {
+        n % 100 in 11..13 -> "${n}th"
+        n % 10 == 1 -> "${n}st"
+        n % 10 == 2 -> "${n}nd"
+        n % 10 == 3 -> "${n}rd"
+        else -> "${n}th"
+    }
+}
+
+private fun getOrdinalWord(ord: Int): String {
+    return when (ord) {
+        1 -> "1st"
+        2 -> "2nd"
+        3 -> "3rd"
+        4 -> "4th"
+        5 -> "5th"
+        -1 -> "Last"
+        else -> "${ord}th"
+    }
+}
+
+private fun getWeekdayName(dayOfWeek: Int): String {
+    return when (dayOfWeek) {
+        Calendar.MONDAY -> "Monday"
+        Calendar.TUESDAY -> "Tuesday"
+        Calendar.WEDNESDAY -> "Wednesday"
+        Calendar.THURSDAY -> "Thursday"
+        Calendar.FRIDAY -> "Friday"
+        Calendar.SATURDAY -> "Saturday"
+        Calendar.SUNDAY -> "Sunday"
+        else -> "Day"
+    }
+}
+
+private fun getWeekdayShortName(dayOfWeek: Int): String {
+    return when (dayOfWeek) {
+        Calendar.MONDAY -> "Mon"
+        Calendar.TUESDAY -> "Tue"
+        Calendar.WEDNESDAY -> "Wed"
+        Calendar.THURSDAY -> "Thu"
+        Calendar.FRIDAY -> "Fri"
+        Calendar.SATURDAY -> "Sat"
+        Calendar.SUNDAY -> "Sun"
+        else -> "Day"
+    }
+}
+
+private val monthNames = listOf(
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+)
+
+private val monthShortNames = listOf(
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+)
+
+@Composable
+private fun RecurrenceOptionCard(
+    title: String,
+    subtitle: String,
+    selected: Boolean,
+    accentColor: Color,
+    onClick: () -> Unit
+) {
+    val c = LocalAppColors.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .background(if (selected) accentColor.copy(alpha = 0.12f) else c.surfaceVariant)
+            .border(BorderStroke(1.dp, if (selected) accentColor else c.outlineColor), RoundedCornerShape(10.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = onClick,
+            colors = RadioButtonDefaults.colors(selectedColor = accentColor, unselectedColor = c.textDisabled)
+        )
+        Spacer(Modifier.width(8.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = if (selected) c.textPrimary else c.textSecondary)
+            if (subtitle.isNotEmpty()) {
+                Spacer(Modifier.height(2.dp))
+                Text(subtitle, fontSize = 11.sp, color = c.textDisabled)
+            }
+        }
+    }
+}
+
+// ════════════════════════════════════════════════════════
 //  ALARM CARD
 // ════════════════════════════════════════════════════════
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun AlarmCard(
     alarm: Alarm, isSelected: Boolean, isSelectionMode: Boolean,
+    timeFormat: String = "12H",
     onToggle: () -> Unit, onEdit: () -> Unit, onDelete: () -> Unit,
     onPlayPreview: () -> Unit, onLongPress: () -> Unit, onSelectToggle: () -> Unit
 ) {
-    val isCyclic   = alarm.alarmType != "WEEKLY"
+    val isCyclic   = alarm.alarmType == "CYCLIC" || alarm.alarmType == "DAILY"
+    val isMonthly  = alarm.alarmType == "MONTHLY"
+    val isYearly   = alarm.alarmType == "YEARLY"
     val c          = LocalAppColors.current
-    val cardBg     = if (isCyclic) c.cyclicCardBg else c.weeklyCardBg
-    val cardBorder = if (isCyclic) c.cyclicCardBorder else c.weeklyCardBorder
-    val accent     = if (isCyclic) CyclicAccent else WeeklyAccent
-    val timeCol    = if (isCyclic) c.cyclicTimeColor else c.weeklyTimeColor
+    val cardBg     = when { isYearly -> c.surfaceColor; isMonthly -> c.surfaceColor; isCyclic -> c.cyclicCardBg; else -> c.weeklyCardBg }
+    val cardBorder = when { isYearly -> c.outlineColor; isMonthly -> c.outlineColor; isCyclic -> c.cyclicCardBorder; else -> c.weeklyCardBorder }
+    val accent     = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isCyclic -> CyclicAccent; else -> WeeklyAccent }
+    val timeCol    = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isCyclic -> c.cyclicTimeColor; else -> c.weeklyTimeColor }
     val alpha      = if (alarm.isEnabled) 1f else 0.4f
 
-    val displayHour = when { alarm.hour == 0 -> 12; alarm.hour > 12 -> alarm.hour - 12; else -> alarm.hour }
-    val ampm    = if (alarm.hour >= 12) "PM" else "AM"
-    val timeStr = String.format("%02d:%02d", displayHour, alarm.minute)
+    val is24H       = timeFormat == "24H"
+    val displayHour = if (is24H) alarm.hour else when { alarm.hour == 0 -> 12; alarm.hour > 12 -> alarm.hour - 12; else -> alarm.hour }
+    val ampm        = if (is24H) "" else if (alarm.hour >= 12) "PM" else "AM"
+    val timeStr     = String.format("%02d:%02d", displayHour, alarm.minute)
 
-    val headerText = if (isCyclic) stringResource(R.string.sched_cyclic_prefix, alarm.cyclicIntervalDays)
-    else {
-        val d = alarm.getWeeklyDaysSet()
-        val mo = stringResource(R.string.day_mo)
-        val tu = stringResource(R.string.day_tu)
-        val we = stringResource(R.string.day_we)
-        val th = stringResource(R.string.day_th)
-        val fr = stringResource(R.string.day_fr)
-        val sa = stringResource(R.string.day_sa)
-        val su = stringResource(R.string.day_su)
-        when {
-            d.isEmpty() -> stringResource(R.string.sched_one_off)
-            d.size == 7 -> stringResource(R.string.sched_daily)
-            d.size == 5 && !d.contains(6) && !d.contains(7) -> stringResource(R.string.sched_mon_fri)
-            d.size == 2 && d.contains(6) && d.contains(7)   -> stringResource(R.string.sched_weekends)
-            else -> listOf(mo, tu, we, th, fr, sa, su).let { n -> d.sorted().joinToString(" · ") { n[it - 1] } }
+    val headerText = when (alarm.alarmType) {
+        "DAILY" -> {
+            if (alarm.cyclicIntervalDays <= 1) stringResource(R.string.sched_daily)
+            else stringResource(R.string.sched_cyclic_prefix, alarm.cyclicIntervalDays)
         }
+        "CYCLIC" -> stringResource(R.string.sched_cyclic_prefix, alarm.cyclicIntervalDays)
+        "WEEKLY" -> {
+            val d = alarm.getWeeklyDaysSet()
+            val mo = stringResource(R.string.day_mo)
+            val tu = stringResource(R.string.day_tu)
+            val we = stringResource(R.string.day_we)
+            val th = stringResource(R.string.day_th)
+            val fr = stringResource(R.string.day_fr)
+            val sa = stringResource(R.string.day_sa)
+            val su = stringResource(R.string.day_su)
+            when {
+                d.isEmpty() -> stringResource(R.string.sched_one_off)
+                d.size == 7 -> stringResource(R.string.sched_daily)
+                d.size == 5 && !d.contains(6) && !d.contains(7) -> stringResource(R.string.sched_mon_fri)
+                d.size == 2 && d.contains(6) && d.contains(7)   -> stringResource(R.string.sched_weekends)
+                else -> listOf(mo, tu, we, th, fr, sa, su).let { n -> d.sorted().joinToString(" · ") { n[it - 1] } }
+            }
+        }
+        "MONTHLY" -> {
+            val baseCal = Calendar.getInstance().apply { timeInMillis = alarm.cyclicStartDate }
+            when (alarm.recurrenceSubtype) {
+                "DAY_OF_WEEK" -> {
+                    val ord = if (alarm.monthlyDayOrdinal != 0) alarm.monthlyDayOrdinal else ((baseCal.get(Calendar.DAY_OF_MONTH) - 1) / 7 + 1)
+                    val dow = if (alarm.monthlyDayOfWeek != 0) alarm.monthlyDayOfWeek else baseCal.get(Calendar.DAY_OF_WEEK)
+                    "MONTHLY · ${getOrdinalWord(ord)} ${getWeekdayShortName(dow)}"
+                }
+                "SELECTED_DATES" -> {
+                    val dates = alarm.getMonthlyDatesSet().sorted()
+                    if (dates.isEmpty()) "MONTHLY · ${getOrdinalSuffix(baseCal.get(Calendar.DAY_OF_MONTH))}"
+                    else "MONTHLY · ${dates.joinToString(",")}"
+                }
+                else -> {
+                    val day = alarm.monthlyDates.toIntOrNull() ?: baseCal.get(Calendar.DAY_OF_MONTH)
+                    "MONTHLY · ${getOrdinalSuffix(day)}"
+                }
+            }
+        }
+        "YEARLY" -> {
+            val baseCal = Calendar.getInstance().apply { timeInMillis = alarm.cyclicStartDate }
+            val mName = monthShortNames[baseCal.get(Calendar.MONTH)]
+            when (alarm.recurrenceSubtype) {
+                "DAY_OF_WEEK" -> {
+                    val ord = if (alarm.monthlyDayOrdinal != 0) alarm.monthlyDayOrdinal else ((baseCal.get(Calendar.DAY_OF_MONTH) - 1) / 7 + 1)
+                    val dow = if (alarm.monthlyDayOfWeek != 0) alarm.monthlyDayOfWeek else baseCal.get(Calendar.DAY_OF_WEEK)
+                    "YEARLY · ${getOrdinalWord(ord)} ${getWeekdayShortName(dow)} of $mName"
+                }
+                "SELECTED_MONTHS" -> {
+                    val months = alarm.getYearlyMonthsSet().sorted()
+                    val mStr = if (months.isEmpty()) mName else months.joinToString(",") { monthShortNames[it - 1] }
+                    "YEARLY · ${getOrdinalSuffix(baseCal.get(Calendar.DAY_OF_MONTH))} ($mStr)"
+                }
+                else -> {
+                    val day = alarm.monthlyDates.toIntOrNull() ?: baseCal.get(Calendar.DAY_OF_MONTH)
+                    "YEARLY · $day $mName"
+                }
+            }
+        }
+        else -> stringResource(R.string.sched_daily)
     }
 
     Card(
@@ -824,8 +974,10 @@ fun AlarmCard(
             // Time + sound pill row
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
                 Text(timeStr, fontSize = 48.sp, fontWeight = FontWeight.Black, color = timeCol.copy(alpha = alpha), fontFamily = FontFamily.Monospace, lineHeight = 48.sp)
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(ampm, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = accent.copy(alpha = alpha), modifier = Modifier.padding(bottom = 8.dp))
+                if (!is24H) {
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(ampm, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = accent.copy(alpha = alpha), modifier = Modifier.padding(bottom = 8.dp))
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 if (!isSelectionMode) {
                     Box(modifier = Modifier.align(Alignment.Bottom).clip(RoundedCornerShape(8.dp)).background(c.surfaceVariant).clickable { onPlayPreview() }.padding(horizontal = 8.dp, vertical = 5.dp)) {
@@ -877,9 +1029,10 @@ fun AlarmCard(
 //  LOG ITEM
 // ════════════════════════════════════════════════════════
 @Composable
-fun LogItem(log: AlarmLog) {
+fun LogItem(log: AlarmLog, timeFormat: String = "12H") {
     val c = LocalAppColors.current
-    val dateStr = remember(log.triggerTime) { SimpleDateFormat("MMM d, yyyy · hh:mm a", Locale.getDefault()).format(Date(log.triggerTime)) }
+    val tfPattern = if (timeFormat == "24H") "MMM d, yyyy · HH:mm" else "MMM d, yyyy · hh:mm a"
+    val dateStr = remember(log.triggerTime, timeFormat) { SimpleDateFormat(tfPattern, Locale.getDefault()).format(Date(log.triggerTime)) }
     val color = when (log.action) { "DISMISSED" -> BrandBlue; "SNOOZED" -> BrandPurple; else -> c.textSecondary }
     val icon  = when (log.action) { "DISMISSED" -> Icons.Default.Close; "SNOOZED" -> Icons.Default.Refresh; else -> Icons.Default.Notifications }
     Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = c.surfaceColor), shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, c.outlineColor)) {
@@ -973,8 +1126,12 @@ private fun TimeSpinner(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmAddEditDialog(
-    alarm: Alarm?, onDismiss: () -> Unit, onSave: (Alarm) -> Unit,
-    onPlayPreview: (String, Float) -> Unit, onStopPreview: () -> Unit,
+    alarm: Alarm?,
+    timeFormat: String = "12H",
+    onDismiss: () -> Unit,
+    onSave: (Alarm) -> Unit,
+    onPlayPreview: (String, Float) -> Unit,
+    onStopPreview: () -> Unit,
     lastCustomTrackUri: String = "",
     onTrackPicked: (String) -> Unit = {}
 ) {
@@ -986,19 +1143,62 @@ fun AlarmAddEditDialog(
     var label     by remember { mutableStateOf(alarm?.label ?: "") }
     var hour      by remember { mutableIntStateOf(alarm?.hour ?: nowHour) }
     var minute    by remember { mutableIntStateOf(alarm?.minute ?: nowMin) }
-    var alarmType by remember { mutableStateOf(alarm?.alarmType ?: "CYCLIC") }
-    var isPm      by remember { mutableStateOf((alarm?.hour ?: nowHour) >= 12) }
+
+    val initialType = when (alarm?.alarmType) {
+        "CYCLIC" -> "DAILY"
+        "DAILY", "WEEKLY", "MONTHLY", "YEARLY" -> alarm.alarmType
+        else -> "DAILY"
+    }
+    var alarmType by remember { mutableStateOf(initialType) }
+    var dailyMode by remember {
+        mutableStateOf(
+            if (alarm?.alarmType == "CYCLIC" || (alarm?.alarmType == "DAILY" && (alarm?.cyclicIntervalDays ?: 1) > 1))
+                "INTERVAL"
+            else "EVERYDAY"
+        )
+    }
+    var recurrenceSubtype by remember { mutableStateOf(alarm?.recurrenceSubtype?.ifEmpty { "DATE" } ?: "DATE") }
+
+    val is24H = timeFormat == "24H"
+    var isPm  by remember { mutableStateOf((alarm?.hour ?: nowHour) >= 12) }
     var hour12Str by remember { mutableStateOf(run { val h = alarm?.hour ?: nowHour; (if (h == 0) 12 else if (h > 12) h - 12 else h).toString() }) }
+    var hour24Str by remember { mutableStateOf(String.format("%02d", alarm?.hour ?: nowHour)) }
     var minuteStr by remember { mutableStateOf(String.format("%02d", alarm?.minute ?: nowMin)) }
+
+    fun syncTime() {
+        if (is24H) {
+            hour = (hour24Str.toIntOrNull() ?: nowHour).coerceIn(0, 23)
+        } else {
+            val h12 = (hour12Str.toIntOrNull() ?: 12).coerceIn(1, 12)
+            hour = if (h12 == 12) (if (isPm) 12 else 0) else (if (isPm) h12 + 12 else h12)
+        }
+        minute = (minuteStr.toIntOrNull() ?: 0).coerceIn(0, 59)
+    }
 
     val weeklyDays = remember { mutableStateMapOf<Int, Boolean>() }
     val origDays   = alarm?.getWeeklyDaysSet() ?: emptySet()
     LaunchedEffect(Unit) { for (i in 1..7) weeklyDays[i] = origDays.contains(i) }
 
-    var cyclicInterval  by remember { mutableStateOf((alarm?.cyclicIntervalDays ?: 3).toString()) }
-    var cyclicStart     by remember { mutableLongStateOf(alarm?.cyclicStartDate ?: System.currentTimeMillis()) }
-    var showDatePicker  by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = cyclicStart)
+    var cyclicInterval by remember { mutableStateOf((if ((alarm?.cyclicIntervalDays ?: 1) > 1) alarm?.cyclicIntervalDays else 3).toString()) }
+    var baseDateMillis by remember { mutableLongStateOf(alarm?.cyclicStartDate ?: System.currentTimeMillis()) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = baseDateMillis)
+
+    val baseCal = remember(baseDateMillis) { Calendar.getInstance().apply { timeInMillis = baseDateMillis } }
+    val baseDay = remember(baseDateMillis) { baseCal.get(Calendar.DAY_OF_MONTH) }
+    val baseDaySuffix = remember(baseDay) { getOrdinalSuffix(baseDay) }
+    val baseDow = remember(baseDateMillis) { baseCal.get(Calendar.DAY_OF_WEEK) }
+    val baseDowName = remember(baseDow) { getWeekdayName(baseDow) }
+    val baseOrdinal = remember(baseDay) { (baseDay - 1) / 7 + 1 }
+    val baseOrdinalWord = remember(baseOrdinal) { getOrdinalWord(baseOrdinal) }
+    val baseMonth = remember(baseDateMillis) { baseCal.get(Calendar.MONTH) }
+    val baseMonthName = remember(baseMonth) { monthNames[baseMonth] }
+
+    val origMonthlyDates = alarm?.getMonthlyDatesSet() ?: emptySet()
+    val selectedDates = remember { mutableStateListOf<Int>().apply { addAll(if (origMonthlyDates.isNotEmpty()) origMonthlyDates else listOf(baseDay)) } }
+
+    val origYearlyMonths = alarm?.getYearlyMonthsSet() ?: emptySet()
+    val selectedMonths = remember { mutableStateListOf<Int>().apply { addAll(if (origYearlyMonths.isNotEmpty()) origYearlyMonths else listOf(baseMonth + 1)) } }
 
     var soundPreset    by remember { mutableStateOf(alarm?.soundPreset ?: "High Pitch") }
     // For new alarms, pre-fill from lastCustomTrackUri (persistent custom track feature)
@@ -1029,14 +1229,8 @@ fun AlarmAddEditDialog(
             val uriStr = uri.toString()
             customTrackUri = uriStr
             soundPreset = "Custom Track"
-            onTrackPicked(uriStr)  // persist for future alarms
+            onTrackPicked(uriStr)
         }
-    }
-
-    fun syncTime() {
-        val h12 = (hour12Str.toIntOrNull() ?: 12).coerceIn(1, 12)
-        hour   = if (h12 == 12) (if (isPm) 12 else 0) else (if (isPm) h12 + 12 else h12)
-        minute = (minuteStr.toIntOrNull() ?: 0).coerceIn(0, 59)
     }
 
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
@@ -1052,62 +1246,220 @@ fun AlarmAddEditDialog(
 
                 LazyColumn(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
 
-                    // TIME PICKER
+                    // TIME PICKER (12H / 24H Adaptive)
                     item {
                         SectionCard(stringResource(R.string.alarm_time_section)) {
                             val focusMgr = LocalFocusManager.current
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                                TimeSpinner(value = hour12Str, tag = "hour_input",
-                                    onUp   = { val v = hour12Str.toIntOrNull() ?: 12; hour12Str = (if (v == 12) 1 else v + 1).toString(); syncTime() },
-                                    onDown = { val v = hour12Str.toIntOrNull() ?: 12; hour12Str = (if (v == 1) 12 else v - 1).toString(); syncTime() },
-                                    onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) { hour12Str = it; syncTime() } })
+                                if (is24H) {
+                                    TimeSpinner(
+                                        value = hour24Str,
+                                        tag = "hour_input",
+                                        onUp = {
+                                            val v = hour24Str.toIntOrNull() ?: nowHour
+                                            hour24Str = String.format("%02d", (v + 1) % 24)
+                                            syncTime()
+                                        },
+                                        onDown = {
+                                            val v = hour24Str.toIntOrNull() ?: nowHour
+                                            hour24Str = String.format("%02d", (v - 1 + 24) % 24)
+                                            syncTime()
+                                        },
+                                        onValueChange = {
+                                            if (it.length <= 2 && it.all(Char::isDigit)) {
+                                                hour24Str = it
+                                                syncTime()
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    TimeSpinner(
+                                        value = hour12Str,
+                                        tag = "hour_input",
+                                        onUp = {
+                                            val v = hour12Str.toIntOrNull() ?: 12
+                                            hour12Str = (if (v == 12) 1 else v + 1).toString()
+                                            syncTime()
+                                        },
+                                        onDown = {
+                                            val v = hour12Str.toIntOrNull() ?: 12
+                                            hour12Str = (if (v == 1) 12 else v - 1).toString()
+                                            syncTime()
+                                        },
+                                        onValueChange = {
+                                            if (it.length <= 2 && it.all(Char::isDigit)) {
+                                                hour12Str = it
+                                                syncTime()
+                                            }
+                                        }
+                                    )
+                                }
                                 Text(":", fontSize = 36.sp, fontWeight = FontWeight.Black, color = BrandBlue, modifier = Modifier.padding(horizontal = 8.dp))
-                                TimeSpinner(value = minuteStr, tag = "minute_input",
-                                    onUp   = { minuteStr = String.format("%02d", ((minuteStr.toIntOrNull() ?: 0) + 1) % 60); syncTime() },
-                                    onDown = { minuteStr = String.format("%02d", ((minuteStr.toIntOrNull() ?: 0) - 1 + 60) % 60); syncTime() },
-                                    onValueChange = { if (it.length <= 2 && it.all(Char::isDigit)) { minuteStr = it; syncTime() } },
-                                    onDone = { focusMgr.clearFocus(); minuteStr = String.format("%02d", minuteStr.toIntOrNull() ?: 0); syncTime() })
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                    listOf("AM" to false, "PM" to true).forEach { (lbl, pm) ->
-                                        Box(modifier = Modifier.width(52.dp).height(34.dp).clip(RoundedCornerShape(8.dp)).background(if (isPm == pm) BrandBlue else c.surfaceVariant).clickable { isPm = pm; syncTime() }.testTag("${lbl.lowercase()}_button"), contentAlignment = Alignment.Center) {
-                                            Text(lbl, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = if (isPm == pm) Color.White else c.textSecondary)
+                                TimeSpinner(
+                                    value = minuteStr,
+                                    tag = "minute_input",
+                                    onUp = {
+                                        minuteStr = String.format("%02d", ((minuteStr.toIntOrNull() ?: 0) + 1) % 60)
+                                        syncTime()
+                                    },
+                                    onDown = {
+                                        minuteStr = String.format("%02d", ((minuteStr.toIntOrNull() ?: 0) - 1 + 60) % 60)
+                                        syncTime()
+                                    },
+                                    onValueChange = {
+                                        if (it.length <= 2 && it.all(Char::isDigit)) {
+                                            minuteStr = it
+                                            syncTime()
+                                        }
+                                    },
+                                    onDone = {
+                                        focusMgr.clearFocus()
+                                        minuteStr = String.format("%02d", minuteStr.toIntOrNull() ?: 0)
+                                        syncTime()
+                                    }
+                                )
+
+                                if (!is24H) {
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        listOf("AM" to false, "PM" to true).forEach { (lbl, pm) ->
+                                            Box(
+                                                modifier = Modifier
+                                                    .width(52.dp)
+                                                    .height(34.dp)
+                                                    .clip(RoundedCornerShape(8.dp))
+                                                    .background(if (isPm == pm) BrandBlue else c.surfaceVariant)
+                                                    .clickable { isPm = pm; syncTime() }
+                                                    .testTag("${lbl.lowercase()}_button"),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Text(lbl, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = if (isPm == pm) Color.White else c.textSecondary)
+                                            }
                                         }
                                     }
                                 }
                             }
                             Spacer(modifier = Modifier.height(6.dp))
-                            val rh = if (hour == 0) 12 else if (hour > 12) hour - 12 else hour
-                            Text("→  ${String.format("%d:%02d %s", rh, minute, if (hour >= 12) "PM" else "AM")}", color = BrandBlue, fontWeight = FontWeight.Bold, fontSize = 13.sp, modifier = Modifier.align(Alignment.CenterHorizontally))
+                            if (is24H) {
+                                Text("→  ${String.format("%02d:%02d", hour, minute)}", color = BrandBlue, fontWeight = FontWeight.Bold, fontSize = 13.sp, modifier = Modifier.align(Alignment.CenterHorizontally))
+                            } else {
+                                val rh = if (hour == 0) 12 else if (hour > 12) hour - 12 else hour
+                                Text("→  ${String.format("%d:%02d %s", rh, minute, if (hour >= 12) "PM" else "AM")}", color = BrandBlue, fontWeight = FontWeight.Bold, fontSize = 13.sp, modifier = Modifier.align(Alignment.CenterHorizontally))
+                            }
                         }
                     }
 
                     // LABEL
                     item {
-                        OutlinedTextField(value = label, onValueChange = { label = it },
+                        OutlinedTextField(
+                            value = label, onValueChange = { label = it },
                             label = { Text(stringResource(R.string.alarm_label_optional), color = c.textSecondary) },
                             placeholder = { Text(stringResource(R.string.alarm_label_placeholder), color = c.textDisabled) },
                             modifier = Modifier.fillMaxWidth().testTag("alarm_label_input"),
                             colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = BrandBlue, unfocusedBorderColor = c.outlineColor, focusedLabelColor = BrandBlue, focusedTextColor = c.textPrimary, unfocusedTextColor = c.textPrimary, cursorColor = BrandBlue),
-                            shape = RoundedCornerShape(12.dp), singleLine = true)
+                            shape = RoundedCornerShape(12.dp), singleLine = true
+                        )
                     }
 
-                    // TYPE TABS
+                    // RECURRENCE FREQUENCY TABS (DAILY, WEEKLY, MONTHLY, YEARLY)
                     item {
-                        Row(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(c.appBackground).padding(4.dp)) {
-                            listOf("WEEKLY" to stringResource(R.string.tab_weekly_days), "CYCLIC" to stringResource(R.string.tab_cyclic_days)).forEach { (type, lbl) ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(c.appBackground)
+                                .padding(4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            listOf(
+                                "DAILY" to (stringResource(R.string.tab_daily) to BrandBlue),
+                                "WEEKLY" to (stringResource(R.string.tab_weekly) to BrandPurple),
+                                "MONTHLY" to (stringResource(R.string.tab_monthly) to Color(0xFFFF9800)),
+                                "YEARLY" to (stringResource(R.string.tab_yearly) to Color(0xFF10B981))
+                            ).forEach { (type, pair) ->
+                                val (lbl, color) = pair
                                 val active = alarmType == type
-                                Box(modifier = Modifier.weight(1f).clip(RoundedCornerShape(8.dp)).background(if (active) (if (type == "WEEKLY") BrandPurple else BrandBlue) else Color.Transparent).clickable { alarmType = type }.padding(vertical = 10.dp), contentAlignment = Alignment.Center) {
-                                    Text(lbl, fontWeight = FontWeight.ExtraBold, fontSize = 13.sp, color = if (active) Color.White else c.textSecondary)
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(if (active) color else Color.Transparent)
+                                        .clickable { alarmType = type }
+                                        .padding(vertical = 10.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        lbl,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        fontSize = 12.sp,
+                                        color = if (active) Color.White else c.textSecondary
+                                    )
                                 }
                             }
                         }
                     }
 
-                    // SCHEDULE DETAILS
+                    // RECURRENCE DETAILS SECTION
                     item {
-                        AnimatedContent(targetState = alarmType, label = "sched") { type ->
-                            if (type == "WEEKLY") {
+                        val sdf = remember { SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault()) }
+                        when (alarmType) {
+                            "DAILY" -> {
+                                SectionCard(stringResource(R.string.tab_daily)) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).padding(4.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        listOf(
+                                            "EVERYDAY" to stringResource(R.string.repeat_daily_everyday),
+                                            "INTERVAL" to stringResource(R.string.repeat_daily_interval)
+                                        ).forEach { (m, lbl) ->
+                                            val isSel = dailyMode == m
+                                            Box(
+                                                modifier = Modifier.weight(1f).height(36.dp).clip(RoundedCornerShape(8.dp))
+                                                    .background(if (isSel) BrandBlue else Color.Transparent)
+                                                    .clickable { dailyMode = m },
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Text(lbl, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = if (isSel) Color.White else c.textSecondary)
+                                            }
+                                        }
+                                    }
+                                    if (dailyMode == "INTERVAL") {
+                                        Spacer(Modifier.height(12.dp))
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Text(stringResource(R.string.every_word), color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                            Spacer(Modifier.width(10.dp))
+                                            OutlinedTextField(
+                                                value = cyclicInterval,
+                                                onValueChange = { if (it.all(Char::isDigit)) cyclicInterval = it },
+                                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                                modifier = Modifier.width(72.dp).testTag("cyclic_interval_input"), singleLine = true,
+                                                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = BrandBlue, unfocusedBorderColor = c.outlineColor, focusedTextColor = c.textPrimary, unfocusedTextColor = c.textPrimary, cursorColor = BrandBlue),
+                                                shape = RoundedCornerShape(8.dp),
+                                                textStyle = TextStyle(textAlign = TextAlign.Center, color = c.textPrimary, fontSize = 14.sp)
+                                            )
+                                            Spacer(Modifier.width(10.dp))
+                                            Text(stringResource(R.string.days_word), color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                        }
+                                        Spacer(Modifier.height(10.dp))
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(10.dp)).clickable { showDatePicker = true }.padding(12.dp).testTag("cyclic_start_date_selector_card"),
+                                            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                                Icon(Icons.Default.DateRange, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
+                                                Spacer(Modifier.width(10.dp))
+                                                Column {
+                                                    Text(stringResource(R.string.start_date), fontSize = 11.sp, color = c.textSecondary, fontWeight = FontWeight.Bold)
+                                                    Text(sdf.format(Date(baseDateMillis)), fontSize = 14.sp, color = c.textPrimary, fontWeight = FontWeight.Bold)
+                                                }
+                                            }
+                                            Icon(Icons.Default.Edit, contentDescription = null, tint = c.textSecondary, modifier = Modifier.size(16.dp))
+                                        }
+                                    }
+                                }
+                            }
+                            "WEEKLY" -> {
                                 SectionCard(stringResource(R.string.repeat_on_days_section)) {
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                                         val dn = listOf(
@@ -1127,41 +1479,193 @@ fun AlarmAddEditDialog(
                                         }
                                     }
                                 }
-                            } else {
-                                SectionCard(stringResource(R.string.cyclic_config_section)) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(stringResource(R.string.every_word), color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                                        Spacer(Modifier.width(10.dp))
-                                        OutlinedTextField(value = cyclicInterval, onValueChange = { if (it.all(Char::isDigit)) cyclicInterval = it },
-                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                            modifier = Modifier.width(72.dp).testTag("cyclic_interval_input"), singleLine = true,
-                                            colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = BrandBlue, unfocusedBorderColor = c.outlineColor, focusedTextColor = c.textPrimary, unfocusedTextColor = c.textPrimary, cursorColor = BrandBlue),
-                                            shape = RoundedCornerShape(8.dp),
-                                            textStyle = TextStyle(textAlign = TextAlign.Center, color = c.textPrimary, fontSize = 14.sp))
-                                        Spacer(Modifier.width(10.dp))
-                                        Text(stringResource(R.string.days_word), color = c.textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                                    }
-                                    Spacer(Modifier.height(12.dp))
-                                    val sdf = remember { SimpleDateFormat("EEE, MMM d yyyy", Locale.getDefault()) }
-                                    Row(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(10.dp)).clickable { showDatePicker = true }.padding(12.dp).testTag("cyclic_start_date_selector_card"),
-                                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                            }
+                            "MONTHLY" -> {
+                                val monthlyColor = Color(0xFFFF9800)
+                                SectionCard(stringResource(R.string.tab_monthly)) {
+                                    // Base date selector
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(10.dp)).clickable { showDatePicker = true }.padding(10.dp),
+                                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Icon(Icons.Default.DateRange, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
-                                            Spacer(Modifier.width(10.dp))
+                                            Icon(Icons.Default.DateRange, contentDescription = null, tint = monthlyColor, modifier = Modifier.size(18.dp))
+                                            Spacer(Modifier.width(8.dp))
                                             Column {
-                                                Text(stringResource(R.string.start_date), fontSize = 11.sp, color = c.textSecondary, fontWeight = FontWeight.Bold)
-                                                Text(sdf.format(Date(cyclicStart)), fontSize = 14.sp, color = c.textPrimary, fontWeight = FontWeight.Bold)
+                                                Text(stringResource(R.string.base_date_label), fontSize = 10.sp, color = c.textSecondary, fontWeight = FontWeight.Bold)
+                                                Text(sdf.format(Date(baseDateMillis)), fontSize = 13.sp, color = c.textPrimary, fontWeight = FontWeight.Bold)
                                             }
                                         }
                                         Icon(Icons.Default.Edit, contentDescription = null, tint = c.textSecondary, modifier = Modifier.size(16.dp))
                                     }
-                                    if (showDatePicker) {
-                                        DatePickerDialog(onDismissRequest = { showDatePicker = false },
-                                            confirmButton = { TextButton(onClick = { datePickerState.selectedDateMillis?.let { cyclicStart = it }; showDatePicker = false }) { Text("OK", color = BrandBlue, fontWeight = FontWeight.Bold) } },
-                                            dismissButton = { TextButton(onClick = { showDatePicker = false }) { Text(stringResource(R.string.cancel), color = c.textSecondary) } }
-                                        ) { DatePicker(state = datePickerState) }
+                                    Spacer(Modifier.height(10.dp))
+
+                                    // Option 1: On the 20th
+                                    RecurrenceOptionCard(
+                                        title = stringResource(R.string.repeat_monthly_date, baseDaySuffix),
+                                        subtitle = "Repeats on day $baseDay of every month",
+                                        selected = recurrenceSubtype == "DATE",
+                                        accentColor = monthlyColor,
+                                        onClick = { recurrenceSubtype = "DATE" }
+                                    )
+                                    Spacer(Modifier.height(6.dp))
+
+                                    // Option 2: On the 3rd Tuesday
+                                    RecurrenceOptionCard(
+                                        title = stringResource(R.string.repeat_monthly_day_of_week, baseOrdinalWord, baseDowName),
+                                        subtitle = "Repeats on the $baseOrdinalWord $baseDowName of every month",
+                                        selected = recurrenceSubtype == "DAY_OF_WEEK",
+                                        accentColor = monthlyColor,
+                                        onClick = { recurrenceSubtype = "DAY_OF_WEEK" }
+                                    )
+                                    Spacer(Modifier.height(6.dp))
+
+                                    // Option 3: Selected dates
+                                    RecurrenceOptionCard(
+                                        title = stringResource(R.string.repeat_monthly_selected_dates),
+                                        subtitle = stringResource(R.string.select_dates_hint),
+                                        selected = recurrenceSubtype == "SELECTED_DATES",
+                                        accentColor = monthlyColor,
+                                        onClick = { recurrenceSubtype = "SELECTED_DATES" }
+                                    )
+
+                                    if (recurrenceSubtype == "SELECTED_DATES") {
+                                        Spacer(Modifier.height(8.dp))
+                                        val chunkedDates = (1..31).chunked(7)
+                                        Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                                            chunkedDates.forEach { rowDates ->
+                                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                                    rowDates.forEach { d ->
+                                                        val isSel = selectedDates.contains(d)
+                                                        Box(
+                                                            modifier = Modifier
+                                                                .size(34.dp)
+                                                                .clip(RoundedCornerShape(8.dp))
+                                                                .background(if (isSel) monthlyColor else c.surfaceVariant)
+                                                                .border(BorderStroke(1.dp, if (isSel) monthlyColor else c.outlineColor), RoundedCornerShape(8.dp))
+                                                                .clickable {
+                                                                    if (isSel) {
+                                                                        if (selectedDates.size > 1) selectedDates.remove(d)
+                                                                    } else {
+                                                                        selectedDates.add(d)
+                                                                    }
+                                                                },
+                                                            contentAlignment = Alignment.Center
+                                                        ) {
+                                                            Text("$d", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (isSel) Color.White else c.textPrimary)
+                                                        }
+                                                    }
+                                                    for (e in rowDates.size until 7) {
+                                                        Spacer(Modifier.size(34.dp))
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
+                            }
+                            "YEARLY" -> {
+                                val yearlyColor = Color(0xFF10B981)
+                                SectionCard(stringResource(R.string.tab_yearly)) {
+                                    // Base date selector
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(c.surfaceVariant).border(BorderStroke(1.dp, c.outlineColor), RoundedCornerShape(10.dp)).clickable { showDatePicker = true }.padding(10.dp),
+                                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(Icons.Default.DateRange, contentDescription = null, tint = yearlyColor, modifier = Modifier.size(18.dp))
+                                            Spacer(Modifier.width(8.dp))
+                                            Column {
+                                                Text(stringResource(R.string.base_date_label), fontSize = 10.sp, color = c.textSecondary, fontWeight = FontWeight.Bold)
+                                                Text(sdf.format(Date(baseDateMillis)), fontSize = 13.sp, color = c.textPrimary, fontWeight = FontWeight.Bold)
+                                            }
+                                        }
+                                        Icon(Icons.Default.Edit, contentDescription = null, tint = c.textSecondary, modifier = Modifier.size(16.dp))
+                                    }
+                                    Spacer(Modifier.height(10.dp))
+
+                                    // Option 1: On 20th October
+                                    RecurrenceOptionCard(
+                                        title = stringResource(R.string.repeat_yearly_date, baseDaySuffix, baseMonthName),
+                                        subtitle = "Repeats every year on $baseMonthName $baseDay",
+                                        selected = recurrenceSubtype == "DATE",
+                                        accentColor = yearlyColor,
+                                        onClick = { recurrenceSubtype = "DATE" }
+                                    )
+                                    Spacer(Modifier.height(6.dp))
+
+                                    // Option 2: On the 3rd Tuesday of October
+                                    RecurrenceOptionCard(
+                                        title = stringResource(R.string.repeat_yearly_day_of_week, baseOrdinalWord, baseDowName, baseMonthName),
+                                        subtitle = "Repeats every year on the $baseOrdinalWord $baseDowName of $baseMonthName",
+                                        selected = recurrenceSubtype == "DAY_OF_WEEK",
+                                        accentColor = yearlyColor,
+                                        onClick = { recurrenceSubtype = "DAY_OF_WEEK" }
+                                    )
+                                    Spacer(Modifier.height(6.dp))
+
+                                    // Option 3: On the 20th of selected months
+                                    RecurrenceOptionCard(
+                                        title = stringResource(R.string.repeat_yearly_selected_months, baseDaySuffix),
+                                        subtitle = stringResource(R.string.select_months_hint, baseDaySuffix),
+                                        selected = recurrenceSubtype == "SELECTED_MONTHS",
+                                        accentColor = yearlyColor,
+                                        onClick = { recurrenceSubtype = "SELECTED_MONTHS" }
+                                    )
+
+                                    if (recurrenceSubtype == "SELECTED_MONTHS") {
+                                        Spacer(Modifier.height(8.dp))
+                                        val chunkedMonths = (1..12).chunked(4)
+                                        Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                                            chunkedMonths.forEach { rowMonths ->
+                                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                                    rowMonths.forEach { m ->
+                                                        val isSel = selectedMonths.contains(m)
+                                                        Box(
+                                                            modifier = Modifier
+                                                                .weight(1f)
+                                                                .height(34.dp)
+                                                                .clip(RoundedCornerShape(8.dp))
+                                                                .background(if (isSel) yearlyColor else c.surfaceVariant)
+                                                                .border(BorderStroke(1.dp, if (isSel) yearlyColor else c.outlineColor), RoundedCornerShape(8.dp))
+                                                                .clickable {
+                                                                    if (isSel) {
+                                                                        if (selectedMonths.size > 1) selectedMonths.remove(m)
+                                                                    } else {
+                                                                        selectedMonths.add(m)
+                                                                    }
+                                                                },
+                                                            contentAlignment = Alignment.Center
+                                                        ) {
+                                                            Text(monthShortNames[m - 1], fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (isSel) Color.White else c.textPrimary)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (showDatePicker) {
+                            DatePickerDialog(
+                                onDismissRequest = { showDatePicker = false },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        datePickerState.selectedDateMillis?.let { baseDateMillis = it }
+                                        showDatePicker = false
+                                    }) {
+                                        Text(stringResource(R.string.ok), color = BrandBlue, fontWeight = FontWeight.Bold)
+                                    }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = { showDatePicker = false }) {
+                                        Text(stringResource(R.string.cancel), color = c.textSecondary)
+                                    }
+                                }
+                            ) {
+                                DatePicker(state = datePickerState)
                             }
                         }
                     }
@@ -1353,13 +1857,34 @@ fun AlarmAddEditDialog(
                         Text(stringResource(R.string.cancel), fontWeight = FontWeight.Bold)
                     }
                     Button(onClick = {
-                        val daysStr  = weeklyDays.filterValues { it }.keys.sorted().joinToString(",")
-                        val interval = cyclicInterval.toIntOrNull() ?: 3
+                        val daysStr = if (alarmType == "WEEKLY") weeklyDays.filterValues { it }.keys.sorted().joinToString(",") else ""
+                        val finalAlarmType = if (alarmType == "DAILY" && dailyMode == "INTERVAL") "CYCLIC" else alarmType
+                        val interval = if (finalAlarmType == "CYCLIC") (cyclicInterval.toIntOrNull() ?: 1).coerceAtLeast(1) else 1
                         val validSnooze = snoozeMinutes.coerceIn(1, 180)
-                        onSave(Alarm(id = alarm?.id ?: 0, label = label, hour = hour, minute = minute, isEnabled = true,
-                            alarmType = alarmType, weeklyDays = daysStr, cyclicIntervalDays = interval,
-                            cyclicStartDate = cyclicStart, soundPreset = soundPreset, customTrackUri = customTrackUri,
-                            vibrate = vibrate, volume = volume, snoozeMinutes = validSnooze, lastTriggeredTime = alarm?.lastTriggeredTime ?: 0L))
+                        val finalSubtype = if (alarmType == "MONTHLY" || alarmType == "YEARLY") recurrenceSubtype else ""
+                        val finalMonthlyDates = if (alarmType == "MONTHLY") {
+                            if (recurrenceSubtype == "SELECTED_DATES") selectedDates.sorted().joinToString(",")
+                            else baseDay.toString()
+                        } else ""
+                        val finalYearlyMonths = if (alarmType == "YEARLY") {
+                            if (recurrenceSubtype == "SELECTED_MONTHS") selectedMonths.sorted().joinToString(",")
+                            else (baseMonth + 1).toString()
+                        } else ""
+                        val finalOrdinal = if (recurrenceSubtype == "DAY_OF_WEEK") baseOrdinal else 0
+                        val finalDow = if (recurrenceSubtype == "DAY_OF_WEEK") baseDow else 0
+
+                        onSave(Alarm(
+                            id = alarm?.id ?: 0, label = label, hour = hour, minute = minute, isEnabled = true,
+                            alarmType = finalAlarmType, weeklyDays = daysStr, cyclicIntervalDays = interval,
+                            cyclicStartDate = baseDateMillis, soundPreset = soundPreset, customTrackUri = customTrackUri,
+                            vibrate = vibrate, volume = volume, snoozeMinutes = validSnooze,
+                            lastTriggeredTime = alarm?.lastTriggeredTime ?: 0L,
+                            recurrenceSubtype = finalSubtype,
+                            monthlyDates = finalMonthlyDates,
+                            monthlyDayOrdinal = finalOrdinal,
+                            monthlyDayOfWeek = finalDow,
+                            yearlyMonths = finalYearlyMonths
+                        ))
                     }, modifier = Modifier.weight(1.6f).height(48.dp).testTag("save_alarm_button"),
                         colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166)),
                         shape = RoundedCornerShape(12.dp)) {
@@ -2582,11 +3107,22 @@ fun AboutPageView() {
             Text(stringResource(R.string.release_history_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.7 — Expanded by default (current release)
+            // v1.7.1 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = stringResource(R.string.rel_v1_7_title),
+                version = stringResource(R.string.rel_v1_7_1_title),
                 badgeText = stringResource(R.string.badge_latest),
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "🕒" to stringResource(R.string.rel_v1_7_1_item1),
+                    "🔄" to stringResource(R.string.rel_v1_7_1_item2)
+                )
+            )
+
+            // v1.7 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = stringResource(R.string.rel_v1_7_title),
+                badgeText = "v1.7",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "🔔" to stringResource(R.string.rel_v1_7_item1),
                     "⏰" to stringResource(R.string.rel_v1_7_item2)
@@ -2842,7 +3378,7 @@ private fun ExpandableReleaseNoteCard(
 //  RINGING SCREEN
 // ════════════════════════════════════════════════════════
 @Composable
-fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
+fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm, timeFormat: String = "12H") {
     val context = LocalContext.current
     var ticks by remember { mutableStateOf(0) }
     LaunchedEffect(Unit) { while (true) { delay(800); ticks++ } }
@@ -2855,19 +3391,26 @@ fun RingingScreen(activeAlarm: com.example.service.RingingState.ActiveAlarm) {
         }
     }
 
-    val currentTimeStr = remember(currentTimeMillis) {
-        SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(currentTimeMillis))
+    val is24H = timeFormat == "24H"
+    val currentTimeStr = remember(currentTimeMillis, is24H) {
+        val pattern = if (is24H) "HH:mm" else "hh:mm a"
+        SimpleDateFormat(pattern, Locale.getDefault()).format(Date(currentTimeMillis))
     }
     val currentDateStr = remember(currentTimeMillis) {
         SimpleDateFormat("EEE, MMM d", Locale.getDefault()).format(Date(currentTimeMillis))
     }
-    val originalTimeStr = remember(activeAlarm.hour, activeAlarm.minute) {
-        val dh = if (activeAlarm.hour == 0) 12 else if (activeAlarm.hour > 12) activeAlarm.hour - 12 else activeAlarm.hour
-        String.format("%02d:%02d %s", dh, activeAlarm.minute, if (activeAlarm.hour >= 12) "PM" else "AM")
+    val originalTimeStr = remember(activeAlarm.hour, activeAlarm.minute, is24H) {
+        if (is24H) {
+            String.format("%02d:%02d", activeAlarm.hour, activeAlarm.minute)
+        } else {
+            val dh = if (activeAlarm.hour == 0) 12 else if (activeAlarm.hour > 12) activeAlarm.hour - 12 else activeAlarm.hour
+            String.format("%02d:%02d %s", dh, activeAlarm.minute, if (activeAlarm.hour >= 12) "PM" else "AM")
+        }
     }
-    val snoozedAtStr = remember(activeAlarm.snoozedAt) {
+    val snoozedAtStr = remember(activeAlarm.snoozedAt, is24H) {
         if (activeAlarm.snoozedAt > 0) {
-            SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(activeAlarm.snoozedAt))
+            val pattern = if (is24H) "HH:mm" else "hh:mm a"
+            SimpleDateFormat(pattern, Locale.getDefault()).format(Date(activeAlarm.snoozedAt))
         } else ""
     }
 

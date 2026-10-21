@@ -105,8 +105,25 @@
     <string name="alarm_time_section">وقت المنبه</string>
     <string name="alarm_label_optional">التسمية (اختياري)</string>
     <string name="alarm_label_placeholder">مثل: وردية العمل</string>
+    <string name="tab_daily">يومي</string>
+    <string name="tab_weekly">أسبوعي</string>
+    <string name="tab_monthly">شهري</string>
+    <string name="tab_yearly">سنوي</string>
     <string name="tab_cyclic_days">أيام دورية</string>
     <string name="tab_weekly_days">أيام الأسبوع</string>
+    <string name="repeat_daily_everyday">كل يوم</string>
+    <string name="repeat_daily_interval">فاصل زمني (كل N أيام)</string>
+    <string name="repeat_monthly_date">في اليوم %s</string>
+    <string name="repeat_monthly_day_of_week">في %1$s %2$s</string>
+    <string name="repeat_monthly_selected_dates">تواريخ محددة</string>
+    <string name="repeat_yearly_date">في %1$s %2$s</string>
+    <string name="repeat_yearly_day_of_week">في %1$s %2$s من %3$s</string>
+    <string name="repeat_yearly_selected_months">في يوم %s من الأشهر المحددة</string>
+    <string name="base_date_label">التاريخ الأساسي</string>
+    <string name="select_dates_hint">حدد تواريخ الشهر للتكرار:</string>
+    <string name="select_months_hint">حدد الأشهر للتكرار في يوم %s:</string>
+    <string name="sched_monthly_prefix">شهري</string>
+    <string name="sched_yearly_prefix">سنوي</string>
     <string name="cyclic_config_section">الإعداد الدوري</string>
     <string name="repeat_on_days_section">التكرار في الأيام</string>
     <string name="every_word">كل</string>
@@ -179,8 +196,13 @@
     <string name="snooze_notif_big_text">تم التأجيل في %1$s لمدة %2$d دقيقة\nيرن في %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_title">v1.7 (الإصدار الحالي)</string>
+    <string name="rel_v1_7_1_title">v1.7.1 (الإصدار الحالي)</string>
+    <string name="rel_v1_7_title">ملاحظات الإصدار v1.7</string>
     <string name="rel_v1_6_5_title">ملاحظات الإصدار v1.6.5</string>
+
+    <!-- Release Notes Items v1.7.1 -->
+    <string name="rel_v1_7_1_item1">اتساق تنسيق الوقت 12 ساعة / 24 ساعة — تتبع أوقات المنبهات في القائمة والنوافذ والمعاينة والإشعارات التنسيق المحدد بدقة</string>
+    <string name="rel_v1_7_1_item2">محرك تكرار مرن — دعم الدورات اليومية والأسبوعية والشهرية (مثل يوم 20، الثلاثاء الثالث، تواريخ محددة) والسنوية (مثل 20 أكتوبر، الثلاثاء الثالث من أكتوبر، أشهر محددة)</string>
     <string name="rel_v1_6_4_title">ملاحظات الإصدار v1.6.4</string>
     <string name="rel_v1_6_3_title">ملاحظات الإصدار v1.6.3</string>
     <string name="rel_v1_6_2_title">ملاحظات الإصدار v1.6.2</string>

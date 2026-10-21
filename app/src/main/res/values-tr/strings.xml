@@ -105,8 +105,25 @@
     <string name="alarm_time_section">Alarm Saati</string>
     <string name="alarm_label_optional">Etiket (isteğe bağlı)</string>
     <string name="alarm_label_placeholder">örn. Vardiya</string>
+    <string name="tab_daily">Günlük</string>
+    <string name="tab_weekly">Haftalık</string>
+    <string name="tab_monthly">Aylık</string>
+    <string name="tab_yearly">Yıllık</string>
     <string name="tab_cyclic_days">Döngüsel Günler</string>
     <string name="tab_weekly_days">Haftalık Günler</string>
+    <string name="repeat_daily_everyday">Her gün</string>
+    <string name="repeat_daily_interval">Aralık (Her N günde bir)</string>
+    <string name="repeat_monthly_date">Her ayın %s günü</string>
+    <string name="repeat_monthly_day_of_week">Her ayın %1$s %2$s günü</string>
+    <string name="repeat_monthly_selected_dates">Seçilen tarihler</string>
+    <string name="repeat_yearly_date">%1$s %2$s tarihinde</string>
+    <string name="repeat_yearly_day_of_week">%3$s ayının %1$s %2$s günü</string>
+    <string name="repeat_yearly_selected_months">Seçilen ayların %s gününde</string>
+    <string name="base_date_label">Başlangıç Tarihi</string>
+    <string name="select_dates_hint">Tekrarlanacak ay günlerini seçin:</string>
+    <string name="select_months_hint">%s gününde tekrarlanacak ayları seçin:</string>
+    <string name="sched_monthly_prefix">AYLIK</string>
+    <string name="sched_yearly_prefix">YILLIK</string>
     <string name="cyclic_config_section">Döngüsel Yapılandırma</string>
     <string name="repeat_on_days_section">Günlerde Tekrarla</string>
     <string name="every_word">Her</string>
@@ -179,8 +196,13 @@
     <string name="snooze_notif_big_text">%1$s zamanında %2$d dk ertelendi\nÇalma zamanı: %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_title">v1.7 (Geçerli Sürüm)</string>
+    <string name="rel_v1_7_1_title">v1.7.1 (Geçerli Sürüm)</string>
+    <string name="rel_v1_7_title">v1.7 Sürüm Notları</string>
     <string name="rel_v1_6_5_title">v1.6.5 Sürüm Notları</string>
+
+    <!-- Release Notes Items v1.7.1 -->
+    <string name="rel_v1_7_1_item1">12s / 24s Saat Biçimi Tutarlılığı — alarm listesi, diyaloglar, önizleme ve bildirimlerdeki tüm saatler seçtiğiniz biçime tam uyar</string>
+    <string name="rel_v1_7_1_item2">Esnek Tekrarlama Motoru — günlük, haftalık, aylık (ör. ayın 20\'si, 3. salı, seçilen günler) ve yıllık döngüler (ör. 20 Ekim, Ekim\'in 3. salısı, seçilen aylar) desteği</string>
     <string name="rel_v1_6_4_title">v1.6.4 Sürüm Notları</string>
     <string name="rel_v1_6_3_title">v1.6.3 Sürüm Notları</string>
     <string name="rel_v1_6_2_title">v1.6.2 Sürüm Notları</string>

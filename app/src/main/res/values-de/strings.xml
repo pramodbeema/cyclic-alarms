@@ -105,8 +105,25 @@
     <string name="alarm_time_section">Weckzeit</string>
     <string name="alarm_label_optional">Bezeichnung (optional)</string>
     <string name="alarm_label_placeholder">z.B. Frühschicht</string>
+    <string name="tab_daily">Täglich</string>
+    <string name="tab_weekly">Wöchentlich</string>
+    <string name="tab_monthly">Monatlich</string>
+    <string name="tab_yearly">Jährlich</string>
     <string name="tab_cyclic_days">Zyklische Tage</string>
     <string name="tab_weekly_days">Wochentage</string>
+    <string name="repeat_daily_everyday">Jeden Tag</string>
+    <string name="repeat_daily_interval">Intervall (Alle N Tage)</string>
+    <string name="repeat_monthly_date">Am %s</string>
+    <string name="repeat_monthly_day_of_week">Am %1$s %2$s</string>
+    <string name="repeat_monthly_selected_dates">Ausgewählte Daten</string>
+    <string name="repeat_yearly_date">Am %1$s %2$s</string>
+    <string name="repeat_yearly_day_of_week">Am %1$s %2$s im %3$s</string>
+    <string name="repeat_yearly_selected_months">Am %s der ausgewählten Monate</string>
+    <string name="base_date_label">Basisdatum</string>
+    <string name="select_dates_hint">Tage des Monats zur Wiederholung auswählen:</string>
+    <string name="select_months_hint">Monate zur Wiederholung am %s auswählen:</string>
+    <string name="sched_monthly_prefix">MONATLICH</string>
+    <string name="sched_yearly_prefix">JÄHRLICH</string>
     <string name="cyclic_config_section">Zyklische Konfiguration</string>
     <string name="repeat_on_days_section">An Tagen wiederholen</string>
     <string name="every_word">Alle</string>
@@ -179,8 +196,13 @@
     <string name="snooze_notif_big_text">Geschlummert um %1$s für %2$d Min.\nKlingelt um %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_title">v1.7 (Aktuelle Version)</string>
+    <string name="rel_v1_7_1_title">v1.7.1 (Aktuelle Version)</string>
+    <string name="rel_v1_7_title">Versionshinweise v1.7</string>
     <string name="rel_v1_6_5_title">v1.6.5 Versionshinweise</string>
+
+    <!-- Release Notes Items v1.7.1 -->
+    <string name="rel_v1_7_1_item1">Konsistentes 12h-/24h-Zeitformat — Alarmzeiten in Dashboard-Liste, Dialogen, Vorschau und Benachrichtigungen folgen strikt dem gewählten Zeitformat</string>
+    <string name="rel_v1_7_1_item2">Flexible Wiederholungs-Engine — Unterstützung für tägliche, wöchentliche, monatliche (z. B. am 20., 3. Dienstag, ausgewählte Tage) und jährliche Zyklen (z. B. 20. Okt, 3. Dienstag im Okt, ausgewählte Monate)</string>
     <string name="rel_v1_6_4_title">Versionshinweise v1.6.4</string>
     <string name="rel_v1_6_3_title">Versionshinweise v1.6.3</string>
     <string name="rel_v1_6_2_title">Versionshinweise v1.6.2</string>
