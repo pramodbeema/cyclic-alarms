@@ -56,7 +56,7 @@ Builds:
 
   - versionName: 1.7.2
     versionCode: 20261026
-    commit: b84010d
+    commit: b84010d4c4058b19cc5a07fdf26eb6dd4291b609
     subdir: app
     gradle:
       - yes
