@@ -1,0 +1,2 @@
+- Timer Lock Screen Fix: Stopping a ringing timer now correctly returns the phone to its pre-alert lock-screen state. The wake lock is released before the app moves to background, so the keyguard re-engages immediately without requiring an extra unlock.
+- No Duplicate Notification: When a timer's full-screen ringing UI is visible, the notification banner is fully suppressed. A silent invisible placeholder satisfies the foreground-service requirement without cluttering the notification shade.

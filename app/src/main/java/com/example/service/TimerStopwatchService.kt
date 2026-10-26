@@ -89,6 +89,15 @@ object TimerStopwatchState {
         }
     }
 
+    /** Resets ALL finished timers back to their original duration without touching running ones.
+     *  Called by the service AFTER releasing the alert wake lock, so the lock screen is re-engaged
+     *  before [isAlertActive] transitions to false in the UI. */
+    fun resetFinishedTimers() {
+        _timers.value = _timers.value.map { t ->
+            if (t.isFinished) t.copy(remainingMs = t.totalMs, isRunning = false, isFinished = false) else t
+        }
+    }
+
     fun clearTimer(id: Int) {
         _timers.value = _timers.value.map { t ->
             if (t.id == id) t.copy(totalMs = 0L, remainingMs = 0L, isRunning = false, isFinished = false) else t
@@ -220,7 +229,12 @@ class TimerStopwatchService : Service() {
                 return START_NOT_STICKY
             }
             ACTION_STOP_ALERT -> {
+                // 1. Release wake lock FIRST — so the screen is no longer force-kept on.
                 stopAlertSound()
+                // 2. Reset finished timers AFTER the wake lock is released — this causes
+                //    isAlertActive to become false in MainActivity, which then calls
+                //    moveTaskToBack(true) AFTER the screen can dim/keyguard can re-engage.
+                TimerStopwatchState.resetFinishedTimers()
                 if (!TimerStopwatchState.hasActiveOrPausedSession()) {
                     stopForeground(STOP_FOREGROUND_REMOVE)
                     stopSelf()
@@ -293,13 +307,14 @@ class TimerStopwatchService : Service() {
         try {
             stopAlertSound()
 
-            // Acquire FULL WakeLock to turn on the screen when timer goes off on locked device
+            // Acquire FULL WakeLock to turn on the screen when timer goes off on locked device.
+            // ON_AFTER_RELEASE is intentionally omitted: releasing this lock must NOT extend
+            // the screen-on period, so the keyguard re-engages promptly once the alert is stopped.
             val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
             @Suppress("DEPRECATION")
             alertWakeLock = pm.newWakeLock(
                 PowerManager.FULL_WAKE_LOCK or
-                PowerManager.ACQUIRE_CAUSES_WAKEUP or
-                PowerManager.ON_AFTER_RELEASE,
+                PowerManager.ACQUIRE_CAUSES_WAKEUP,
                 "com.example:TimerFinishWakeLock"
             ).also { it.acquire(5 * 60 * 1000L /* 5 min max */) }
 
@@ -335,9 +350,11 @@ class TimerStopwatchService : Service() {
             // fullScreenIntent, preventing a redundant heads-up notification from appearing
             // on top of the already-visible full-screen ringing UI.
             isFullScreenActivityActive = true
-            // Immediately refresh the foreground notification without fullScreenIntent.
+            // Switch to the silent foreground notification so no banner appears alongside
+            // the full-screen ringing UI — that would be a duplicate alert.
             val notifMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notifMgr.notify(NOTIF_ID, buildNotification())
+            startForeground(SILENT_NOTIF_ID, buildSilentNotification())
+            notifMgr.cancel(NOTIF_ID)
         } catch (_: Exception) {}
     }
 
@@ -463,6 +480,23 @@ class TimerStopwatchService : Service() {
     }
 
     private val ALERT_CHANNEL_ID = "timer_alert_channel"
+    // Minimum-importance channel used while the full-screen timer-finish UI is visible.
+    // IMPORTANCE_MIN means the notification satisfies the foreground-service requirement
+    // but is NOT shown in the status bar or shade — eliminating the duplicate alert.
+    private val SILENT_CHANNEL_ID = "timer_silent_bg_channel"
+    private val SILENT_NOTIF_ID = 2002
+
+    private fun buildSilentNotification(): android.app.Notification {
+        return androidx.core.app.NotificationCompat.Builder(this, SILENT_CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+            .setContentTitle("Timer")
+            .setContentText("Timer alert active")
+            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_MIN)
+            .setOnlyAlertOnce(true)
+            .setShowWhen(false)
+            .setSilent(true)
+            .build()
+    }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -489,6 +523,19 @@ class TimerStopwatchService : Service() {
                 lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
             }
             manager.createNotificationChannel(alertChannel)
+
+            // Silent background channel: satisfies foreground-service requirement while the
+            // full-screen ringing UI is visible. IMPORTANCE_MIN = never shown in status bar.
+            val silentChannel = NotificationChannel(
+                SILENT_CHANNEL_ID,
+                "Timer Background (Silent)",
+                NotificationManager.IMPORTANCE_MIN
+            ).apply {
+                description = "Silent foreground-service placeholder used when full-screen timer alert is active"
+                setShowBadge(false)
+                lockscreenVisibility = android.app.Notification.VISIBILITY_SECRET
+            }
+            manager.createNotificationChannel(silentChannel)
         }
     }
 
@@ -496,6 +543,9 @@ class TimerStopwatchService : Service() {
         stopAlertSound()
         tickJob?.cancel()
         serviceJob.cancel()
+        // Clean up the silent foreground notification if it was used.
+        val notifMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notifMgr.cancel(SILENT_NOTIF_ID)
         super.onDestroy()
     }
 

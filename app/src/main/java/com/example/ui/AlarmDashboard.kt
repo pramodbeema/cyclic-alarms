@@ -2579,13 +2579,16 @@ fun TimerScreen() {
                     com.example.service.TimerStopwatchState.pauseTimer(timer.id)
                 },
                 onReset = {
+                    // stopAlert sends ACTION_STOP_ALERT to the service which:
+                    //   1. releases the wake lock (stopAlertSound)
+                    //   2. resets finished timers (resetFinishedTimers)
+                    // This ordering ensures moveTaskToBack fires AFTER the screen can keyguard.
                     com.example.service.TimerStopwatchService.stopAlert(context)
-                    com.example.service.TimerStopwatchState.resetTimer(timer.id)
                     com.example.service.TimerStopwatchService.stopIfIdle(context)
                 },
                 onClear = {
+                    // Same ordering fix as onReset: let the service reset state after releasing wake lock.
                     com.example.service.TimerStopwatchService.stopAlert(context)
-                    com.example.service.TimerStopwatchState.resetTimer(timer.id)
                     com.example.service.TimerStopwatchService.stopIfIdle(context)
                 },
                 onRemove = {
