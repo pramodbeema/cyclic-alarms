@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Autorisations et accès système</string>
     <string name="setting_permissions_subtitle">Gérer les accès nécessaires pour la sonnerie fiable et l\'écran de verrouillage</string>
     <string name="about_cyclic_alarms">À propos de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.7 • Notes de version, support et infos créateur</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.7.3 • Notes de version, support et infos créateur</string>
     <string name="tinted">Teinté</string>
     <string name="pure_white">Blanc Pur</string>
 
@@ -105,6 +105,8 @@
     <string name="alarm_time_section">Heure de l\'alarme</string>
     <string name="alarm_label_optional">Libellé (facultatif)</string>
     <string name="alarm_label_placeholder">ex. Équipe du matin</string>
+    <string name="tab_once">Unique</string>
+    <string name="alarm_once_desc">Sonne une seule fois à l\'heure définie, puis se désactive</string>
     <string name="tab_daily">Quotidien</string>
     <string name="tab_weekly">Hebdomadaire</string>
     <string name="tab_monthly">Mensuel</string>
@@ -196,9 +198,14 @@
     <string name="snooze_notif_big_text">Répétée à %1$s pour %2$d min\nSonnera à %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_1_title">v1.7.1 (Version actuelle)</string>
+    <string name="rel_v1_7_3_title">v1.7.3 (Version actuelle)</string>
+    <string name="rel_v1_7_1_title">Notes de version v1.7.1</string>
     <string name="rel_v1_7_title">Notes de version v1.7</string>
     <string name="rel_v1_6_5_title">Notes de version v1.6.5</string>
+
+    <!-- Release Notes Items v1.7.3 -->
+    <string name="rel_v1_7_3_item1">Option d\'alarme unique — programmez des alarmes qui sonnent une seule fois et se désactivent automatiquement</string>
+    <string name="rel_v1_7_3_item2">Correction des minuteurs — suppression du bogue d\'affichage %d et renumérotation automatique séquentielle lors de suppressions</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">Cohérence du format d\'heure 12h / 24h — les heures des alarmes dans la liste, dialogues, aperçus et notifications suivent rigoureusement le format choisi</string>

@@ -862,11 +862,12 @@ fun AlarmCard(
     val isCyclic   = alarm.alarmType == "CYCLIC" || alarm.alarmType == "DAILY"
     val isMonthly  = alarm.alarmType == "MONTHLY"
     val isYearly   = alarm.alarmType == "YEARLY"
+    val isOnce     = alarm.alarmType == "ONCE" || alarm.isOneOff
     val c          = LocalAppColors.current
-    val cardBg     = when { isYearly -> c.surfaceColor; isMonthly -> c.surfaceColor; isCyclic -> c.cyclicCardBg; else -> c.weeklyCardBg }
-    val cardBorder = when { isYearly -> c.outlineColor; isMonthly -> c.outlineColor; isCyclic -> c.cyclicCardBorder; else -> c.weeklyCardBorder }
-    val accent     = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isCyclic -> CyclicAccent; else -> WeeklyAccent }
-    val timeCol    = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isCyclic -> c.cyclicTimeColor; else -> c.weeklyTimeColor }
+    val cardBg     = when { isYearly -> c.surfaceColor; isMonthly -> c.surfaceColor; isOnce -> c.surfaceColor; isCyclic -> c.cyclicCardBg; else -> c.weeklyCardBg }
+    val cardBorder = when { isYearly -> c.outlineColor; isMonthly -> c.outlineColor; isOnce -> c.outlineColor; isCyclic -> c.cyclicCardBorder; else -> c.weeklyCardBorder }
+    val accent     = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isOnce -> Color(0xFF00B4D8); isCyclic -> CyclicAccent; else -> WeeklyAccent }
+    val timeCol    = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isOnce -> Color(0xFF00B4D8); isCyclic -> c.cyclicTimeColor; else -> c.weeklyTimeColor }
     val alpha      = if (alarm.isEnabled) 1f else 0.4f
 
     val is24H       = timeFormat == "24H"
@@ -875,6 +876,7 @@ fun AlarmCard(
     val timeStr     = String.format("%02d:%02d", displayHour, alarm.minute)
 
     val headerText = when (alarm.alarmType) {
+        "ONCE" -> stringResource(R.string.sched_one_off)
         "DAILY" -> {
             if (alarm.cyclicIntervalDays <= 1) stringResource(R.string.sched_daily)
             else stringResource(R.string.sched_cyclic_prefix, alarm.cyclicIntervalDays)
@@ -1144,9 +1146,12 @@ fun AlarmAddEditDialog(
     var hour      by remember { mutableIntStateOf(alarm?.hour ?: nowHour) }
     var minute    by remember { mutableIntStateOf(alarm?.minute ?: nowMin) }
 
-    val initialType = when (alarm?.alarmType) {
-        "CYCLIC" -> "DAILY"
-        "DAILY", "WEEKLY", "MONTHLY", "YEARLY" -> alarm.alarmType
+    val initialType = when {
+        alarm == null -> "DAILY"
+        alarm.alarmType == "ONCE" -> "ONCE"
+        alarm.isOneOff -> "ONCE"
+        alarm.alarmType == "CYCLIC" -> "DAILY"
+        alarm.alarmType in listOf("DAILY", "WEEKLY", "MONTHLY", "YEARLY") -> alarm.alarmType
         else -> "DAILY"
     }
     var alarmType by remember { mutableStateOf(initialType) }
@@ -1361,7 +1366,7 @@ fun AlarmAddEditDialog(
                         )
                     }
 
-                    // RECURRENCE FREQUENCY TABS (DAILY, WEEKLY, MONTHLY, YEARLY)
+                    // RECURRENCE FREQUENCY TABS (ONCE, DAILY, WEEKLY, MONTHLY, YEARLY)
                     item {
                         Row(
                             modifier = Modifier
@@ -1372,6 +1377,7 @@ fun AlarmAddEditDialog(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             listOf(
+                                "ONCE" to (stringResource(R.string.tab_once) to Color(0xFF00B4D8)),
                                 "DAILY" to (stringResource(R.string.tab_daily) to BrandBlue),
                                 "WEEKLY" to (stringResource(R.string.tab_weekly) to BrandPurple),
                                 "MONTHLY" to (stringResource(R.string.tab_monthly) to Color(0xFFFF9800)),
@@ -1391,7 +1397,10 @@ fun AlarmAddEditDialog(
                                     Text(
                                         lbl,
                                         fontWeight = FontWeight.ExtraBold,
-                                        fontSize = 12.sp,
+                                        fontSize = 11.sp,
+                                        maxLines = 1,
+                                        softWrap = false,
+                                        overflow = TextOverflow.Ellipsis,
                                         color = if (active) Color.White else c.textSecondary
                                     )
                                 }
@@ -1403,6 +1412,23 @@ fun AlarmAddEditDialog(
                     item {
                         val sdf = remember { SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault()) }
                         when (alarmType) {
+                            "ONCE" -> {
+                                SectionCard(stringResource(R.string.tab_once)) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(Icons.Default.NotificationsActive, contentDescription = null, tint = Color(0xFF00B4D8), modifier = Modifier.size(20.dp))
+                                        Spacer(Modifier.width(10.dp))
+                                        Text(
+                                            stringResource(R.string.alarm_once_desc),
+                                            fontSize = 13.sp,
+                                            color = c.textPrimary,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+                                }
+                            }
                             "DAILY" -> {
                                 SectionCard(stringResource(R.string.tab_daily)) {
                                     Row(
@@ -2567,9 +2593,10 @@ fun TimerScreen() {
             }
         }
 
-        timers.forEach { timer ->
+        timers.forEachIndexed { index, timer ->
             MultiTimerCard(
                 timer = timer,
+                displayIndex = index + 1,
                 canRemove = timers.size > 1,
                 onStart = {
                     com.example.service.TimerStopwatchState.startTimer(timer.id)
@@ -2607,6 +2634,7 @@ fun TimerScreen() {
 @Composable
 private fun MultiTimerCard(
     timer: com.example.service.TimerInstance,
+    displayIndex: Int = 1,
     canRemove: Boolean,
     onStart: () -> Unit,
     onPause: () -> Unit,
@@ -2655,8 +2683,7 @@ private fun MultiTimerCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             val timerLabel = if (timer.label.startsWith("Timer")) {
-                val num = timer.label.removePrefix("Timer").trim()
-                stringResource(R.string.timer_default_name) + (if (num.isNotEmpty()) " $num" else "")
+                stringResource(R.string.timer_default_name, displayIndex)
             } else timer.label
             Text(
                 text = timerLabel,
@@ -3110,11 +3137,22 @@ fun AboutPageView() {
             Text(stringResource(R.string.release_history_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.7.1 — Expanded by default (current release)
+            // v1.7.3 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = stringResource(R.string.rel_v1_7_1_title),
+                version = stringResource(R.string.rel_v1_7_3_title),
                 badgeText = stringResource(R.string.badge_latest),
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "⏰" to stringResource(R.string.rel_v1_7_3_item1),
+                    "⏱️" to stringResource(R.string.rel_v1_7_3_item2)
+                )
+            )
+
+            // v1.7.1 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = stringResource(R.string.rel_v1_7_1_title),
+                badgeText = "v1.7.1",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "🕒" to stringResource(R.string.rel_v1_7_1_item1),
                     "🔄" to stringResource(R.string.rel_v1_7_1_item2)

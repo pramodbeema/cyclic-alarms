@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">İzinler ve Sistem Erişimi</string>
     <string name="setting_permissions_subtitle">Güvenilir alarm çalması ve kilit ekranı pencereleri için gereken izinleri yönetin</string>
     <string name="about_cyclic_alarms">Cyclic Alarms Hakkında</string>
-    <string name="about_cyclic_alarms_subtitle">Sürüm 1.7 • Sürüm notları, destek ve yapımcı bilgisi</string>
+    <string name="about_cyclic_alarms_subtitle">Sürüm 1.7.3 • Sürüm notları, destek ve yapımcı bilgisi</string>
     <string name="tinted">Tonlu</string>
     <string name="pure_white">Saf Beyaz</string>
 
@@ -105,6 +105,8 @@
     <string name="alarm_time_section">Alarm Saati</string>
     <string name="alarm_label_optional">Etiket (isteğe bağlı)</string>
     <string name="alarm_label_placeholder">örn. Vardiya</string>
+    <string name="tab_once">Bir kez</string>
+    <string name="alarm_once_desc">Belirlenen saatte bir kez çalar ve ardından otomatik olarak kapanır</string>
     <string name="tab_daily">Günlük</string>
     <string name="tab_weekly">Haftalık</string>
     <string name="tab_monthly">Aylık</string>
@@ -196,9 +198,14 @@
     <string name="snooze_notif_big_text">%1$s zamanında %2$d dk ertelendi\nÇalma zamanı: %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_1_title">v1.7.1 (Geçerli Sürüm)</string>
+    <string name="rel_v1_7_3_title">v1.7.3 (Geçerli Sürüm)</string>
+    <string name="rel_v1_7_1_title">v1.7.1 Sürüm Notları</string>
     <string name="rel_v1_7_title">v1.7 Sürüm Notları</string>
     <string name="rel_v1_6_5_title">v1.6.5 Sürüm Notları</string>
+
+    <!-- Release Notes Items v1.7.3 -->
+    <string name="rel_v1_7_3_item1">Tek Seferlik Alarm Seçeneği — yalnızca bir kez çalan ve çaldıktan sonra otomatik kapanan alarmları kolayca kurun</string>
+    <string name="rel_v1_7_3_item2">Zamanlayıcı Düzeltmesi — %d görüntüleme sorunu giderildi ve silinen sayaçların ardından kalanlar sıralı yeniden numaralandırıldı</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">12s / 24s Saat Biçimi Tutarlılığı — alarm listesi, diyaloglar, önizleme ve bildirimlerdeki tüm saatler seçtiğiniz biçime tam uyar</string>

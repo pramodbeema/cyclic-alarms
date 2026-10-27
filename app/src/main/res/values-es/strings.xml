@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permisos y acceso del sistema</string>
     <string name="setting_permissions_subtitle">Administre el acceso necesario para alarmas fiables y avisos en pantalla de bloqueo</string>
     <string name="about_cyclic_alarms">Acerca de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Versión 1.7 • Notas de la versión, soporte e info del creador</string>
+    <string name="about_cyclic_alarms_subtitle">Versión 1.7.3 • Notas de la versión, soporte e info del creador</string>
     <string name="tinted">Matizado</string>
     <string name="pure_white">Blanco Puro</string>
 
@@ -105,6 +105,8 @@
     <string name="alarm_time_section">Hora de alarma</string>
     <string name="alarm_label_optional">Etiqueta (opcional)</string>
     <string name="alarm_label_placeholder">ej. Turno de trabajo</string>
+    <string name="tab_once">Una vez</string>
+    <string name="alarm_once_desc">Suena una vez a la hora fijada y se apaga automáticamente</string>
     <string name="tab_daily">Diario</string>
     <string name="tab_weekly">Semanal</string>
     <string name="tab_monthly">Mensual</string>
@@ -196,9 +198,14 @@
     <string name="snooze_notif_big_text">Pospuesta a las %1$s por %2$d min\nSonará a las %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_1_title">v1.7.1 (Versión actual)</string>
+    <string name="rel_v1_7_3_title">v1.7.3 (Versión actual)</string>
+    <string name="rel_v1_7_1_title">Notas de la versión v1.7.1</string>
     <string name="rel_v1_7_title">Notas de la versión v1.7</string>
     <string name="rel_v1_6_5_title">Notas de la versión v1.6.5</string>
+
+    <!-- Release Notes Items v1.7.3 -->
+    <string name="rel_v1_7_3_item1">Opción de alarma de una sola vez — configure alarmas para que suenen una sola vez y se apaguen automáticamente tras sonar o descartarse</string>
+    <string name="rel_v1_7_3_item2">Corrección de temporizadores — se eliminó el artefacto %d y se renumeran automáticamente los temporizadores restantes en secuencia</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">Consistencia de formato 12h / 24h — las horas de las alarmas en la lista del panel, diálogos, vista previa y notificaciones ahora siguen estrictamente su formato seleccionado</string>

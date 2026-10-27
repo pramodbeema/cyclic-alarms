@@ -14,8 +14,8 @@ android {
         applicationId = "com.beemasfincon.cyclicalarms"
         minSdk = 24
         targetSdk = 36
-        versionCode = 20261026
-        versionName = "1.7.2"
+        versionCode = 20261027
+        versionName = "1.7.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -58,6 +58,7 @@ data class Alarm(
 
     val isOneOff: Boolean
         get() = when (alarmType) {
+            "ONCE" -> true
             "WEEKLY" -> getWeeklyDaysSet().isEmpty()
             "DAILY", "CYCLIC", "MONTHLY", "YEARLY" -> false
             else -> false

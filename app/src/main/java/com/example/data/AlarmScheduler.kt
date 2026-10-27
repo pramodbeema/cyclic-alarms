@@ -94,6 +94,7 @@ class AlarmScheduler(private val context: Context) {
         fun calculateNextTriggerTime(alarm: Alarm): Long {
             val now = System.currentTimeMillis()
             return when (alarm.alarmType) {
+                "ONCE" -> calculateOneOffNextTrigger(alarm, now)
                 "DAILY" -> calculateDailyNextTrigger(alarm, now)
                 "CYCLIC" -> calculateCyclicNextTrigger(alarm, now)
                 "WEEKLY" -> calculateWeeklyNextTrigger(alarm, now)
@@ -101,6 +102,19 @@ class AlarmScheduler(private val context: Context) {
                 "YEARLY" -> calculateYearlyNextTrigger(alarm, now)
                 else -> calculateWeeklyNextTrigger(alarm, now)
             }
+        }
+
+        private fun calculateOneOffNextTrigger(alarm: Alarm, now: Long): Long {
+            val targetCal = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, alarm.hour)
+                set(Calendar.MINUTE, alarm.minute)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            if (targetCal.timeInMillis <= now) {
+                targetCal.add(Calendar.DAY_OF_YEAR, 1)
+            }
+            return targetCal.timeInMillis
         }
 
         private fun calculateDailyNextTrigger(alarm: Alarm, now: Long): Long {

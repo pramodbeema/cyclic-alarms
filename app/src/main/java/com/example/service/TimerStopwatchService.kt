@@ -57,12 +57,18 @@ object TimerStopwatchState {
     // ── Timer operations ──
     fun addTimer(): Int {
         val newId = (_timers.value.maxOfOrNull { it.id } ?: -1) + 1
-        _timers.value = _timers.value + TimerInstance(id = newId)
+        val newIndex = _timers.value.size + 1
+        _timers.value = _timers.value + TimerInstance(id = newId, label = "Timer $newIndex")
         return newId
     }
 
     fun removeTimer(id: Int) {
-        _timers.value = _timers.value.filter { it.id != id }
+        val remaining = _timers.value.filter { it.id != id }
+        _timers.value = remaining.mapIndexed { index, timer ->
+            if (timer.label.startsWith("Timer")) {
+                timer.copy(label = "Timer ${index + 1}")
+            } else timer
+        }
     }
 
     fun startTimer(id: Int) {

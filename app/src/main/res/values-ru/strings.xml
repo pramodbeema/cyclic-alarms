@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Разрешения и доступ к системе</string>
     <string name="setting_permissions_subtitle">Управление доступом для надежного срабатывания будильника и экрана блокировки</string>
     <string name="about_cyclic_alarms">О приложении Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Версия 1.7 • Примечания к выпуску, поддержка и автор</string>
+    <string name="about_cyclic_alarms_subtitle">Версия 1.7.3 • Примечания к выпуску, поддержка и автор</string>
     <string name="tinted">С оттенком</string>
     <string name="pure_white">Чистый белый</string>
 
@@ -105,6 +105,8 @@
     <string name="alarm_time_section">Время сигнала</string>
     <string name="alarm_label_optional">Название (необязательно)</string>
     <string name="alarm_label_placeholder">напр., Рабочая смена</string>
+    <string name="tab_once">Однократно</string>
+    <string name="alarm_once_desc">Звонит один раз в заданное время и автоматически отключается</string>
     <string name="tab_daily">Ежедневно</string>
     <string name="tab_weekly">Еженедельно</string>
     <string name="tab_monthly">Ежемесячно</string>
@@ -196,9 +198,14 @@
     <string name="snooze_notif_big_text">Отложен в %1$s на %2$d мин\nЗазвонит в %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_1_title">v1.7.1 (Текущая версия)</string>
+    <string name="rel_v1_7_3_title">v1.7.3 (Текущая версия)</string>
+    <string name="rel_v1_7_1_title">Примечания к версии v1.7.1</string>
     <string name="rel_v1_7_title">Примечания к версии v1.7</string>
     <string name="rel_v1_6_5_title">Примечания к версии v1.6.5</string>
+
+    <!-- Release Notes Items v1.7.3 -->
+    <string name="rel_v1_7_3_item1">Однократный будильник — удобная настройка будильников, которые срабатывают только один раз и автоматически отключаются</string>
+    <string name="rel_v1_7_3_item2">Исправление таймеров — устранен артефакт %d и добавлена последовательная автоматическая перенумерация таймеров при удалении</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">Согласованность формата 12ч / 24ч — время будильников в списке, диалогах, предпросмотре и уведомлениях строго следует выбранному формату</string>

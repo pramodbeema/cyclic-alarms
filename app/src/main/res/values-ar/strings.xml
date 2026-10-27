@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">الأذونات والوصول إلى النظام</string>
     <string name="setting_permissions_subtitle">إدارة أذونات النظام المطلوبة لدقة التنبيه وشاشة القفل</string>
     <string name="about_cyclic_alarms">حول Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">الإصدار 1.7 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
+    <string name="about_cyclic_alarms_subtitle">الإصدار 1.7.3 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
     <string name="tinted">مظلل</string>
     <string name="pure_white">أبيض ناصع</string>
 
@@ -105,6 +105,8 @@
     <string name="alarm_time_section">وقت المنبه</string>
     <string name="alarm_label_optional">التسمية (اختياري)</string>
     <string name="alarm_label_placeholder">مثل: وردية العمل</string>
+    <string name="tab_once">مرة واحدة</string>
+    <string name="alarm_once_desc">يرن مرة واحدة في الوقت المحدد ثم يتوقف تلقائياً</string>
     <string name="tab_daily">يومي</string>
     <string name="tab_weekly">أسبوعي</string>
     <string name="tab_monthly">شهري</string>
@@ -196,9 +198,14 @@
     <string name="snooze_notif_big_text">تم التأجيل في %1$s لمدة %2$d دقيقة\nيرن في %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_1_title">v1.7.1 (الإصدار الحالي)</string>
+    <string name="rel_v1_7_3_title">v1.7.3 (الإصدار الحالي)</string>
+    <string name="rel_v1_7_1_title">ملاحظات الإصدار v1.7.1</string>
     <string name="rel_v1_7_title">ملاحظات الإصدار v1.7</string>
     <string name="rel_v1_6_5_title">ملاحظات الإصدار v1.6.5</string>
+
+    <!-- Release Notes Items v1.7.3 -->
+    <string name="rel_v1_7_3_item1">خيار التنبيه لمرة واحدة — اضبط المنبه ليرن لمرة واحدة فقط ويتوقف تلقائياً بعد الرنين أو الإلغاء</string>
+    <string name="rel_v1_7_3_item2">إصلاح المؤقتات — معالجة خطأ عرض %d وإعادة ترقيم المؤقتات المتبقية تلقائياً بالتسلسل عند الحذف</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">اتساق تنسيق الوقت 12 ساعة / 24 ساعة — تتبع أوقات المنبهات في القائمة والنوافذ والمعاينة والإشعارات التنسيق المحدد بدقة</string>

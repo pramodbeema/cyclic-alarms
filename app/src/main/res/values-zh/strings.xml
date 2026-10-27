@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">权限与系统访问</string>
     <string name="setting_permissions_subtitle">管理精准响铃和锁屏弹窗所需的系统权限</string>
     <string name="about_cyclic_alarms">关于 Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">版本 1.7 • 发行说明、支持与开发者信息</string>
+    <string name="about_cyclic_alarms_subtitle">版本 1.7.3 • 发行说明、支持与开发者信息</string>
     <string name="tinted">淡色</string>
     <string name="pure_white">纯白</string>
 
@@ -105,6 +105,8 @@
     <string name="alarm_time_section">闹钟时间</string>
     <string name="alarm_label_optional">标签（可选）</string>
     <string name="alarm_label_placeholder">例如：白班</string>
+    <string name="tab_once">单次</string>
+    <string name="alarm_once_desc">在设定时间响铃一次，随后自动关闭</string>
     <string name="tab_daily">每日</string>
     <string name="tab_weekly">每周</string>
     <string name="tab_monthly">每月</string>
@@ -196,9 +198,14 @@
     <string name="snooze_notif_big_text">于 %1$s 稍后提醒 %2$d 分钟\n将于 %3$s 响铃</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_1_title">v1.7.1（当前版本）</string>
+    <string name="rel_v1_7_3_title">v1.7.3（当前版本）</string>
+    <string name="rel_v1_7_1_title">v1.7.1 更新说明</string>
     <string name="rel_v1_7_title">v1.7 更新说明</string>
     <string name="rel_v1_6_5_title">v1.6.5 发行说明</string>
+
+    <!-- Release Notes Items v1.7.3 -->
+    <string name="rel_v1_7_3_item1">单次闹钟独立选项 — 轻松设置只响铃一次的独立闹钟，响铃或关闭后自动禁用</string>
+    <string name="rel_v1_7_3_item2">计时器标签与序号修复 — 修复 %d 显示异常，并在删除任一计时器时自动保持顺序编号</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">12 / 24 小时制全局统一 — 闹钟列表、弹窗设置、试听预览与系统通知的时间显示完全遵循所选时间格式</string>

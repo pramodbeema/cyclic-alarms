@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permissões e acesso ao sistema</string>
     <string name="setting_permissions_subtitle">Gerencie o acesso do sistema necessário para alarmes pontuais e tela de bloqueio</string>
     <string name="about_cyclic_alarms">Sobre o Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Versão 1.7 • Notas da versão, suporte e criador</string>
+    <string name="about_cyclic_alarms_subtitle">Versão 1.7.3 • Notas da versão, suporte e criador</string>
     <string name="tinted">Matizado</string>
     <string name="pure_white">Branco Puro</string>
 
@@ -105,6 +105,8 @@
     <string name="alarm_time_section">Hora do Alarme</string>
     <string name="alarm_label_optional">Rótulo (opcional)</string>
     <string name="alarm_label_placeholder">ex. Turno de Trabalho</string>
+    <string name="tab_once">Uma vez</string>
+    <string name="alarm_once_desc">Toca uma vez no horário definido e desliga automaticamente</string>
     <string name="tab_daily">Diário</string>
     <string name="tab_weekly">Semanal</string>
     <string name="tab_monthly">Mensal</string>
@@ -196,9 +198,14 @@
     <string name="snooze_notif_big_text">Adiado às %1$s por %2$d min\nTocará às %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_1_title">v1.7.1 (Versão atual)</string>
+    <string name="rel_v1_7_3_title">v1.7.3 (Versão atual)</string>
+    <string name="rel_v1_7_1_title">Notas da versão v1.7.1</string>
     <string name="rel_v1_7_title">Notas da versão v1.7</string>
     <string name="rel_v1_6_5_title">Notas da Versão v1.6.5</string>
+
+    <!-- Release Notes Items v1.7.3 -->
+    <string name="rel_v1_7_3_item1">Opção de Alarme de Uma Vez — programe facilmente alarmes para tocarem apenas uma vez e desligarem automaticamente</string>
+    <string name="rel_v1_7_3_item2">Correção de Temporizadores — corrigido problema de exibição %d e renumeração sequencial automática dos temporizadores restantes</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">Consistência do formato 12h / 24h — horários na lista de alarmes, diálogos, pré-visualizações e notificações agora seguem fielmente o formato escolhido</string>

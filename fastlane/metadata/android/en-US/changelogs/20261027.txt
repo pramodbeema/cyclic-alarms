@@ -1,0 +1,2 @@
+- Dedicated "Once" Alarm Recurrence: Added an explicit "Once" option to recurrence cycles so alarms ring only once and turn off automatically upon ringing or dismissal.
+- Timer Label & Sequential Numbering: Resolved the %d display glitch in timer cards and auto-renumber remaining timers sequentially (Timer 1, Timer 2...) when any timer is deleted.

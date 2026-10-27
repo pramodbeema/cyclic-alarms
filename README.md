@@ -18,7 +18,7 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 
 ## Features
 
-- **Flexible Recurrence Cycles** — Daily (everyday or N-day interval), Weekly (weekdays), Monthly (e.g. 20th, 3rd Tuesday, or selected dates grid), and Yearly (e.g. 20th Oct, 3rd Tuesday of Oct, or selected months)
+- **Flexible Recurrence Cycles** — Once (ring once, then auto-disable), Daily (everyday or N-day interval), Weekly (weekdays), Monthly (e.g. 20th, 3rd Tuesday, or selected dates grid), and Yearly (e.g. 20th Oct, 3rd Tuesday of Oct, or selected months)
 - **Cyclic alarms** — repeat every N days from a start date (e.g. every 3 days, every 14 days)
 - **Weekly alarms** — pick any combination of weekdays
 - **Multiple Timers** — run up to 5 independent countdown timers simultaneously, each with its own label and progress bar
@@ -83,6 +83,16 @@ This app was built **100% using AI assistance** (Google Antigravity AI / Claude)
 I'm not a software developer. I'm just someone who needed a specific alarm app, couldn't find one that did exactly what I wanted, and used AI to build it. The ideas, requirements, and testing are mine — the code is the AI's.
 
 ---
+
+## What's new — v1.7.3
+
+- ⏰ **Dedicated "Only Once" Alarm Option** — explicitly set one-off alarms via the new "Once" tab in recurrence options; alarms ring once at the set time and automatically disable upon ringing or dismissal.
+- ⏱️ **Timer Label & Sequential Numbering** — resolved the `%d` display formatting glitch in timer cards and enabled automatic sequential re-numbering (Timer 1, Timer 2...) so remaining timers are properly numbered when a timer is deleted.
+
+## What's new — v1.7.2
+
+- 🔒 **Timer Lock Screen Fix** — stopping or resetting a ringing timer immediately restores the phone to its pre-alert lock screen state without requiring an extra unlock.
+- 🔕 **No Duplicate Notifications** — suppressed redundant heads-up notification shade banners while the timer full-screen ringing UI is actively showing.
 
 ## What's new — v1.7.1
 

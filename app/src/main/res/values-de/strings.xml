@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Berechtigungen &amp; App-Zugriff</string>
     <string name="setting_permissions_subtitle">Systemzugriff für zuverlässiges Klingeln und Sperrbildschirm-Popups verwalten</string>
     <string name="about_cyclic_alarms">Über Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.7 • Versionshinweise, Support &amp; Entwickler-Info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.7.3 • Versionshinweise, Support &amp; Entwickler-Info</string>
     <string name="tinted">Getönt</string>
     <string name="pure_white">Reinweiß</string>
 
@@ -105,6 +105,8 @@
     <string name="alarm_time_section">Weckzeit</string>
     <string name="alarm_label_optional">Bezeichnung (optional)</string>
     <string name="alarm_label_placeholder">z.B. Frühschicht</string>
+    <string name="tab_once">Einmal</string>
+    <string name="alarm_once_desc">Klingelt einmal zur eingestellten Zeit und schaltet sich automatisch ab</string>
     <string name="tab_daily">Täglich</string>
     <string name="tab_weekly">Wöchentlich</string>
     <string name="tab_monthly">Monatlich</string>
@@ -196,9 +198,14 @@
     <string name="snooze_notif_big_text">Geschlummert um %1$s für %2$d Min.\nKlingelt um %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_1_title">v1.7.1 (Aktuelle Version)</string>
+    <string name="rel_v1_7_3_title">v1.7.3 (Aktuelle Version)</string>
+    <string name="rel_v1_7_1_title">Versionshinweise v1.7.1</string>
     <string name="rel_v1_7_title">Versionshinweise v1.7</string>
     <string name="rel_v1_6_5_title">v1.6.5 Versionshinweise</string>
+
+    <!-- Release Notes Items v1.7.3 -->
+    <string name="rel_v1_7_3_item1">Einmalige Alarm-Option — Wecker ganz einfach so einstellen, dass er nur einmal klingelt und sich nach dem Auslösen automatisch ausschaltet</string>
+    <string name="rel_v1_7_3_item2">Timer-Behebungen — %d-Anzeigefehler behoben und automatische sequenzielle Neunummerierung verbleibender Timer beim Löschen</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">Konsistentes 12h-/24h-Zeitformat — Alarmzeiten in Dashboard-Liste, Dialogen, Vorschau und Benachrichtigungen folgen strikt dem gewählten Zeitformat</string>

@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">権限とシステムアクセス</string>
     <string name="setting_permissions_subtitle">正確なアラーム鳴動とロック画面表示に必要な権限を管理</string>
     <string name="about_cyclic_alarms">Cyclic Alarms について</string>
-    <string name="about_cyclic_alarms_subtitle">バージョン 1.7 • リリースノート、サポート、開発者情報</string>
+    <string name="about_cyclic_alarms_subtitle">バージョン 1.7.3 • リリースノート、サポート、開発者情報</string>
     <string name="tinted">色付き</string>
     <string name="pure_white">ピュアホワイト</string>
 
@@ -105,6 +105,8 @@
     <string name="alarm_time_section">アラーム時刻</string>
     <string name="alarm_label_optional">ラベル（任意）</string>
     <string name="alarm_label_placeholder">例：早番シフト</string>
+    <string name="tab_once">1回のみ</string>
+    <string name="alarm_once_desc">設定時刻に1回だけ鳴り、その後自動的にオフになります</string>
     <string name="tab_daily">毎日</string>
     <string name="tab_weekly">毎週</string>
     <string name="tab_monthly">毎月</string>
@@ -196,9 +198,14 @@
     <string name="snooze_notif_big_text">%1$s に %2$d 分間スヌーズ\n%3$s に鳴動</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_1_title">v1.7.1（現在のバージョン）</string>
+    <string name="rel_v1_7_3_title">v1.7.3（現在のバージョン）</string>
+    <string name="rel_v1_7_1_title">v1.7.1 更新情報</string>
     <string name="rel_v1_7_title">v1.7 更新情報</string>
     <string name="rel_v1_6_5_title">v1.6.5 リリースノート</string>
+
+    <!-- Release Notes Items v1.7.3 -->
+    <string name="rel_v1_7_3_item1">1回のみのアラーム設定 — 1回だけ鳴って自動的に無効化されるアラームを簡単に設定可能</string>
+    <string name="rel_v1_7_3_item2">タイマー番号の修正 — %d 表示不具合を解消し、削除時に残りのタイマーを自動的に連番に再整理</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">12時間／24時間表示の完全統一 — アラーム一覧、設定ダイアログ、試聴プレビュー、通知のすべてが選択した時間形式に厳格に従います</string>
