@@ -53,15 +53,10 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 
 ## Installation
 
-### 📲 Install via F-Droid (Recommended)
+### 📲 Install via F-Droid
 Cyclic Alarms is an official open-source package published on **F-Droid**:
 - Search for **Cyclic Alarms** directly in the [F-Droid app](https://f-droid.org/) or install via the official F-Droid repository.
 - Built from source and signed directly by F-Droid's trusted build infrastructure.
-
-### 📦 Direct APK Installation (GitHub Releases)
-You can also download and sideload the release APK directly:
-1. Download `app-release.apk` from the [Releases](../../releases) page
-2. Open the downloaded APK on your Android device and tap **Install**
 
 ---
 
