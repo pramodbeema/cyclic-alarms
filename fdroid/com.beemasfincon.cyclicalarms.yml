@@ -61,7 +61,14 @@ Builds:
     gradle:
       - yes
 
+  - versionName: 1.7.3
+    versionCode: 20261027
+    commit: b7b8169622cd37434092271edccdc99672966400
+    subdir: app
+    gradle:
+      - yes
+
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.7.2
-CurrentVersionCode: 20261026
+CurrentVersion: 1.7.3
+CurrentVersionCode: 20261027
