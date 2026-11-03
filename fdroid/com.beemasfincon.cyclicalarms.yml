@@ -68,7 +68,14 @@ Builds:
     gradle:
       - yes
 
+  - versionName: 1.8
+    versionCode: 20261103
+    commit: d0c25b48ff0818e25dc6ac0bada5e8ae065daa46
+    subdir: app
+    gradle:
+      - yes
+
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.7.3
-CurrentVersionCode: 20261027
+CurrentVersion: 1.8
+CurrentVersionCode: 20261103
