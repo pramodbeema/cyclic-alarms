@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">权限与系统访问</string>
     <string name="setting_permissions_subtitle">管理精准响铃和锁屏弹窗所需的系统权限</string>
     <string name="about_cyclic_alarms">关于 Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">版本 1.7.3 • 发行说明、支持与开发者信息</string>
+    <string name="about_cyclic_alarms_subtitle">版本 1.8 • 发行说明、支持与开发者信息</string>
     <string name="tinted">淡色</string>
     <string name="pure_white">纯白</string>
 
@@ -67,6 +67,7 @@
     <string name="notif_off_warning">⚠ 通知已关闭 — 闹钟将无法响铃</string>
     <string name="silent_banner_text">⚡ 即使在静音和免打扰模式下闹钟也会响铃。注意：关机状态下闹钟无法响铃。</string>
     <string name="delete">删除</string>
+    <string name="duplicate">复制</string>
     <string name="edit">编辑</string>
     <string name="cancel">取消</string>
     <string name="save">保存</string>
@@ -198,14 +199,24 @@
     <string name="snooze_notif_big_text">于 %1$s 稍后提醒 %2$d 分钟\n将于 %3$s 响铃</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_3_title">v1.7.3（当前版本）</string>
+    <string name="rel_v1_8_title">v1.8（当前版本）</string>
+    <string name="rel_v1_7_3_title">v1.7.3 更新说明</string>
+    <string name="rel_v1_7_2_title">v1.7.2 更新说明</string>
     <string name="rel_v1_7_1_title">v1.7.1 更新说明</string>
     <string name="rel_v1_7_title">v1.7 更新说明</string>
     <string name="rel_v1_6_5_title">v1.6.5 发行说明</string>
 
+        <!-- Release Notes Items v1.8 -->
+    <string name="rel_v1_8_item1">闹钟复制功能 — 一键复制现有闹钟以节省设置时间，并可在确认保存前随意修改任何参数</string>
+    <string name="rel_v1_8_item2">全屏无缝布局 — 消除底部导航栏上方的空白色带，呈现更沉浸清爽的闹钟列表</string>
+
     <!-- Release Notes Items v1.7.3 -->
     <string name="rel_v1_7_3_item1">单次闹钟独立选项 — 轻松设置只响铃一次的独立闹钟，响铃或关闭后自动禁用</string>
     <string name="rel_v1_7_3_item2">计时器标签与序号修复 — 修复 %d 显示异常，并在删除任一计时器时自动保持顺序编号</string>
+
+        <!-- Release Notes Items v1.7.2 -->
+    <string name="rel_v1_7_2_item1">计时器锁屏修复 — 停止或重置响铃计时器后立即恢复至响铃前的锁屏状态，无需额外解锁</string>
+    <string name="rel_v1_7_2_item2">消除重复通知 — 计时器全屏响铃界面显示期间彻底抑制冗余横幅悬浮通知</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">12 / 24 小时制全局统一 — 闹钟列表、弹窗设置、试听预览与系统通知的时间显示完全遵循所选时间格式</string>

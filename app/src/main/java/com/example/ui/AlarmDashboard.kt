@@ -104,6 +104,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
 
     var showAddEdit   by remember { mutableStateOf(false) }
     var editTarget    by remember { mutableStateOf<Alarm?>(null) }
+    var isDuplicating by remember { mutableStateOf(false) }
     var currentTab    by remember { mutableStateOf(0) }
 
     // Handle navigation requests from notification taps
@@ -494,7 +495,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                     ) { Icon(Icons.Default.Delete, contentDescription = "Delete selected", modifier = Modifier.size(26.dp)) }
                 } else {
                     FloatingActionButton(
-                        onClick = { editTarget = null; showAddEdit = true },
+                        onClick = { editTarget = null; isDuplicating = false; showAddEdit = true },
                         containerColor = BrandBlue, contentColor = Color(0xFF003166), shape = RoundedCornerShape(16.dp),
                         modifier = Modifier.testTag("add_alarm_fab")
                     ) { Icon(Icons.Default.Add, contentDescription = "Add alarm", modifier = Modifier.size(28.dp)) }
@@ -646,14 +647,15 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         if (alarms.isEmpty()) {
                             EmptyStateView(Icons.Default.Notifications, stringResource(R.string.no_alarms_yet), stringResource(R.string.no_alarms_hint))
                         } else {
-                            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxSize().padding(bottom = 80.dp)) {
+                            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxSize().padding(bottom = 88.dp)) {
                                 items(alarms, key = { it.id }) { alarm ->
                                     val isSel = selectedIds.contains(alarm.id)
                                     AlarmCard(
                                         alarm = alarm, isSelected = isSel, isSelectionMode = selectionMode,
                                         timeFormat = timeFormat,
                                         onToggle = { if (!selectionMode) viewModel.toggleAlarm(alarm) },
-                                        onEdit = { editTarget = alarm; showAddEdit = true },
+                                        onEdit = { editTarget = alarm; isDuplicating = false; showAddEdit = true },
+                                        onDuplicate = { editTarget = alarm; isDuplicating = true; showAddEdit = true },
                                         onDelete = { viewModel.deleteAlarm(alarm) },
                                         onPlayPreview = { viewModel.previewSound(alarm.soundPreset, alarm.volume) },
                                         onLongPress = { selectedIds = selectedIds + alarm.id },
@@ -688,10 +690,11 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     if (showAddEdit) {
         AlarmAddEditDialog(
             alarm = editTarget,
+            isDuplicate = isDuplicating,
             timeFormat = timeFormat,
-            lastCustomTrackUri = if (editTarget == null) lastCustomTrackUri else "",
-            onDismiss = { viewModel.stopPreview(); showAddEdit = false },
-            onSave = { a -> viewModel.stopPreview(); if (editTarget == null) viewModel.addAlarm(a) else viewModel.updateAlarm(a); showAddEdit = false },
+            lastCustomTrackUri = if (editTarget == null && !isDuplicating) lastCustomTrackUri else "",
+            onDismiss = { viewModel.stopPreview(); showAddEdit = false; isDuplicating = false },
+            onSave = { a -> viewModel.stopPreview(); if (editTarget == null || isDuplicating) viewModel.addAlarm(a) else viewModel.updateAlarm(a); showAddEdit = false; isDuplicating = false },
             onPlayPreview = { s, v -> viewModel.previewSound(s, v) },
             onStopPreview = { viewModel.stopPreview() },
             onTrackPicked = { uri -> viewModel.setLastCustomTrackUri(uri) }
@@ -856,7 +859,7 @@ private fun RecurrenceOptionCard(
 fun AlarmCard(
     alarm: Alarm, isSelected: Boolean, isSelectionMode: Boolean,
     timeFormat: String = "12H",
-    onToggle: () -> Unit, onEdit: () -> Unit, onDelete: () -> Unit,
+    onToggle: () -> Unit, onEdit: () -> Unit, onDuplicate: () -> Unit, onDelete: () -> Unit,
     onPlayPreview: () -> Unit, onLongPress: () -> Unit, onSelectToggle: () -> Unit
 ) {
     val isCyclic   = alarm.alarmType == "CYCLIC" || alarm.alarmType == "DAILY"
@@ -1003,8 +1006,16 @@ fun AlarmCard(
                 HorizontalDivider(color = cardBorder)
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Edit + Delete buttons — full width, equal size
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                // Duplicate + Edit + Delete buttons — full width, equal 3-way split
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = onDuplicate, modifier = Modifier.weight(1f).height(42.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = accent.copy(alpha = 0.15f), contentColor = accent),
+                        shape = RoundedCornerShape(10.dp), contentPadding = PaddingValues(horizontal = 4.dp),
+                        elevation = ButtonDefaults.buttonElevation(0.dp)) {
+                        Icon(Icons.Default.ContentCopy, contentDescription = stringResource(R.string.duplicate), modifier = Modifier.size(14.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text(stringResource(R.string.duplicate), fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
                     Button(onClick = onEdit, modifier = Modifier.weight(1f).height(42.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = accent.copy(alpha = 0.2f), contentColor = accent),
                         shape = RoundedCornerShape(10.dp), contentPadding = PaddingValues(horizontal = 8.dp),
@@ -1129,6 +1140,7 @@ private fun TimeSpinner(
 @Composable
 fun AlarmAddEditDialog(
     alarm: Alarm?,
+    isDuplicate: Boolean = false,
     timeFormat: String = "12H",
     onDismiss: () -> Unit,
     onSave: (Alarm) -> Unit,
@@ -1900,7 +1912,7 @@ fun AlarmAddEditDialog(
                         val finalDow = if (recurrenceSubtype == "DAY_OF_WEEK") baseDow else 0
 
                         onSave(Alarm(
-                            id = alarm?.id ?: 0, label = label, hour = hour, minute = minute, isEnabled = true,
+                            id = if (isDuplicate) 0 else (alarm?.id ?: 0), label = label, hour = hour, minute = minute, isEnabled = true,
                             alarmType = finalAlarmType, weeklyDays = daysStr, cyclicIntervalDays = interval,
                             cyclicStartDate = baseDateMillis, soundPreset = soundPreset, customTrackUri = customTrackUri,
                             vibrate = vibrate, volume = volume, snoozeMinutes = validSnooze,
@@ -3137,14 +3149,36 @@ fun AboutPageView() {
             Text(stringResource(R.string.release_history_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.7.3 — Expanded by default (current release)
+            // v1.8 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = stringResource(R.string.rel_v1_7_3_title),
+                version = stringResource(R.string.rel_v1_8_title),
                 badgeText = stringResource(R.string.badge_latest),
                 isInitiallyExpanded = true,
                 items = listOf(
+                    "📑" to stringResource(R.string.rel_v1_8_item1),
+                    "✨" to stringResource(R.string.rel_v1_8_item2)
+                )
+            )
+
+            // v1.7.3 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = stringResource(R.string.rel_v1_7_3_title),
+                badgeText = "v1.7.3",
+                isInitiallyExpanded = false,
+                items = listOf(
                     "⏰" to stringResource(R.string.rel_v1_7_3_item1),
                     "⏱️" to stringResource(R.string.rel_v1_7_3_item2)
+                )
+            )
+
+            // v1.7.2 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = stringResource(R.string.rel_v1_7_2_title),
+                badgeText = "v1.7.2",
+                isInitiallyExpanded = false,
+                items = listOf(
+                    "🔒" to stringResource(R.string.rel_v1_7_2_item1),
+                    "🔕" to stringResource(R.string.rel_v1_7_2_item2)
                 )
             )
 

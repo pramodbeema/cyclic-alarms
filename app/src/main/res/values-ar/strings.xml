@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">الأذونات والوصول إلى النظام</string>
     <string name="setting_permissions_subtitle">إدارة أذونات النظام المطلوبة لدقة التنبيه وشاشة القفل</string>
     <string name="about_cyclic_alarms">حول Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">الإصدار 1.7.3 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
+    <string name="about_cyclic_alarms_subtitle">الإصدار 1.8 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
     <string name="tinted">مظلل</string>
     <string name="pure_white">أبيض ناصع</string>
 
@@ -67,6 +67,7 @@
     <string name="notif_off_warning">⚠ الإشعارات متوقفة — لن يرن المنبه</string>
     <string name="silent_banner_text">⚡ ترن المنبهات حتى في الوضع الصامت ووضع عدم الإزعاج. ملاحظة: إذا كان الهاتف مغلقًا فلن يرن المنبه.</string>
     <string name="delete">حذف</string>
+    <string name="duplicate">تكرار</string>
     <string name="edit">تعديل</string>
     <string name="cancel">إلغاء</string>
     <string name="save">حفظ</string>
@@ -198,14 +199,24 @@
     <string name="snooze_notif_big_text">تم التأجيل في %1$s لمدة %2$d دقيقة\nيرن في %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_3_title">v1.7.3 (الإصدار الحالي)</string>
+    <string name="rel_v1_8_title">v1.8 (الإصدار الحالي)</string>
+    <string name="rel_v1_7_3_title">ملاحظات الإصدار v1.7.3</string>
+    <string name="rel_v1_7_2_title">ملاحظات الإصدار v1.7.2</string>
     <string name="rel_v1_7_1_title">ملاحظات الإصدار v1.7.1</string>
     <string name="rel_v1_7_title">ملاحظات الإصدار v1.7</string>
     <string name="rel_v1_6_5_title">ملاحظات الإصدار v1.6.5</string>
 
+        <!-- Release Notes Items v1.8 -->
+    <string name="rel_v1_8_item1">خيار تكرار المنبه — انسخ أي منبه حالي لتوفير وقت الإعداد مع إمكانية تعديل أي تفاصيل قبل الحفظ</string>
+    <string name="rel_v1_8_item2">تنسيق سلس لشاشات العرض — إزالة الشريط الفارغ فوق شريط التنقل لعرض قائمة المنبهات بشكل غامر وأنيق</string>
+
     <!-- Release Notes Items v1.7.3 -->
     <string name="rel_v1_7_3_item1">خيار التنبيه لمرة واحدة — اضبط المنبه ليرن لمرة واحدة فقط ويتوقف تلقائياً بعد الرنين أو الإلغاء</string>
     <string name="rel_v1_7_3_item2">إصلاح المؤقتات — معالجة خطأ عرض %d وإعادة ترقيم المؤقتات المتبقية تلقائياً بالتسلسل عند الحذف</string>
+
+        <!-- Release Notes Items v1.7.2 -->
+    <string name="rel_v1_7_2_item1">إصلاح شاشة القفل للمؤقت — إيقاف المؤقت أو إعادة ضبطه يعيد الهاتف فوراً إلى حالة شاشة القفل السابقة</string>
+    <string name="rel_v1_7_2_item2">عدم تكرار الإشعارات — كتم إشعارات التنبيه المكررة أثناء ظهور شاشة رنين المؤقت بملء الشاشة</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">اتساق تنسيق الوقت 12 ساعة / 24 ساعة — تتبع أوقات المنبهات في القائمة والنوافذ والمعاينة والإشعارات التنسيق المحدد بدقة</string>

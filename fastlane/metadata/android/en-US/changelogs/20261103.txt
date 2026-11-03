@@ -1,0 +1,2 @@
+- Duplicate Alarm Option: Added a convenient Duplicate button on every alarm card to quickly clone existing alarms with full flexibility to tweak details before saving.
+- Seamless Edge-to-Edge List: Eliminated the artificial empty ribbon above the navigation bar for an immersive, edge-to-edge alarms view.

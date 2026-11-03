@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permissions &amp; App Access</string>
     <string name="setting_permissions_subtitle">Manage system access required for reliable alarm ringing and lock-screen popups</string>
     <string name="about_cyclic_alarms">About Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.7.3 • Release notes, support &amp; creator info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.8 • Release notes, support &amp; creator info</string>
     <string name="tinted">Tinted</string>
     <string name="pure_white">Pure White</string>
 
@@ -67,6 +67,7 @@
     <string name="notif_off_warning">⚠ Notifications off — alarms won\'t ring</string>
     <string name="silent_banner_text">⚡ Alarms ring even in Silent &amp; DND mode. Note: if phone is switched off, alarms cannot ring.</string>
     <string name="delete">Delete</string>
+    <string name="duplicate">Duplicate</string>
     <string name="edit">Edit</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -199,7 +200,9 @@
     <string name="snooze_notif_big_text">Snoozed at %1$s for %2$d min\nRings at %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_3_title">v1.7.3 (Current Release)</string>
+    <string name="rel_v1_8_title">v1.8 (Current Release)</string>
+    <string name="rel_v1_7_3_title">v1.7.3 Release Notes</string>
+    <string name="rel_v1_7_2_title">v1.7.2 Release Notes</string>
     <string name="rel_v1_7_1_title">v1.7.1 Release Notes</string>
     <string name="rel_v1_7_title">v1.7 Release Notes</string>
     <string name="rel_v1_6_5_title">v1.6.5 Release Notes</string>
@@ -215,9 +218,17 @@
     <string name="rel_v1_1_title">v1.1 Release Notes</string>
     <string name="rel_v1_0_title">v1.0 Initial Release</string>
 
+    <!-- Release Notes Items v1.8 -->
+    <string name="rel_v1_8_item1">Duplicate Alarm Option — easily duplicate any existing alarm to save setup time, with full ability to modify any setting before saving</string>
+    <string name="rel_v1_8_item2">Seamless Edge-to-Edge FAB Layout — removed the artificial empty ribbon above the navigation bar for a clean, immersive full-screen alarm list</string>
+
     <!-- Release Notes Items v1.7.3 -->
     <string name="rel_v1_7_3_item1">Dedicated "Only Once" Alarm Option — easily set alarms to ring only once and turn off automatically upon ringing or dismissal</string>
     <string name="rel_v1_7_3_item2">Timer Label &amp; Numbering Fix — resolved %d display glitch and auto-renumber remaining timers sequentially upon deletion</string>
+
+    <!-- Release Notes Items v1.7.2 -->
+    <string name="rel_v1_7_2_item1">Timer Lock Screen Fix — stopping or resetting a ringing timer immediately restores the phone to its pre-alert lock screen state without requiring an extra unlock</string>
+    <string name="rel_v1_7_2_item2">No Duplicate Notifications — suppressed redundant heads-up notification shade banners while the timer full-screen ringing UI is actively showing</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">12H / 24H Alarm Format Consistency — alarm times across dashboard list, dialogs, preview, and notifications now strictly follow your chosen clock format</string>

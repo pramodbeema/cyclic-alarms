@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Berechtigungen &amp; App-Zugriff</string>
     <string name="setting_permissions_subtitle">Systemzugriff für zuverlässiges Klingeln und Sperrbildschirm-Popups verwalten</string>
     <string name="about_cyclic_alarms">Über Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.7.3 • Versionshinweise, Support &amp; Entwickler-Info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.8 • Versionshinweise, Support &amp; Entwickler-Info</string>
     <string name="tinted">Getönt</string>
     <string name="pure_white">Reinweiß</string>
 
@@ -67,6 +67,7 @@
     <string name="notif_off_warning">⚠ Benachrichtigungen aus — Wecker klingeln nicht</string>
     <string name="silent_banner_text">⚡ Wecker klingeln auch im Lautlos- und Nicht-Stören-Modus. Hinweis: Bei ausgeschaltetem Telefon kann kein Wecker klingeln.</string>
     <string name="delete">Löschen</string>
+    <string name="duplicate">Duplizieren</string>
     <string name="edit">Bearbeiten</string>
     <string name="cancel">Abbrechen</string>
     <string name="save">Speichern</string>
@@ -198,14 +199,24 @@
     <string name="snooze_notif_big_text">Geschlummert um %1$s für %2$d Min.\nKlingelt um %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_3_title">v1.7.3 (Aktuelle Version)</string>
+    <string name="rel_v1_8_title">v1.8 (Aktuelle Version)</string>
+    <string name="rel_v1_7_3_title">Versionshinweise v1.7.3</string>
+    <string name="rel_v1_7_2_title">Versionshinweise v1.7.2</string>
     <string name="rel_v1_7_1_title">Versionshinweise v1.7.1</string>
     <string name="rel_v1_7_title">Versionshinweise v1.7</string>
     <string name="rel_v1_6_5_title">v1.6.5 Versionshinweise</string>
 
+        <!-- Release Notes Items v1.8 -->
+    <string name="rel_v1_8_item1">Wecker duplizieren — Bestehende Wecker zeitsparend kopieren und vor dem Speichern beliebige Einstellungen anpassen</string>
+    <string name="rel_v1_8_item2">Nahtloses Edge-to-Edge-Layout — Das leere Farbband über der Navigationsleiste wurde entfernt für ein klares, randloses Design</string>
+
     <!-- Release Notes Items v1.7.3 -->
     <string name="rel_v1_7_3_item1">Einmalige Alarm-Option — Wecker ganz einfach so einstellen, dass er nur einmal klingelt und sich nach dem Auslösen automatisch ausschaltet</string>
     <string name="rel_v1_7_3_item2">Timer-Behebungen — %d-Anzeigefehler behoben und automatische sequenzielle Neunummerierung verbleibender Timer beim Löschen</string>
+
+        <!-- Release Notes Items v1.7.2 -->
+    <string name="rel_v1_7_2_item1">Timer-Sperrbildschirm-Korrektur — Das Stoppen eines klingelnden Timers stellt den ursprünglichen Sperrbildschirm sofort wieder her</string>
+    <string name="rel_v1_7_2_item2">Keine doppelten Benachrichtigungen — Redundante Benachrichtigungsbanner werden unterdrückt, während der Vollbild-Timer aktiv ist</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">Konsistentes 12h-/24h-Zeitformat — Alarmzeiten in Dashboard-Liste, Dialogen, Vorschau und Benachrichtigungen folgen strikt dem gewählten Zeitformat</string>

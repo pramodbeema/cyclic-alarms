@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Permisos y acceso del sistema</string>
     <string name="setting_permissions_subtitle">Administre el acceso necesario para alarmas fiables y avisos en pantalla de bloqueo</string>
     <string name="about_cyclic_alarms">Acerca de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Versión 1.7.3 • Notas de la versión, soporte e info del creador</string>
+    <string name="about_cyclic_alarms_subtitle">Versión 1.8 • Notas de la versión, soporte e info del creador</string>
     <string name="tinted">Matizado</string>
     <string name="pure_white">Blanco Puro</string>
 
@@ -67,6 +67,7 @@
     <string name="notif_off_warning">⚠ Notificaciones desactivadas — las alarmas no sonarán</string>
     <string name="silent_banner_text">⚡ Las alarmas suenan incluso en modo Silencio y No molestar. Nota: si el teléfono está apagado, las alarmas no pueden sonar.</string>
     <string name="delete">Eliminar</string>
+    <string name="duplicate">Duplicar</string>
     <string name="edit">Editar</string>
     <string name="cancel">Cancelar</string>
     <string name="save">Guardar</string>
@@ -198,14 +199,24 @@
     <string name="snooze_notif_big_text">Pospuesta a las %1$s por %2$d min\nSonará a las %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_3_title">v1.7.3 (Versión actual)</string>
+    <string name="rel_v1_8_title">v1.8 (Versión actual)</string>
+    <string name="rel_v1_7_3_title">Notas de la versión v1.7.3</string>
+    <string name="rel_v1_7_2_title">Notas de la versión v1.7.2</string>
     <string name="rel_v1_7_1_title">Notas de la versión v1.7.1</string>
     <string name="rel_v1_7_title">Notas de la versión v1.7</string>
     <string name="rel_v1_6_5_title">Notas de la versión v1.6.5</string>
 
+        <!-- Release Notes Items v1.8 -->
+    <string name="rel_v1_8_item1">Opción de duplicar alarma — duplique cualquier alarma existente para ahorrar tiempo, pudiendo modificar cualquier ajuste antes de guardar</string>
+    <string name="rel_v1_8_item2">Diseño inmersivo borde a borde — se eliminó la franja vacía sobre la barra de navegación para una vista completa y limpia</string>
+
     <!-- Release Notes Items v1.7.3 -->
     <string name="rel_v1_7_3_item1">Opción de alarma de una sola vez — configure alarmas para que suenen una sola vez y se apaguen automáticamente tras sonar o descartarse</string>
     <string name="rel_v1_7_3_item2">Corrección de temporizadores — se eliminó el artefacto %d y se renumeran automáticamente los temporizadores restantes en secuencia</string>
+
+        <!-- Release Notes Items v1.7.2 -->
+    <string name="rel_v1_7_2_item1">Corrección de temporizador en pantalla de bloqueo — detener un temporizador restaura de inmediato el estado previo de bloqueo</string>
+    <string name="rel_v1_7_2_item2">Sin notificaciones duplicadas — se suprimen avisos redundantes mientras la pantalla completa de alerta del temporizador está visible</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">Consistencia de formato 12h / 24h — las horas de las alarmas en la lista del panel, diálogos, vista previa y notificaciones ahora siguen estrictamente su formato seleccionado</string>

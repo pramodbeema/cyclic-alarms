@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">権限とシステムアクセス</string>
     <string name="setting_permissions_subtitle">正確なアラーム鳴動とロック画面表示に必要な権限を管理</string>
     <string name="about_cyclic_alarms">Cyclic Alarms について</string>
-    <string name="about_cyclic_alarms_subtitle">バージョン 1.7.3 • リリースノート、サポート、開発者情報</string>
+    <string name="about_cyclic_alarms_subtitle">バージョン 1.8 • リリースノート、サポート、開発者情報</string>
     <string name="tinted">色付き</string>
     <string name="pure_white">ピュアホワイト</string>
 
@@ -67,6 +67,7 @@
     <string name="notif_off_warning">⚠ 通知が無効です — アラームが鳴りません</string>
     <string name="silent_banner_text">⚡ サイレントモードやマナーモードでもアラームは鳴ります。注：端末の電源が切れている場合は鳴りません。</string>
     <string name="delete">削除</string>
+    <string name="duplicate">複製</string>
     <string name="edit">編集</string>
     <string name="cancel">キャンセル</string>
     <string name="save">保存</string>
@@ -198,14 +199,24 @@
     <string name="snooze_notif_big_text">%1$s に %2$d 分間スヌーズ\n%3$s に鳴動</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_3_title">v1.7.3（現在のバージョン）</string>
+    <string name="rel_v1_8_title">v1.8（現在のバージョン）</string>
+    <string name="rel_v1_7_3_title">v1.7.3 更新情報</string>
+    <string name="rel_v1_7_2_title">v1.7.2 更新情報</string>
     <string name="rel_v1_7_1_title">v1.7.1 更新情報</string>
     <string name="rel_v1_7_title">v1.7 更新情報</string>
     <string name="rel_v1_6_5_title">v1.6.5 リリースノート</string>
 
+        <!-- Release Notes Items v1.8 -->
+    <string name="rel_v1_8_item1">アラーム複製機能 — 既存のアラームをワンタップで複製し、保存前に各設定を素早く編集可能</string>
+    <string name="rel_v1_8_item2">洗練された全画面レイアウト — ナビゲーションバー上の不要な空白リボンを解消し、より見やすいリスト画面を実現</string>
+
     <!-- Release Notes Items v1.7.3 -->
     <string name="rel_v1_7_3_item1">1回のみのアラーム設定 — 1回だけ鳴って自動的に無効化されるアラームを簡単に設定可能</string>
     <string name="rel_v1_7_3_item2">タイマー番号の修正 — %d 表示不具合を解消し、削除時に残りのタイマーを自動的に連番に再整理</string>
+
+        <!-- Release Notes Items v1.7.2 -->
+    <string name="rel_v1_7_2_item1">タイマーのロック画面修正 — タイマーを停止またはリセットした際、追加のロック解除なしで即座にロック画面へ復帰</string>
+    <string name="rel_v1_7_2_item2">重複通知の抑制 — タイマーの全画面アラート表示中に不要なヘッドアップ通知バナーを非表示化</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">12時間／24時間表示の完全統一 — アラーム一覧、設定ダイアログ、試聴プレビュー、通知のすべてが選択した時間形式に厳格に従います</string>

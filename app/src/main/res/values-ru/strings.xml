@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Разрешения и доступ к системе</string>
     <string name="setting_permissions_subtitle">Управление доступом для надежного срабатывания будильника и экрана блокировки</string>
     <string name="about_cyclic_alarms">О приложении Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Версия 1.7.3 • Примечания к выпуску, поддержка и автор</string>
+    <string name="about_cyclic_alarms_subtitle">Версия 1.8 • Примечания к выпуску, поддержка и автор</string>
     <string name="tinted">С оттенком</string>
     <string name="pure_white">Чистый белый</string>
 
@@ -67,6 +67,7 @@
     <string name="notif_off_warning">⚠ Уведомления выключены — будильники не сработают</string>
     <string name="silent_banner_text">⚡ Будильники звонят даже в режиме «Без звука» и «Не беспокоить». Примечание: если телефон выключен, будильник не сработает.</string>
     <string name="delete">Удалить</string>
+    <string name="duplicate">Дублировать</string>
     <string name="edit">Изменить</string>
     <string name="cancel">Отмена</string>
     <string name="save">Сохранить</string>
@@ -198,14 +199,24 @@
     <string name="snooze_notif_big_text">Отложен в %1$s на %2$d мин\nЗазвонит в %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_3_title">v1.7.3 (Текущая версия)</string>
+    <string name="rel_v1_8_title">v1.8 (Текущая версия)</string>
+    <string name="rel_v1_7_3_title">Примечания к версии v1.7.3</string>
+    <string name="rel_v1_7_2_title">Примечания к версии v1.7.2</string>
     <string name="rel_v1_7_1_title">Примечания к версии v1.7.1</string>
     <string name="rel_v1_7_title">Примечания к версии v1.7</string>
     <string name="rel_v1_6_5_title">Примечания к версии v1.6.5</string>
 
+        <!-- Release Notes Items v1.8 -->
+    <string name="rel_v1_8_item1">Дублирование будильника — создавайте копии будильников в одно касание и редактируйте любые параметры перед сохранением</string>
+    <string name="rel_v1_8_item2">Полноэкранный интерфейс — удалена пустая полоса над панелью навигации для аккуратного отображения списка</string>
+
     <!-- Release Notes Items v1.7.3 -->
     <string name="rel_v1_7_3_item1">Однократный будильник — удобная настройка будильников, которые срабатывают только один раз и автоматически отключаются</string>
     <string name="rel_v1_7_3_item2">Исправление таймеров — устранен артефакт %d и добавлена последовательная автоматическая перенумерация таймеров при удалении</string>
+
+        <!-- Release Notes Items v1.7.2 -->
+    <string name="rel_v1_7_2_item1">Экран блокировки таймера — остановка или сброс таймера мгновенно возвращает телефон в исходное состояние блокировки</string>
+    <string name="rel_v1_7_2_item2">Без дублирования уведомлений — скрыты лишние всплывающие баннеры во время полноэкранного сигнала таймера</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">Согласованность формата 12ч / 24ч — время будильников в списке, диалогах, предпросмотре и уведомлениях строго следует выбранному формату</string>

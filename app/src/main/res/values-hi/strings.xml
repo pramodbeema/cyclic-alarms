@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">अनुमतियाँ और ऐप एक्सेस</string>
     <string name="setting_permissions_subtitle">सटीक अलार्म बजने और लॉक-स्क्रीन पॉपअप के लिए सिस्टम अनुमतियाँ प्रबंधित करें</string>
     <string name="about_cyclic_alarms">Cyclic Alarms के बारे में</string>
-    <string name="about_cyclic_alarms_subtitle">संस्करण 1.7.3 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
+    <string name="about_cyclic_alarms_subtitle">संस्करण 1.8 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
     <string name="tinted">टिंटेड</string>
     <string name="pure_white">प्योर व्हाइट</string>
 
@@ -67,6 +67,7 @@
     <string name="notif_off_warning">⚠ सूचनाएँ बंद हैं — अलार्म नहीं बजेगा</string>
     <string name="silent_banner_text">⚡ साइलेंट और डीएनडी मोड में भी अलार्म बजता है। नोट: यदि फ़ोन बंद है, तो अलार्म नहीं बज सकता।</string>
     <string name="delete">हटाएं</string>
+    <string name="duplicate">डुप्लिकेट करें</string>
     <string name="edit">संपादित करें</string>
     <string name="cancel">रद्द करें</string>
     <string name="save">सहेजें</string>
@@ -198,14 +199,24 @@
     <string name="snooze_notif_big_text">%1$s पर %2$d मिनट के लिए स्नूज़ किया गया\n%3$s पर बजेगा</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_3_title">v1.7.3 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_8_title">v1.8 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_7_3_title">v1.7.3 संस्करण विवरण</string>
+    <string name="rel_v1_7_2_title">v1.7.2 संस्करण विवरण</string>
     <string name="rel_v1_7_1_title">v1.7.1 संस्करण विवरण</string>
     <string name="rel_v1_7_title">v1.7 संस्करण विवरण</string>
     <string name="rel_v1_6_5_title">v1.6.5 रिलीज़ नोट्स</string>
 
+        <!-- Release Notes Items v1.8 -->
+    <string name="rel_v1_8_item1">अलार्म डुप्लिकेट विकल्प — नया अलार्म जल्दी बनाने के लिए किसी भी मौजूदा अलार्म को डुप्लिकेट करें और सहेजने से पहले विवरण बदलें</string>
+    <string name="rel_v1_8_item2">सीमलेस एज-टू-एज लेआउट — नेविगेशन बार के ऊपर खाली रिबन को हटाकर पूर्ण स्क्रीन अलार्म सूची प्रदान की गई</string>
+
     <!-- Release Notes Items v1.7.3 -->
     <string name="rel_v1_7_3_item1">एकल अलार्म विकल्प — अलार्म को केवल एक बार बजने और बंद होने के लिए आसानी से सेट करें</string>
     <string name="rel_v1_7_3_item2">टाइमर सुधार — %d प्रदर्शन समस्या को ठीक किया गया और टाइमर हटाने पर शेष टाइमर को क्रमिक रूप से पुनः क्रमांकित किया गया</string>
+
+        <!-- Release Notes Items v1.7.2 -->
+    <string name="rel_v1_7_2_item1">टाइमर लॉक स्क्रीन सुधार — बजते टाइमर को रोकने या रीसेट करने पर फोन तुरंत अपनी लॉक स्क्रीन स्थिति में लौटता है</string>
+    <string name="rel_v1_7_2_item2">डुप्लिकेट सूचनाएं बंद — पूर्ण-स्क्रीन टाइमर बजने के दौरान अतिरिक्त बैनर सूचना को छुपा दिया गया है</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">12-घंटे / 24-घंटे समय प्रारूप संगति — अलार्म सूची, डायलॉग, पूर्वावलोकन और सूचनाओं में सभी अलार्म समय आपके चुने हुए प्रारूप का कड़ाई से पालन करते हैं</string>

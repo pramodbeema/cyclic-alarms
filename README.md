@@ -21,6 +21,7 @@ That's it. No subscriptions, no ads, no accounts, no permissions beyond what's n
 - **Flexible Recurrence Cycles** — Once (ring once, then auto-disable), Daily (everyday or N-day interval), Weekly (weekdays), Monthly (e.g. 20th, 3rd Tuesday, or selected dates grid), and Yearly (e.g. 20th Oct, 3rd Tuesday of Oct, or selected months)
 - **Cyclic alarms** — repeat every N days from a start date (e.g. every 3 days, every 14 days)
 - **Weekly alarms** — pick any combination of weekdays
+- **Duplicate Alarms** — clone any alarm instantly with a single tap, with full flexibility to tweak details before saving
 - **Multiple Timers** — run up to 5 independent countdown timers simultaneously, each with its own label and progress bar
 - **Stopwatch** — elapsed time tracker with lap recording, fastest/slowest lap highlights, and touch audio feedback
 - **Background Timer & Stopwatch** — continue running when the app is backgrounded via a Foreground Service with a persistent, non-dismissible notification (like YouTube playback) — shows live countdown and a "Stop All" action
@@ -78,6 +79,11 @@ This app was built **100% using AI assistance** (Google Antigravity AI / Claude)
 I'm not a software developer. I'm just someone who needed a specific alarm app, couldn't find one that did exactly what I wanted, and used AI to build it. The ideas, requirements, and testing are mine — the code is the AI's.
 
 ---
+
+## What's new — v1.8
+
+- 📑 **Duplicate Alarm Feature** — added a convenient "Duplicate" button directly on every alarm card; clone any alarm instantly to save setup time, with the full Add/Edit dialog pre-populated so you can tweak times or settings before saving.
+- ✨ **Seamless Edge-to-Edge FAB Layout** — cleaned up the alarm dashboard layout by removing the artificial empty ribbon above the navigation bar for an immersive, edge-to-edge alarms view.
 
 ## What's new — v1.7.3
 

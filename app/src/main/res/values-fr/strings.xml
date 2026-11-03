@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">Autorisations et accès système</string>
     <string name="setting_permissions_subtitle">Gérer les accès nécessaires pour la sonnerie fiable et l\'écran de verrouillage</string>
     <string name="about_cyclic_alarms">À propos de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.7.3 • Notes de version, support et infos créateur</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.8 • Notes de version, support et infos créateur</string>
     <string name="tinted">Teinté</string>
     <string name="pure_white">Blanc Pur</string>
 
@@ -67,6 +67,7 @@
     <string name="notif_off_warning">⚠ Notifications désactivées — les alarmes ne sonneront pas</string>
     <string name="silent_banner_text">⚡ Les alarmes sonnent même en mode Silencieux &amp; Ne pas déranger. Remarque : si le téléphone est éteint, les alarmes ne sonneront pas.</string>
     <string name="delete">Supprimer</string>
+    <string name="duplicate">Dupliquer</string>
     <string name="edit">Modifier</string>
     <string name="cancel">Annuler</string>
     <string name="save">Enregistrer</string>
@@ -198,14 +199,24 @@
     <string name="snooze_notif_big_text">Répétée à %1$s pour %2$d min\nSonnera à %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_3_title">v1.7.3 (Version actuelle)</string>
+    <string name="rel_v1_8_title">v1.8 (Version actuelle)</string>
+    <string name="rel_v1_7_3_title">Notes de version v1.7.3</string>
+    <string name="rel_v1_7_2_title">Notes de version v1.7.2</string>
     <string name="rel_v1_7_1_title">Notes de version v1.7.1</string>
     <string name="rel_v1_7_title">Notes de version v1.7</string>
     <string name="rel_v1_6_5_title">Notes de version v1.6.5</string>
 
+        <!-- Release Notes Items v1.8 -->
+    <string name="rel_v1_8_item1">Duplication d\'alarme — dupliquez facilement une alarme existante et modifiez ses paramètres avant validation</string>
+    <string name="rel_v1_8_item2">Affichage bord à bord immersif — suppression du bandeau vide au-dessus de la barre de navigation pour une liste épurée</string>
+
     <!-- Release Notes Items v1.7.3 -->
     <string name="rel_v1_7_3_item1">Option d\'alarme unique — programmez des alarmes qui sonnent une seule fois et se désactivent automatiquement</string>
     <string name="rel_v1_7_3_item2">Correction des minuteurs — suppression du bogue d\'affichage %d et renumérotation automatique séquentielle lors de suppressions</string>
+
+        <!-- Release Notes Items v1.7.2 -->
+    <string name="rel_v1_7_2_item1">Écran de verrouillage du minuteur — arrêter un minuteur rétablit instantanément l\'écran de verrouillage d\'origine</string>
+    <string name="rel_v1_7_2_item2">Suppression des notifications en double — le bandeau de notification est masqué lorsque l\'écran plein d\'alerte est affiché</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">Cohérence du format d\'heure 12h / 24h — les heures des alarmes dans la liste, dialogues, aperçus et notifications suivent rigoureusement le format choisi</string>

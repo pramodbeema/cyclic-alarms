@@ -24,7 +24,7 @@
     <string name="setting_permissions_title">İzinler ve Sistem Erişimi</string>
     <string name="setting_permissions_subtitle">Güvenilir alarm çalması ve kilit ekranı pencereleri için gereken izinleri yönetin</string>
     <string name="about_cyclic_alarms">Cyclic Alarms Hakkında</string>
-    <string name="about_cyclic_alarms_subtitle">Sürüm 1.7.3 • Sürüm notları, destek ve yapımcı bilgisi</string>
+    <string name="about_cyclic_alarms_subtitle">Sürüm 1.8 • Sürüm notları, destek ve yapımcı bilgisi</string>
     <string name="tinted">Tonlu</string>
     <string name="pure_white">Saf Beyaz</string>
 
@@ -67,6 +67,7 @@
     <string name="notif_off_warning">⚠ Bildirimler kapalı — alarmlar çalmayacak</string>
     <string name="silent_banner_text">⚡ Alarmlar Sessiz ve Rahatsız Etmeyin modunda bile çalar. Not: Telefon kapalıysa alarmlar çalamaz.</string>
     <string name="delete">Sil</string>
+    <string name="duplicate">Çoğalt</string>
     <string name="edit">Düzenle</string>
     <string name="cancel">İptal</string>
     <string name="save">Kaydet</string>
@@ -198,14 +199,24 @@
     <string name="snooze_notif_big_text">%1$s zamanında %2$d dk ertelendi\nÇalma zamanı: %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_7_3_title">v1.7.3 (Geçerli Sürüm)</string>
+    <string name="rel_v1_8_title">v1.8 (Geçerli Sürüm)</string>
+    <string name="rel_v1_7_3_title">v1.7.3 Sürüm Notları</string>
+    <string name="rel_v1_7_2_title">v1.7.2 Sürüm Notları</string>
     <string name="rel_v1_7_1_title">v1.7.1 Sürüm Notları</string>
     <string name="rel_v1_7_title">v1.7 Sürüm Notları</string>
     <string name="rel_v1_6_5_title">v1.6.5 Sürüm Notları</string>
 
+        <!-- Release Notes Items v1.8 -->
+    <string name="rel_v1_8_item1">Alarm Çoğaltma Seçeneği — mevcut bir alarmı kolayca çoğaltarak zaman kazanın ve kaydetmeden önce ayarları düzenleyin</string>
+    <string name="rel_v1_8_item2">Kusursuz Kenardan Kenara Düzen — gezinme çubuğunun üzerindeki boş şerit kaldırılarak temiz bir liste deneyimi sağlandı</string>
+
     <!-- Release Notes Items v1.7.3 -->
     <string name="rel_v1_7_3_item1">Tek Seferlik Alarm Seçeneği — yalnızca bir kez çalan ve çaldıktan sonra otomatik kapanan alarmları kolayca kurun</string>
     <string name="rel_v1_7_3_item2">Zamanlayıcı Düzeltmesi — %d görüntüleme sorunu giderildi ve silinen sayaçların ardından kalanlar sıralı yeniden numaralandırıldı</string>
+
+        <!-- Release Notes Items v1.7.2 -->
+    <string name="rel_v1_7_2_item1">Zamanlayıcı Kilit Ekranı Düzeltmesi — çalan zamanlayıcıyı durdurmak veya sıfırlamak telefonu hemen önceki kilit ekranı durumuna döndürür</string>
+    <string name="rel_v1_7_2_item2">Yinelenen Bildirim Yok — tam ekran zamanlayıcı uyarısı sırasında gereksiz baş üstü bildirim bannerları engellendi</string>
 
     <!-- Release Notes Items v1.7.1 -->
     <string name="rel_v1_7_1_item1">12s / 24s Saat Biçimi Tutarlılığı — alarm listesi, diyaloglar, önizleme ve bildirimlerdeki tüm saatler seçtiğiniz biçime tam uyar</string>
