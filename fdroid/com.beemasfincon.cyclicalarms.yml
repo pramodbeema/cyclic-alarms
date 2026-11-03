@@ -70,7 +70,7 @@ Builds:
 
   - versionName: 1.8
     versionCode: 20261103
-    commit: 0bd6f3bcda5b9ab70ec3099bfa173d5878b46435
+    commit: cd8c7ab531fb39d8d82e99574e6d108570c40288
     subdir: app
     gradle:
       - yes
