@@ -514,7 +514,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             }
         }
     ) { padding ->
-        Column(modifier = Modifier.fillMaxSize().background(c.appBackground).padding(padding).padding(horizontal = 16.dp)) {
+        Column(modifier = Modifier.fillMaxSize().background(c.appBackground).padding(top = padding.calculateTopPadding()).padding(horizontal = 16.dp)) {
             Spacer(modifier = Modifier.height(12.dp))
 
             // Header
@@ -647,7 +647,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         if (alarms.isEmpty()) {
                             EmptyStateView(Icons.Default.Notifications, stringResource(R.string.no_alarms_yet), stringResource(R.string.no_alarms_hint))
                         } else {
-                            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxSize().padding(bottom = 88.dp)) {
+                            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = padding.calculateBottomPadding() + 88.dp)) {
                                 items(alarms, key = { it.id }) { alarm ->
                                     val isSel = selectedIds.contains(alarm.id)
                                     AlarmCard(
@@ -665,10 +665,11 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                             }
                         }
                     }
-                    1 -> { TimerScreen() }
-                    2 -> { StopwatchScreen() }
+                    1 -> { TimerScreen(bottomPadding = padding.calculateBottomPadding()) }
+                    2 -> { StopwatchScreen(bottomPadding = padding.calculateBottomPadding()) }
                     3 -> {
                         SettingsPageView(
+                            bottomPadding = padding.calculateBottomPadding(),
                             themeMode = themeMode,
                             onThemeModeChange = { viewModel.setThemeMode(it) },
                             timeFormat = timeFormat,
@@ -1939,6 +1940,7 @@ fun AlarmAddEditDialog(
 // ════════════════════════════════════════════════════════
 @Composable
 fun SettingsPageView(
+    bottomPadding: androidx.compose.ui.unit.Dp = 0.dp,
     themeMode: String,
     onThemeModeChange: (String) -> Unit,
     timeFormat: String,
@@ -2002,8 +2004,7 @@ fun SettingsPageView(
     if (currentSubpage == "About") {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 80.dp),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(
@@ -2017,14 +2018,14 @@ fun SettingsPageView(
                 Spacer(Modifier.width(6.dp))
                 Text(stringResource(R.string.back_to_settings), color = BrandBlue, fontWeight = FontWeight.ExtraBold, fontSize = 14.sp)
             }
-            AboutPageView()
+            AboutPageView(bottomPadding = bottomPadding)
         }
     } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = 80.dp),
+                .padding(bottom = bottomPadding + 32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(stringResource(R.string.settings_title), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
@@ -2544,7 +2545,7 @@ private fun PermissionGateItem(
 //  MULTI-TIMER SCREEN (Supports up to 5 concurrent timers)
 // ════════════════════════════════════════════════════════
 @Composable
-fun TimerScreen() {
+fun TimerScreen(bottomPadding: androidx.compose.ui.unit.Dp = 0.dp) {
     val c = LocalAppColors.current
     val context = LocalContext.current
     val timers by com.example.service.TimerStopwatchState.timers.collectAsStateWithLifecycle()
@@ -2569,7 +2570,7 @@ fun TimerScreen() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(bottom = 80.dp),
+            .padding(bottom = bottomPadding + 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -2877,7 +2878,7 @@ private fun TimerInputField(
 //  STOPWATCH SCREEN (Foreground Service Synced)
 // ════════════════════════════════════════════════════════
 @Composable
-fun StopwatchScreen() {
+fun StopwatchScreen(bottomPadding: androidx.compose.ui.unit.Dp = 0.dp) {
     val c = LocalAppColors.current
     val context = LocalContext.current
 
@@ -2911,7 +2912,7 @@ fun StopwatchScreen() {
     val lapMs = elapsedMs - lastLapMs
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 80.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = bottomPadding + 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(8.dp))
@@ -3043,7 +3044,7 @@ fun StopwatchScreen() {
 }
 
 @Composable
-fun AboutPageView() {
+fun AboutPageView(bottomPadding: androidx.compose.ui.unit.Dp = 0.dp) {
     val c = LocalAppColors.current
     val context = LocalContext.current
 
@@ -3051,7 +3052,7 @@ fun AboutPageView() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(bottom = 80.dp),
+            .padding(bottom = bottomPadding + 32.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(stringResource(R.string.about_release_notes_header), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = c.textSecondary, letterSpacing = 1.2.sp)
