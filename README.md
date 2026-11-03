@@ -6,13 +6,18 @@
 
 ## What this app does
 
-Most alarm apps only support weekly repeats — same days every week. If your work schedule repeats every 3 days, every 5 days, or any other interval, you're stuck setting alarms manually each time.
+Most alarm apps only support basic weekly repeats — same days every week. If your schedule doesn't follow a standard Monday-to-Friday routine, you're stuck setting alarms manually each time.
 
-**Cyclic Alarms** solves exactly that. You pick a start date and an interval, and the alarm fires on that cycle forever — no manual resetting needed.
+**Cyclic Alarms** provides a comprehensive, **Flexible Recurrence Engine** built from the ground up to handle any schedule:
 
-It also supports regular weekly alarms (pick any days of the week), so it covers everyday use too.
+- ⏰ **Once (One-off)** — Set an alarm to ring once at the designated time, after which it automatically turns itself off upon ringing or dismissal.
+- 🔁 **Daily & Cyclic** — Repeat everyday or at any custom N-day interval (e.g. every 2 days, every 3 days, every 14 days) anchored from your chosen start date. Perfect for shift workers, rotating rosters, or alternate-day routines.
+- 📅 **Weekly** — Choose any combination of weekdays (Monday through Sunday, weekdays only, weekends only, or specific individual days).
+- 🗓️ **Monthly** — Highly configurable monthly cycles: repeat on a fixed calendar date (e.g., the 20th of every month), by ordinal day of the week (e.g., the 3rd Tuesday of every month), or across any custom selection of dates in a visual monthly grid.
+- 🌍 **Yearly** — Annual recurrence for birthdays, anniversaries, tax filings, or seasonal events: repeat on a specific date (e.g., October 20th), an ordinal day (e.g., the 3rd Tuesday of October), or on a chosen date across selected months.
+- 📑 **Duplicate Alarms** — Duplicate any existing alarm with one tap to quickly create similar alarms without re-configuring options from scratch.
 
-That's it. No subscriptions, no ads, no accounts, no permissions beyond what's needed to actually ring an alarm.
+That's it. No subscriptions, no ads, no accounts, no analytics, no tracking, and no permissions beyond what is strictly necessary to reliably ring your alarms.
 
 ---
 
