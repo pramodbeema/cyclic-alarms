@@ -85,6 +85,13 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 
 ---
 
+## What's new — v1.8.1
+
+- 🌟 **Clean Home Screen Header** — simplified the top dashboard header to showcase the clean app title "Cyclic Alarms".
+- ⚙️ **Optional Live Clock on Home** — added a new toggle in Settings under Clock Display Format to optionally show live clock and date below the app title.
+- ⚡ **Performance Optimization** — eliminated continuous background per-second dashboard recompositions when the home clock is disabled.
+- 🧭 **Settings Navigation Quick Return** — tapping the Settings tab in the bottom bar while in the About section instantly navigates back to the main Settings page.
+
 ## What's new — v1.8
 
 - 📑 **Duplicate Alarm Feature** — added a convenient "Duplicate" button directly on every alarm card; clone any alarm instantly to save setup time, with the full Add/Edit dialog pre-populated so you can tweak times or settings before saving.

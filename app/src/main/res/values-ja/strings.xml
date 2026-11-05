@@ -21,10 +21,12 @@
     <string name="setting_theme_title">テーマ</string>
     <string name="setting_clock_format_title">時計表示フォーマット</string>
     <string name="setting_clock_format_subtitle">ホーム画面の時計表示形式を選択します</string>
+    <string name="setting_show_home_clock_title">ホーム画面に時計を表示</string>
+    <string name="setting_show_home_clock_subtitle">アプリ名の下にリアルタイムの時計と日付を表示します</string>
     <string name="setting_permissions_title">権限とシステムアクセス</string>
     <string name="setting_permissions_subtitle">正確なアラーム鳴動とロック画面表示に必要な権限を管理</string>
     <string name="about_cyclic_alarms">Cyclic Alarms について</string>
-    <string name="about_cyclic_alarms_subtitle">バージョン 1.8 • リリースノート、サポート、開発者情報</string>
+    <string name="about_cyclic_alarms_subtitle">バージョン 1.8.1 • リリースノート、サポート、開発者情報</string>
     <string name="tinted">色付き</string>
     <string name="pure_white">ピュアホワイト</string>
 
@@ -199,12 +201,17 @@
     <string name="snooze_notif_big_text">%1$s に %2$d 分間スヌーズ\n%3$s に鳴動</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_title">v1.8（現在のバージョン）</string>
+    <string name="rel_v1_8_1_title">v1.8.1（現在のバージョン）</string>
+    <string name="rel_v1_8_title">v1.8 更新情報</string>
     <string name="rel_v1_7_3_title">v1.7.3 更新情報</string>
     <string name="rel_v1_7_2_title">v1.7.2 更新情報</string>
     <string name="rel_v1_7_1_title">v1.7.1 更新情報</string>
     <string name="rel_v1_7_title">v1.7 更新情報</string>
     <string name="rel_v1_6_5_title">v1.6.5 リリースノート</string>
+
+        <!-- Release Notes Items v1.8.1 -->
+    <string name="rel_v1_8_1_item1">ホーム画面ヘッダーの刷新 — ブランド名・時計・日付をすっきりとしたアプリ名「Cyclic Alarms」に変更</string>
+    <string name="rel_v1_8_1_item2">パフォーマンス最適化 — バッテリーとCPU負荷を抑えるため継続的な時計更新ループを削除</string>
 
         <!-- Release Notes Items v1.8 -->
     <string name="rel_v1_8_item1">アラーム複製機能 — 既存のアラームをワンタップで複製し、保存前に各設定を素早く編集可能</string>

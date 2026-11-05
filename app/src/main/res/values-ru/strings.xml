@@ -21,10 +21,12 @@
     <string name="setting_theme_title">Тема</string>
     <string name="setting_clock_format_title">Формат отображения часов</string>
     <string name="setting_clock_format_subtitle">Выберите формат отображения времени на главном экране</string>
+    <string name="setting_show_home_clock_title">Показывать часы на главном экране</string>
+    <string name="setting_show_home_clock_subtitle">Отображать живое время и дату под названием приложения</string>
     <string name="setting_permissions_title">Разрешения и доступ к системе</string>
     <string name="setting_permissions_subtitle">Управление доступом для надежного срабатывания будильника и экрана блокировки</string>
     <string name="about_cyclic_alarms">О приложении Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Версия 1.8 • Примечания к выпуску, поддержка и автор</string>
+    <string name="about_cyclic_alarms_subtitle">Версия 1.8.1 • Примечания к выпуску, поддержка и автор</string>
     <string name="tinted">С оттенком</string>
     <string name="pure_white">Чистый белый</string>
 
@@ -199,12 +201,17 @@
     <string name="snooze_notif_big_text">Отложен в %1$s на %2$d мин\nЗазвонит в %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_title">v1.8 (Текущая версия)</string>
+    <string name="rel_v1_8_1_title">v1.8.1 (Текущая версия)</string>
+    <string name="rel_v1_8_title">Примечания к версии v1.8</string>
     <string name="rel_v1_7_3_title">Примечания к версии v1.7.3</string>
     <string name="rel_v1_7_2_title">Примечания к версии v1.7.2</string>
     <string name="rel_v1_7_1_title">Примечания к версии v1.7.1</string>
     <string name="rel_v1_7_title">Примечания к версии v1.7</string>
     <string name="rel_v1_6_5_title">Примечания к версии v1.6.5</string>
+
+        <!-- Release Notes Items v1.8.1 -->
+    <string name="rel_v1_8_1_item1">Чистый заголовок главного экрана — название бренда, живые часы и дата заменены на аккуратное название \"Cyclic Alarms\"</string>
+    <string name="rel_v1_8_1_item2">Оптимизация производительности — удален непрерывный фоновый таймер часов для экономии батареи и процессора</string>
 
         <!-- Release Notes Items v1.8 -->
     <string name="rel_v1_8_item1">Дублирование будильника — создавайте копии будильников в одно касание и редактируйте любые параметры перед сохранением</string>

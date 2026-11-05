@@ -42,6 +42,10 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     private val _snoozeMinutes = MutableStateFlow(prefs.getInt("snooze_minutes", 5))
     val snoozeMinutes = _snoozeMinutes.asStateFlow()
 
+    // Show clock & date on home screen
+    private val _showHomeClock = MutableStateFlow(prefs.getBoolean("show_home_clock", false))
+    val showHomeClock = _showHomeClock.asStateFlow()
+
     // Light mode whiteness (0.0 = default tinted bg, 1.0 = pure white)
     private val _lightWhiteness = MutableStateFlow(
         prefs.getFloat("light_whiteness", 0f)
@@ -103,6 +107,11 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     fun setTimeFormat(format: String) {
         _timeFormat.value = format
         prefs.edit().putString("time_format", format).apply()
+    }
+
+    fun setShowHomeClock(show: Boolean) {
+        _showHomeClock.value = show
+        prefs.edit().putBoolean("show_home_clock", show).apply()
     }
 
     fun setSnoozeMinutes(minutes: Int) {

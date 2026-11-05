@@ -21,10 +21,12 @@
     <string name="setting_theme_title">थीम</string>
     <string name="setting_clock_format_title">घड़ी प्रदर्शन प्रारूप</string>
     <string name="setting_clock_format_subtitle">होम स्क्रीन घड़ी पर समय कैसे दिखे, चुनें</string>
+    <string name="setting_show_home_clock_title">होम स्क्रीन पर लाइव घड़ी दिखाएं</string>
+    <string name="setting_show_home_clock_subtitle">ऐप शीर्षक के नीचे लाइव समय और वर्तमान तिथि प्रदर्शित करें</string>
     <string name="setting_permissions_title">अनुमतियाँ और ऐप एक्सेस</string>
     <string name="setting_permissions_subtitle">सटीक अलार्म बजने और लॉक-स्क्रीन पॉपअप के लिए सिस्टम अनुमतियाँ प्रबंधित करें</string>
     <string name="about_cyclic_alarms">Cyclic Alarms के बारे में</string>
-    <string name="about_cyclic_alarms_subtitle">संस्करण 1.8 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
+    <string name="about_cyclic_alarms_subtitle">संस्करण 1.8.1 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
     <string name="tinted">टिंटेड</string>
     <string name="pure_white">प्योर व्हाइट</string>
 
@@ -199,12 +201,17 @@
     <string name="snooze_notif_big_text">%1$s पर %2$d मिनट के लिए स्नूज़ किया गया\n%3$s पर बजेगा</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_title">v1.8 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_8_1_title">v1.8.1 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_8_title">v1.8 संस्करण विवरण</string>
     <string name="rel_v1_7_3_title">v1.7.3 संस्करण विवरण</string>
     <string name="rel_v1_7_2_title">v1.7.2 संस्करण विवरण</string>
     <string name="rel_v1_7_1_title">v1.7.1 संस्करण विवरण</string>
     <string name="rel_v1_7_title">v1.7 संस्करण विवरण</string>
     <string name="rel_v1_6_5_title">v1.6.5 रिलीज़ नोट्स</string>
+
+        <!-- Release Notes Items v1.8.1 -->
+    <string name="rel_v1_8_1_item1">होम स्क्रीन हेडर अपडेट — ब्रांड नाम, लाइव घड़ी और तारीख को ऐप नाम \"Cyclic Alarms\" से बदला गया</string>
+    <string name="rel_v1_8_1_item2">प्रदर्शन में सुधार — बैटरी और सीपीयू की बचत के लिए बैकग्राउंड घड़ी टिकर को हटाया गया</string>
 
         <!-- Release Notes Items v1.8 -->
     <string name="rel_v1_8_item1">अलार्म डुप्लिकेट विकल्प — नया अलार्म जल्दी बनाने के लिए किसी भी मौजूदा अलार्म को डुप्लिकेट करें और सहेजने से पहले विवरण बदलें</string>

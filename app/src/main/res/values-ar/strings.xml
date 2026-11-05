@@ -21,10 +21,12 @@
     <string name="setting_theme_title">المظهر</string>
     <string name="setting_clock_format_title">تنسيق عرض الساعة</string>
     <string name="setting_clock_format_subtitle">اختر كيفية عرض الوقت على شاشة الساعة الرئيسية</string>
+    <string name="setting_show_home_clock_title">إظهار الساعة المباشرة في الرئيسية</string>
+    <string name="setting_show_home_clock_subtitle">عرض الوقت المباشر والتاريخ الحالي أسفل عنوان التطبيق</string>
     <string name="setting_permissions_title">الأذونات والوصول إلى النظام</string>
     <string name="setting_permissions_subtitle">إدارة أذونات النظام المطلوبة لدقة التنبيه وشاشة القفل</string>
     <string name="about_cyclic_alarms">حول Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">الإصدار 1.8 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
+    <string name="about_cyclic_alarms_subtitle">الإصدار 1.8.1 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
     <string name="tinted">مظلل</string>
     <string name="pure_white">أبيض ناصع</string>
 
@@ -199,12 +201,17 @@
     <string name="snooze_notif_big_text">تم التأجيل في %1$s لمدة %2$d دقيقة\nيرن في %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_title">v1.8 (الإصدار الحالي)</string>
+    <string name="rel_v1_8_1_title">v1.8.1 (الإصدار الحالي)</string>
+    <string name="rel_v1_8_title">ملاحظات الإصدار v1.8</string>
     <string name="rel_v1_7_3_title">ملاحظات الإصدار v1.7.3</string>
     <string name="rel_v1_7_2_title">ملاحظات الإصدار v1.7.2</string>
     <string name="rel_v1_7_1_title">ملاحظات الإصدار v1.7.1</string>
     <string name="rel_v1_7_title">ملاحظات الإصدار v1.7</string>
     <string name="rel_v1_6_5_title">ملاحظات الإصدار v1.6.5</string>
+
+        <!-- Release Notes Items v1.8.1 -->
+    <string name="rel_v1_8_1_item1">عنوان شاشة رئيسية نظيف — تم استبدال اسم العلامة التجارية والساعة الحية والتاريخ بعنوان التطبيق الأنيق \"Cyclic Alarms\"</string>
+    <string name="rel_v1_8_1_item2">تحسين الأداء — إزالة مؤقت التحديث المستمر في الخلفية لتوفير طاقة البطارية والمعالج</string>
 
         <!-- Release Notes Items v1.8 -->
     <string name="rel_v1_8_item1">خيار تكرار المنبه — انسخ أي منبه حالي لتوفير وقت الإعداد مع إمكانية تعديل أي تفاصيل قبل الحفظ</string>

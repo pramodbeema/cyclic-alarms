@@ -21,10 +21,12 @@
     <string name="setting_theme_title">Tema</string>
     <string name="setting_clock_format_title">Formato del reloj</string>
     <string name="setting_clock_format_subtitle">Elija cómo se muestra la hora en el reloj principal</string>
+    <string name="setting_show_home_clock_title">Mostrar reloj en inicio</string>
+    <string name="setting_show_home_clock_subtitle">Mostrar la hora en vivo y la fecha actual debajo del título</string>
     <string name="setting_permissions_title">Permisos y acceso del sistema</string>
     <string name="setting_permissions_subtitle">Administre el acceso necesario para alarmas fiables y avisos en pantalla de bloqueo</string>
     <string name="about_cyclic_alarms">Acerca de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Versión 1.8 • Notas de la versión, soporte e info del creador</string>
+    <string name="about_cyclic_alarms_subtitle">Versión 1.8.1 • Notas de la versión, soporte e info del creador</string>
     <string name="tinted">Matizado</string>
     <string name="pure_white">Blanco Puro</string>
 
@@ -199,12 +201,17 @@
     <string name="snooze_notif_big_text">Pospuesta a las %1$s por %2$d min\nSonará a las %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_title">v1.8 (Versión actual)</string>
+    <string name="rel_v1_8_1_title">v1.8.1 (Versión actual)</string>
+    <string name="rel_v1_8_title">Notas de la versión v1.8</string>
     <string name="rel_v1_7_3_title">Notas de la versión v1.7.3</string>
     <string name="rel_v1_7_2_title">Notas de la versión v1.7.2</string>
     <string name="rel_v1_7_1_title">Notas de la versión v1.7.1</string>
     <string name="rel_v1_7_title">Notas de la versión v1.7</string>
     <string name="rel_v1_6_5_title">Notas de la versión v1.6.5</string>
+
+        <!-- Release Notes Items v1.8.1 -->
+    <string name="rel_v1_8_1_item1">Encabezado limpio de pantalla principal — reemplazados la marca, el reloj en vivo y la fecha con el título limpio \"Cyclic Alarms\"</string>
+    <string name="rel_v1_8_1_item2">Optimización de rendimiento — eliminado el reloj continuo en segundo plano para ahorrar batería y CPU</string>
 
         <!-- Release Notes Items v1.8 -->
     <string name="rel_v1_8_item1">Opción de duplicar alarma — duplique cualquier alarma existente para ahorrar tiempo, pudiendo modificar cualquier ajuste antes de guardar</string>

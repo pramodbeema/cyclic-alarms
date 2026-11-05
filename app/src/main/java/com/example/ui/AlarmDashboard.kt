@@ -106,6 +106,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     var editTarget    by remember { mutableStateOf<Alarm?>(null) }
     var isDuplicating by remember { mutableStateOf(false) }
     var currentTab    by remember { mutableStateOf(0) }
+    var settingsSubpage by remember { mutableStateOf<String?>(null) }
 
     // Handle navigation requests from notification taps
     val requestedTab by viewModel.requestedTab.collectAsStateWithLifecycle()
@@ -126,12 +127,14 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     val lastCustomTrackUri by viewModel.lastCustomTrackUri.collectAsStateWithLifecycle()
     val silentBannerDismissed by viewModel.silentBannerDismissed.collectAsStateWithLifecycle()
     val appLanguage      by viewModel.appLanguage.collectAsStateWithLifecycle()
+    val showHomeClock    by viewModel.showHomeClock.collectAsStateWithLifecycle()
     var selectedThemeForSetup by remember { mutableStateOf(themeMode) }
     var selectedLanguageForSetup by remember { mutableStateOf(appLanguage) }
 
     var clock by remember { mutableStateOf("--:--:--") }
     var date  by remember { mutableStateOf("") }
-    LaunchedEffect(timeFormat) {
+    LaunchedEffect(timeFormat, showHomeClock) {
+        if (!showHomeClock) return@LaunchedEffect
         val tfPattern = if (timeFormat == "24H") "HH:mm:ss" else "hh:mm:ss a"
         val tf = SimpleDateFormat(tfPattern, Locale.US)
         val df = SimpleDateFormat("EEE, MMM d, yyyy", Locale.US)
@@ -142,6 +145,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             delay(1000)
         }
     }
+
 
     var hasNotifPerm by remember {
         mutableStateOf(
@@ -509,7 +513,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                     BottomTab(stringResource(R.string.nav_alarms),    Icons.Default.Notifications,  currentTab == 0) { currentTab = 0 }
                     BottomTab(stringResource(R.string.nav_timer),     Icons.Default.Timer,          currentTab == 1) { currentTab = 1 }
                     BottomTab(stringResource(R.string.nav_stopwatch), Icons.Default.AccessTime,     currentTab == 2) { currentTab = 2 }
-                    BottomTab(stringResource(R.string.nav_settings),  Icons.Default.Settings,       currentTab == 3) { currentTab = 3 }
+                    BottomTab(stringResource(R.string.nav_settings),  Icons.Default.Settings,       currentTab == 3) { currentTab = 3; settingsSubpage = null }
                 }
             }
         }
@@ -521,13 +525,15 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column {
                     Text(
-                        text = "Beema's FINCON",
-                        fontSize = 18.sp,
+                        text = stringResource(R.string.app_name),
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = BrandBlue
                     )
-                    Text(clock, fontSize = 24.sp, fontWeight = FontWeight.Black, color = c.textPrimary, fontFamily = FontFamily.Monospace)
-                    Text(date,  fontSize = 13.sp, color = c.textSecondary, fontWeight = FontWeight.Medium)
+                    if (showHomeClock) {
+                        Text(clock, fontSize = 24.sp, fontWeight = FontWeight.Black, color = c.textPrimary, fontFamily = FontFamily.Monospace)
+                        Text(date,  fontSize = 13.sp, color = c.textSecondary, fontWeight = FontWeight.Medium)
+                    }
                 }
                 // History icon button (top-right, only visible on Alarms tab)
                 if (currentTab == 0) {
@@ -680,7 +686,11 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                             onLanguageChange = { code ->
                                 viewModel.setAppLanguage(code)
                                 LocaleManager.setLanguage(context, code, restartActivity = true)
-                            }
+                            },
+                            showHomeClock = showHomeClock,
+                            onShowHomeClockChange = { viewModel.setShowHomeClock(it) },
+                            currentSubpage = settingsSubpage,
+                            onSubpageChange = { settingsSubpage = it }
                         )
                     }
                 }
@@ -1948,7 +1958,11 @@ fun SettingsPageView(
     lightWhiteness: Float = 0f,
     onLightWhitenessChange: (Float) -> Unit = {},
     appLanguage: String = "",
-    onLanguageChange: (String) -> Unit = {}
+    onLanguageChange: (String) -> Unit = {},
+    showHomeClock: Boolean = false,
+    onShowHomeClockChange: (Boolean) -> Unit = {},
+    currentSubpage: String? = null,
+    onSubpageChange: (String?) -> Unit = {}
 ) {
     val c = LocalAppColors.current
     val context = LocalContext.current
@@ -1984,7 +1998,7 @@ fun SettingsPageView(
     var exactAlarmGranted by remember { mutableStateOf(checkExactAlarm()) }
     var fullScreenGranted by remember { mutableStateOf(checkFullScreenIntent()) }
     var overlayGranted    by remember { mutableStateOf(checkOverlay()) }
-    var currentSubpage    by remember { mutableStateOf<String?>(null) }
+    // Subpage state hoisted to AlarmDashboard for bottom-bar navigation reset
 
     // Re-check all permissions every time the user returns from system settings (ON_RESUME)
     val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
@@ -2011,7 +2025,7 @@ fun SettingsPageView(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .clickable { currentSubpage = null }
+                    .clickable { onSubpageChange(null) }
                     .padding(vertical = 8.dp, horizontal = 4.dp)
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back_to_settings), tint = BrandBlue, modifier = Modifier.size(22.dp))
@@ -2037,7 +2051,7 @@ fun SettingsPageView(
                     .clip(RoundedCornerShape(14.dp))
                     .background(c.surfaceColor)
                     .border(BorderStroke(1.dp, BrandBlue.copy(alpha = 0.4f)), RoundedCornerShape(14.dp))
-                    .clickable { currentSubpage = "About" }
+                    .clickable { onSubpageChange("About") }
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -2330,6 +2344,42 @@ fun SettingsPageView(
                         )
                     }
                 }
+            }
+
+            Spacer(Modifier.height(10.dp))
+            HorizontalDivider(color = c.outlineColor.copy(alpha = 0.5f))
+            Spacer(Modifier.height(10.dp))
+
+            // Toggle to show/hide live clock & date on home screen
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        stringResource(R.string.setting_show_home_clock_title),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        color = c.textPrimary
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        stringResource(R.string.setting_show_home_clock_subtitle),
+                        fontSize = 11.sp,
+                        color = c.textSecondary
+                    )
+                }
+                Switch(
+                    checked = showHomeClock,
+                    onCheckedChange = onShowHomeClockChange,
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = BrandBlue,
+                        uncheckedThumbColor = c.textDisabled,
+                        uncheckedTrackColor = c.surfaceVariant
+                    )
+                )
             }
         }
 
@@ -3083,7 +3133,7 @@ fun AboutPageView(bottomPadding: androidx.compose.ui.unit.Dp = 0.dp) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.7", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.8.1", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
@@ -3150,11 +3200,22 @@ fun AboutPageView(bottomPadding: androidx.compose.ui.unit.Dp = 0.dp) {
             Text(stringResource(R.string.release_history_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.8 — Expanded by default (current release)
+            // v1.8.1 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = stringResource(R.string.rel_v1_8_title),
+                version = stringResource(R.string.rel_v1_8_1_title),
                 badgeText = stringResource(R.string.badge_latest),
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "✨" to stringResource(R.string.rel_v1_8_1_item1),
+                    "⚡" to stringResource(R.string.rel_v1_8_1_item2)
+                )
+            )
+
+            // v1.8 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = stringResource(R.string.rel_v1_8_title),
+                badgeText = "v1.8",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "📑" to stringResource(R.string.rel_v1_8_item1),
                     "✨" to stringResource(R.string.rel_v1_8_item2)

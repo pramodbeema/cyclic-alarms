@@ -21,10 +21,12 @@
     <string name="setting_theme_title">主题</string>
     <string name="setting_clock_format_title">时钟显示格式</string>
     <string name="setting_clock_format_subtitle">选择主屏幕时钟的显示方式</string>
+    <string name="setting_show_home_clock_title">主屏幕显示实时时钟</string>
+    <string name="setting_show_home_clock_subtitle">在应用名称下方显示实时时间和当前日期</string>
     <string name="setting_permissions_title">权限与系统访问</string>
     <string name="setting_permissions_subtitle">管理精准响铃和锁屏弹窗所需的系统权限</string>
     <string name="about_cyclic_alarms">关于 Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">版本 1.8 • 发行说明、支持与开发者信息</string>
+    <string name="about_cyclic_alarms_subtitle">版本 1.8.1 • 发行说明、支持与开发者信息</string>
     <string name="tinted">淡色</string>
     <string name="pure_white">纯白</string>
 
@@ -199,12 +201,17 @@
     <string name="snooze_notif_big_text">于 %1$s 稍后提醒 %2$d 分钟\n将于 %3$s 响铃</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_title">v1.8（当前版本）</string>
+    <string name="rel_v1_8_1_title">v1.8.1（当前版本）</string>
+    <string name="rel_v1_8_title">v1.8 更新说明</string>
     <string name="rel_v1_7_3_title">v1.7.3 更新说明</string>
     <string name="rel_v1_7_2_title">v1.7.2 更新说明</string>
     <string name="rel_v1_7_1_title">v1.7.1 更新说明</string>
     <string name="rel_v1_7_title">v1.7 更新说明</string>
     <string name="rel_v1_6_5_title">v1.6.5 发行说明</string>
+
+        <!-- Release Notes Items v1.8.1 -->
+    <string name="rel_v1_8_1_item1">主屏幕标题栏优化 — 移除品牌名、实时时钟和日期，替换为清爽的应用名称“Cyclic Alarms”</string>
+    <string name="rel_v1_8_1_item2">性能优化 — 移除了后台持续时钟计时器，有效节省电量与系统资源</string>
 
         <!-- Release Notes Items v1.8 -->
     <string name="rel_v1_8_item1">闹钟复制功能 — 一键复制现有闹钟以节省设置时间，并可在确认保存前随意修改任何参数</string>

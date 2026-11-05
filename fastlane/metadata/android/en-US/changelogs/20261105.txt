@@ -1,0 +1,3 @@
+- Clean Home Screen Header: Replaced top brand and clock with a clean 'Cyclic Alarms' app title.
+- Optional Home Clock: Added setting to show live clock and date below app title.
+- Settings Navigation: Tapping Settings on bottom bar now directly returns to main settings from About.

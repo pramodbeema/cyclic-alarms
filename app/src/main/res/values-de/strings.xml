@@ -21,10 +21,12 @@
     <string name="setting_theme_title">Design</string>
     <string name="setting_clock_format_title">Uhrzeitanzeigeformat</string>
     <string name="setting_clock_format_subtitle">Wählen Sie das Format der Zeitanzeige auf dem Startbildschirm</string>
+    <string name="setting_show_home_clock_title">Live-Uhr auf Startseite anzeigen</string>
+    <string name="setting_show_home_clock_subtitle">Live-Uhrzeit und aktuelles Datum unter dem App-Titel anzeigen</string>
     <string name="setting_permissions_title">Berechtigungen &amp; App-Zugriff</string>
     <string name="setting_permissions_subtitle">Systemzugriff für zuverlässiges Klingeln und Sperrbildschirm-Popups verwalten</string>
     <string name="about_cyclic_alarms">Über Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.8 • Versionshinweise, Support &amp; Entwickler-Info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.8.1 • Versionshinweise, Support &amp; Entwickler-Info</string>
     <string name="tinted">Getönt</string>
     <string name="pure_white">Reinweiß</string>
 
@@ -199,12 +201,17 @@
     <string name="snooze_notif_big_text">Geschlummert um %1$s für %2$d Min.\nKlingelt um %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_title">v1.8 (Aktuelle Version)</string>
+    <string name="rel_v1_8_1_title">v1.8.1 (Aktuelle Version)</string>
+    <string name="rel_v1_8_title">Versionshinweise v1.8</string>
     <string name="rel_v1_7_3_title">Versionshinweise v1.7.3</string>
     <string name="rel_v1_7_2_title">Versionshinweise v1.7.2</string>
     <string name="rel_v1_7_1_title">Versionshinweise v1.7.1</string>
     <string name="rel_v1_7_title">Versionshinweise v1.7</string>
     <string name="rel_v1_6_5_title">v1.6.5 Versionshinweise</string>
+
+        <!-- Release Notes Items v1.8.1 -->
+    <string name="rel_v1_8_1_item1">Sauberer Startbildschirm-Header — Markenname, Live-Uhr und Datum durch den klaren App-Titel \"Cyclic Alarms\" ersetzt</string>
+    <string name="rel_v1_8_1_item2">Leistungsoptimierung — Kontinuierlichen Hintergrund-Uhrenticker entfernt, um Akku und CPU zu schonen</string>
 
         <!-- Release Notes Items v1.8 -->
     <string name="rel_v1_8_item1">Wecker duplizieren — Bestehende Wecker zeitsparend kopieren und vor dem Speichern beliebige Einstellungen anpassen</string>
