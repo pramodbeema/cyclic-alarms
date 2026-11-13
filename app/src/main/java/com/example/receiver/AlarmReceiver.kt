@@ -9,11 +9,12 @@ import com.example.service.AlarmService
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("AlarmReceiver", "Alarm received: ID = ${intent.getIntExtra("ALARM_ID", -1)}")
+        val alarmId = intent.getIntExtra("ALARM_ID", -1)
+        Log.d("AlarmReceiver", "Alarm received: ID = $alarmId")
 
         val serviceIntent = Intent(context, AlarmService::class.java).apply {
             action = "START_ALARM"
-            putExtra("ALARM_ID", intent.getIntExtra("ALARM_ID", -1))
+            putExtra("ALARM_ID", alarmId)
             putExtra("ALARM_LABEL", intent.getStringExtra("ALARM_LABEL") ?: "Alarm")
             putExtra("ALARM_HOUR", intent.getIntExtra("ALARM_HOUR", 0))
             putExtra("ALARM_MINUTE", intent.getIntExtra("ALARM_MINUTE", 0))
@@ -34,7 +35,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 context.startService(serviceIntent)
             }
         } catch (e: Exception) {
-            Log.e("AlarmReceiver", "Failed to start AlarmService", e)
+            Log.e("AlarmReceiver", "Failed to start AlarmService for ID $alarmId", e)
         }
     }
 }

@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">Berechtigungen &amp; App-Zugriff</string>
     <string name="setting_permissions_subtitle">Systemzugriff für zuverlässiges Klingeln und Sperrbildschirm-Popups verwalten</string>
     <string name="about_cyclic_alarms">Über Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.8.1 • Versionshinweise, Support &amp; Entwickler-Info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.8.2 • Versionshinweise, Support &amp; Entwickler-Info</string>
     <string name="tinted">Getönt</string>
     <string name="pure_white">Reinweiß</string>
 
@@ -201,7 +201,8 @@
     <string name="snooze_notif_big_text">Geschlummert um %1$s für %2$d Min.\nKlingelt um %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_1_title">v1.8.1 (Aktuelle Version)</string>
+    <string name="rel_v1_8_2_title">v1.8.2 (Aktuelle Version)</string>
+    <string name="rel_v1_8_1_title">Versionshinweise v1.8.1</string>
     <string name="rel_v1_8_title">Versionshinweise v1.8</string>
     <string name="rel_v1_7_3_title">Versionshinweise v1.7.3</string>
     <string name="rel_v1_7_2_title">Versionshinweise v1.7.2</string>
@@ -209,7 +210,11 @@
     <string name="rel_v1_7_title">Versionshinweise v1.7</string>
     <string name="rel_v1_6_5_title">v1.6.5 Versionshinweise</string>
 
-        <!-- Release Notes Items v1.8.1 -->
+        <!-- Release Notes Items v1.8.2 -->
+    <string name="rel_v1_8_2_item1">F-Droid Auto-Update-Kompatibilität — Versionscode auf 10-stelliges Format aktualisiert für nahtlose automatische Updates via F-Droid Bot</string>
+    <string name="rel_v1_8_2_item2">Stabilität &amp; Wartung — interne Stabilitätsverbesserungen und Bereinigung der Release-Pipeline</string>
+
+    <!-- Release Notes Items v1.8.1 -->
     <string name="rel_v1_8_1_item1">Sauberer Startbildschirm-Header — Markenname, Live-Uhr und Datum durch den klaren App-Titel \"Cyclic Alarms\" ersetzt</string>
     <string name="rel_v1_8_1_item2">Leistungsoptimierung — Kontinuierlichen Hintergrund-Uhrenticker entfernt, um Akku und CPU zu schonen</string>
 

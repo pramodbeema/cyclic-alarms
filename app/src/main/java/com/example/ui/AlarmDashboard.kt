@@ -3133,7 +3133,7 @@ fun AboutPageView(bottomPadding: androidx.compose.ui.unit.Dp = 0.dp) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.8.1", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.8.2", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
@@ -3200,11 +3200,22 @@ fun AboutPageView(bottomPadding: androidx.compose.ui.unit.Dp = 0.dp) {
             Text(stringResource(R.string.release_history_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.8.1 — Expanded by default (current release)
+            // v1.8.2 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = stringResource(R.string.rel_v1_8_1_title),
+                version = stringResource(R.string.rel_v1_8_2_title),
                 badgeText = stringResource(R.string.badge_latest),
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "🤖" to stringResource(R.string.rel_v1_8_2_item1),
+                    "⚡" to stringResource(R.string.rel_v1_8_2_item2)
+                )
+            )
+
+            // v1.8.1 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = stringResource(R.string.rel_v1_8_1_title),
+                badgeText = "v1.8.1",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "✨" to stringResource(R.string.rel_v1_8_1_item1),
                     "⚡" to stringResource(R.string.rel_v1_8_1_item2)

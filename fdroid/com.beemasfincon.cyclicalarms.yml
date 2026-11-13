@@ -49,7 +49,7 @@ Builds:
 
   - versionName: 1.7.1
     versionCode: 2026102107
-    commit: dde3313fd4435d6c6c09e658d351bb8609851670
+    commit: 5b1dcce7587dced6ddbd3da4c34bf10055c79fc0
     subdir: app
     gradle:
       - yes
@@ -75,7 +75,22 @@ Builds:
     gradle:
       - yes
 
+  - versionName: 1.8.1
+    versionCode: 20261105
+    commit: 16a4dd9c3a17e7c35a8b7f0b10e14c97c1217e53
+    subdir: app
+    gradle:
+      - yes
+
+  - versionName: 1.8.2
+    versionCode: 2026111301
+    commit: v1.8.2
+    subdir: app
+    gradle:
+      - yes
+
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.8
-CurrentVersionCode: 20261103
+CurrentVersion: 1.8.2
+CurrentVersionCode: 2026111301
+

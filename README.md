@@ -85,6 +85,11 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 
 ---
 
+## What's new — v1.8.2
+
+- 🤖 **F-Droid Auto-Update Compatibility** — upgraded internal version code to 10-digit format (`2026111301`) for seamless automatic updates via F-Droid Bot.
+- ⚡ **Stability & Maintenance** — internal stability improvements and release pipeline alignment.
+
 ## What's new — v1.8.1
 
 - 🌟 **Clean Home Screen Header** — simplified the top dashboard header to showcase the clean app title "Cyclic Alarms".

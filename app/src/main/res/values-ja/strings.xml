@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">権限とシステムアクセス</string>
     <string name="setting_permissions_subtitle">正確なアラーム鳴動とロック画面表示に必要な権限を管理</string>
     <string name="about_cyclic_alarms">Cyclic Alarms について</string>
-    <string name="about_cyclic_alarms_subtitle">バージョン 1.8.1 • リリースノート、サポート、開発者情報</string>
+    <string name="about_cyclic_alarms_subtitle">バージョン 1.8.2 • リリースノート、サポート、開発者情報</string>
     <string name="tinted">色付き</string>
     <string name="pure_white">ピュアホワイト</string>
 
@@ -201,7 +201,8 @@
     <string name="snooze_notif_big_text">%1$s に %2$d 分間スヌーズ\n%3$s に鳴動</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_1_title">v1.8.1（現在のバージョン）</string>
+    <string name="rel_v1_8_2_title">v1.8.2（現在のバージョン）</string>
+    <string name="rel_v1_8_1_title">v1.8.1 更新情報</string>
     <string name="rel_v1_8_title">v1.8 更新情報</string>
     <string name="rel_v1_7_3_title">v1.7.3 更新情報</string>
     <string name="rel_v1_7_2_title">v1.7.2 更新情報</string>
@@ -209,7 +210,11 @@
     <string name="rel_v1_7_title">v1.7 更新情報</string>
     <string name="rel_v1_6_5_title">v1.6.5 リリースノート</string>
 
-        <!-- Release Notes Items v1.8.1 -->
+        <!-- Release Notes Items v1.8.2 -->
+    <string name="rel_v1_8_2_item1">F-Droid自動更新の互換性向上 — F-Droid Botによる円滑な自動更新のためバージョンコードを10桁形式に更新</string>
+    <string name="rel_v1_8_2_item2">安定性とメンテナンス — 内部安定性の向上およびリリース情報の同期</string>
+
+    <!-- Release Notes Items v1.8.1 -->
     <string name="rel_v1_8_1_item1">ホーム画面ヘッダーの刷新 — ブランド名・時計・日付をすっきりとしたアプリ名「Cyclic Alarms」に変更</string>
     <string name="rel_v1_8_1_item2">パフォーマンス最適化 — バッテリーとCPU負荷を抑えるため継続的な時計更新ループを削除</string>
 

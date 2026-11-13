@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">Autorisations et accès système</string>
     <string name="setting_permissions_subtitle">Gérer les accès nécessaires pour la sonnerie fiable et l\'écran de verrouillage</string>
     <string name="about_cyclic_alarms">À propos de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.8.1 • Notes de version, support et infos créateur</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.8.2 • Notes de version, support et infos créateur</string>
     <string name="tinted">Teinté</string>
     <string name="pure_white">Blanc Pur</string>
 
@@ -201,7 +201,8 @@
     <string name="snooze_notif_big_text">Répétée à %1$s pour %2$d min\nSonnera à %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_1_title">v1.8.1 (Version actuelle)</string>
+    <string name="rel_v1_8_2_title">v1.8.2 (Version actuelle)</string>
+    <string name="rel_v1_8_1_title">Notes de version v1.8.1</string>
     <string name="rel_v1_8_title">Notes de version v1.8</string>
     <string name="rel_v1_7_3_title">Notes de version v1.7.3</string>
     <string name="rel_v1_7_2_title">Notes de version v1.7.2</string>
@@ -209,7 +210,11 @@
     <string name="rel_v1_7_title">Notes de version v1.7</string>
     <string name="rel_v1_6_5_title">Notes de version v1.6.5</string>
 
-        <!-- Release Notes Items v1.8.1 -->
+        <!-- Release Notes Items v1.8.2 -->
+    <string name="rel_v1_8_2_item1">Compatibilité mise à jour automatique F-Droid — mise à niveau du code de version à 10 chiffres pour des mises à jour automatiques fluides via F-Droid Bot</string>
+    <string name="rel_v1_8_2_item2">Stabilité et maintenance — améliorations internes de la stabilité et synchronisation de publication</string>
+
+    <!-- Release Notes Items v1.8.1 -->
     <string name="rel_v1_8_1_item1">En-tête épuré de l\'écran d\'accueil — remplacement de la marque, de l\'horloge et de la date par le titre \"Cyclic Alarms\"</string>
     <string name="rel_v1_8_1_item2">Optimisation des performances — suppression du rafraîchissement continu de l\'horloge en arrière-plan pour économiser la batterie</string>
 

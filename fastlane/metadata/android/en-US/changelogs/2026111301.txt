@@ -1,0 +1,3 @@
+- F-Droid Auto-Update Compatibility: Upgraded version code to 10-digit format for seamless automated updates by F-Droid Bot.
+- Stability & Maintenance: Internal stability improvements and release pipeline alignment.
+

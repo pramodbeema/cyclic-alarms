@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">İzinler ve Sistem Erişimi</string>
     <string name="setting_permissions_subtitle">Güvenilir alarm çalması ve kilit ekranı pencereleri için gereken izinleri yönetin</string>
     <string name="about_cyclic_alarms">Cyclic Alarms Hakkında</string>
-    <string name="about_cyclic_alarms_subtitle">Sürüm 1.8.1 • Sürüm notları, destek ve yapımcı bilgisi</string>
+    <string name="about_cyclic_alarms_subtitle">Sürüm 1.8.2 • Sürüm notları, destek ve yapımcı bilgisi</string>
     <string name="tinted">Tonlu</string>
     <string name="pure_white">Saf Beyaz</string>
 
@@ -201,7 +201,8 @@
     <string name="snooze_notif_big_text">%1$s zamanında %2$d dk ertelendi\nÇalma zamanı: %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_1_title">v1.8.1 (Geçerli Sürüm)</string>
+    <string name="rel_v1_8_2_title">v1.8.2 (Geçerli Sürüm)</string>
+    <string name="rel_v1_8_1_title">v1.8.1 Sürüm Notları</string>
     <string name="rel_v1_8_title">v1.8 Sürüm Notları</string>
     <string name="rel_v1_7_3_title">v1.7.3 Sürüm Notları</string>
     <string name="rel_v1_7_2_title">v1.7.2 Sürüm Notları</string>
@@ -209,7 +210,11 @@
     <string name="rel_v1_7_title">v1.7 Sürüm Notları</string>
     <string name="rel_v1_6_5_title">v1.6.5 Sürüm Notları</string>
 
-        <!-- Release Notes Items v1.8.1 -->
+        <!-- Release Notes Items v1.8.2 -->
+    <string name="rel_v1_8_2_item1">F-Droid Otomatik Güncelleme Uyumluluğu — F-Droid Bot ile sorunsuz otomatik güncellemeler için sürüm kodu 10 basamaklı formata yükseltildi</string>
+    <string name="rel_v1_8_2_item2">Kararlılık ve Bakım — dahili kararlılık iyileştirmeleri ve sürüm bilgisi eşitlemesi</string>
+
+    <!-- Release Notes Items v1.8.1 -->
     <string name="rel_v1_8_1_item1">Temiz Ana Ekran Başlığı — marka adı, canlı saat ve tarih kaldırılarak sade \"Cyclic Alarms\" başlığı eklendi</string>
     <string name="rel_v1_8_1_item2">Performans Optimizasyonu — pil ve işlemci tasarrufu için arka plandaki saat döngüsü kaldırıldı</string>
 

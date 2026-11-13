@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">Permissões e acesso ao sistema</string>
     <string name="setting_permissions_subtitle">Gerencie o acesso do sistema necessário para alarmes pontuais e tela de bloqueio</string>
     <string name="about_cyclic_alarms">Sobre o Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Versão 1.8.1 • Notas da versão, suporte e criador</string>
+    <string name="about_cyclic_alarms_subtitle">Versão 1.8.2 • Notas da versão, suporte e criador</string>
     <string name="tinted">Matizado</string>
     <string name="pure_white">Branco Puro</string>
 
@@ -201,7 +201,8 @@
     <string name="snooze_notif_big_text">Adiado às %1$s por %2$d min\nTocará às %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_1_title">v1.8.1 (Versão atual)</string>
+    <string name="rel_v1_8_2_title">v1.8.2 (Versão atual)</string>
+    <string name="rel_v1_8_1_title">Notas da versão v1.8.1</string>
     <string name="rel_v1_8_title">Notas da versão v1.8</string>
     <string name="rel_v1_7_3_title">Notas da versão v1.7.3</string>
     <string name="rel_v1_7_2_title">Notas da versão v1.7.2</string>
@@ -209,7 +210,11 @@
     <string name="rel_v1_7_title">Notas da versão v1.7</string>
     <string name="rel_v1_6_5_title">Notas da Versão v1.6.5</string>
 
-        <!-- Release Notes Items v1.8.1 -->
+        <!-- Release Notes Items v1.8.2 -->
+    <string name="rel_v1_8_2_item1">Compatibilidade com atualização automática do F-Droid — código de versão atualizado para 10 dígitos para atualizações automáticas via F-Droid Bot</string>
+    <string name="rel_v1_8_2_item2">Estabilidade e manutenção — melhorias internas de estabilidade e alinhamento de lançamento</string>
+
+    <!-- Release Notes Items v1.8.1 -->
     <string name="rel_v1_8_1_item1">Cabeçalho limpo da tela inicial — substituído o nome da marca, relógio ao vivo e data pelo título \"Cyclic Alarms\"</string>
     <string name="rel_v1_8_1_item2">Otimização de desempenho — removida a atualização contínua do relógio em segundo plano para economizar bateria e CPU</string>
 

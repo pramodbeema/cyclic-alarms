@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">Permissions &amp; App Access</string>
     <string name="setting_permissions_subtitle">Manage system access required for reliable alarm ringing and lock-screen popups</string>
     <string name="about_cyclic_alarms">About Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.8.1 • Release notes, support &amp; creator info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.8.2 • Release notes, support &amp; creator info</string>
     <string name="tinted">Tinted</string>
     <string name="pure_white">Pure White</string>
 
@@ -202,7 +202,8 @@
     <string name="snooze_notif_big_text">Snoozed at %1$s for %2$d min\nRings at %3$s</string>
 
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_1_title">v1.8.1 (Current Release)</string>
+    <string name="rel_v1_8_2_title">v1.8.2 (Current Release)</string>
+    <string name="rel_v1_8_1_title">v1.8.1 Release Notes</string>
     <string name="rel_v1_8_title">v1.8 Release Notes</string>
     <string name="rel_v1_7_3_title">v1.7.3 Release Notes</string>
     <string name="rel_v1_7_2_title">v1.7.2 Release Notes</string>
@@ -220,6 +221,10 @@
     <string name="rel_v1_2_title">v1.2 Release Notes</string>
     <string name="rel_v1_1_title">v1.1 Release Notes</string>
     <string name="rel_v1_0_title">v1.0 Initial Release</string>
+
+    <!-- Release Notes Items v1.8.2 -->
+    <string name="rel_v1_8_2_item1">F-Droid Auto-Update Compatibility — upgraded internal version code to 10-digit format for seamless automatic updates via F-Droid Bot</string>
+    <string name="rel_v1_8_2_item2">Stability &amp; Maintenance — internal stability improvements and release pipeline alignment</string>
 
     <!-- Release Notes Items v1.8.1 -->
     <string name="rel_v1_8_1_item1">Clean Home Screen Header — replaced brand name, live clock, and date with the clean app title \"Cyclic Alarms\"</string>
