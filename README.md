@@ -1,7 +1,7 @@
 # Cyclic Alarms
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![F-Droid](https://img.shields.io/f-droid/v/com.beemasfincon.cyclicalarms?color=brightgreen&label=F-Droid)](https://f-droid.org/packages/com.beemasfincon.cyclicalarms/)
+[![Get it on F-Droid](https://img.shields.io/badge/Get%20it%20on-F--Droid-3DDC84.svg?logo=f-droid&logoColor=white)](https://f-droid.org/en/packages/com.beemasfincon.cyclicalarms/)
 [![Platform](https://img.shields.io/badge/Platform-Android_7.0%2B_(API_24)-green.svg)](https://android.com)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0-purple.svg)](https://kotlinlang.org)
 [![Jetpack Compose](https://img.shields.io/badge/UI-Jetpack_Compose_Material_3-4285F4.svg)](https://developer.android.com/jetpack/compose)
@@ -226,6 +226,12 @@ app/build/outputs/apk/debug/app-debug.apk
 ---
 
 ## 📦 F-Droid Release Pipeline
+
+<p align="left">
+  <a href="https://f-droid.org/en/packages/com.beemasfincon.cyclicalarms/">
+    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">
+  </a>
+</p>
 
 Cyclic Alarms is built directly from source by the F-Droid build server using reproducible metadata:
 - **Package ID**: `com.beemasfincon.cyclicalarms`
