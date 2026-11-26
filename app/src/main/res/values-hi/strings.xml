@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">अनुमतियाँ और ऐप एक्सेस</string>
     <string name="setting_permissions_subtitle">सटीक अलार्म बजने और लॉक-स्क्रीन पॉपअप के लिए सिस्टम अनुमतियाँ प्रबंधित करें</string>
     <string name="about_cyclic_alarms">Cyclic Alarms के बारे में</string>
-    <string name="about_cyclic_alarms_subtitle">संस्करण 1.8.2 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
+    <string name="about_cyclic_alarms_subtitle">संस्करण 1.8.3 • रिलीज़ नोट्स, सहायता और निर्माता जानकारी</string>
     <string name="tinted">टिंटेड</string>
     <string name="pure_white">प्योर व्हाइट</string>
 
@@ -200,8 +200,16 @@
     <string name="snooze_notif_subtext">स्नूज़ किया गया (%d मि)</string>
     <string name="snooze_notif_big_text">%1$s पर %2$d मिनट के लिए स्नूज़ किया गया\n%3$s पर बजेगा</string>
 
+    <!-- Conflict Detection Strings -->
+    <string name="conflict_dialog_title">समान समय अलार्म</string>
+    <string name="conflict_dialog_msg">%1$s के लिए %2$s%3$s पर पहले से ही एक अलार्म निर्धारित है। क्या आप फिर भी सहेजना चाहते हैं?</string>
+    <string name="conflict_warning_banner">सूचना: %1$s पर %2$s के लिए पहले से एक अलार्म मौजूद है</string>
+    <string name="btn_save_anyway">फिर भी सहेजें</string>
+    <string name="btn_change_time">समय बदलें</string>
+
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_2_title">v1.8.2 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_8_3_title">v1.8.3 (वर्तमान संस्करण)</string>
+    <string name="rel_v1_8_2_title">v1.8.2 संस्करण विवरण</string>
     <string name="rel_v1_8_1_title">v1.8.1 संस्करण विवरण</string>
     <string name="rel_v1_8_title">v1.8 संस्करण विवरण</string>
     <string name="rel_v1_7_3_title">v1.7.3 संस्करण विवरण</string>
@@ -210,7 +218,13 @@
     <string name="rel_v1_7_title">v1.7 संस्करण विवरण</string>
     <string name="rel_v1_6_5_title">v1.6.5 रिलीज़ नोट्स</string>
 
-        <!-- Release Notes Items v1.8.2 -->
+        <!-- Release Notes Items v1.8.3 -->
+    <string name="rel_v1_8_3_item1">समान समय टकराव जांच — एक ही दिन एक ही समय पर अलार्म होने पर स्वचालित चेतावनी और पुष्टि संवाद</string>
+    <string name="rel_v1_8_3_item2">अधिकतम स्क्रीन स्पेस — हेडर ऐप नाम हटाया गया और अगले अलार्म को बेहद कॉम्पैक्ट चिप में बदला गया</string>
+    <string name="rel_v1_8_3_item3">कार्ड और सूची दृश्य — कॉम्पैक्ट कार्ड और हाई-डेंसिटी लिस्ट व्यू के बीच आसानी से टॉगल करें</string>
+    <string name="rel_v1_8_3_item4">प्रोफेशनल पारदर्शी आइकन — डार्क स्क्वायर बैकग्राउंड हटाया गया, फाइल मैनेजर, इंस्टॉलर और लॉन्चर में एक समान आकार</string>
+
+    <!-- Release Notes Items v1.8.2 -->
     <string name="rel_v1_8_2_item1">F-Droid ऑटो-अपडेट अनुकूलता — F-Droid बॉट द्वारा स्वचालित अपडेट के लिए 10-अंकीय संस्करण कोड में अपग्रेड</string>
     <string name="rel_v1_8_2_item2">स्थिरता और रखरखाव — आंतरिक स्थिरता सुधार और रिलीज़ प्रक्रिया संरेखण</string>
 

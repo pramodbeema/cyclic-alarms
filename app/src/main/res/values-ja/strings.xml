@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">権限とシステムアクセス</string>
     <string name="setting_permissions_subtitle">正確なアラーム鳴動とロック画面表示に必要な権限を管理</string>
     <string name="about_cyclic_alarms">Cyclic Alarms について</string>
-    <string name="about_cyclic_alarms_subtitle">バージョン 1.8.2 • リリースノート、サポート、開発者情報</string>
+    <string name="about_cyclic_alarms_subtitle">バージョン 1.8.3 • リリースノート、サポート、開発者情報</string>
     <string name="tinted">色付き</string>
     <string name="pure_white">ピュアホワイト</string>
 
@@ -200,8 +200,16 @@
     <string name="snooze_notif_subtext">スヌーズ中 (%d分)</string>
     <string name="snooze_notif_big_text">%1$s に %2$d 分間スヌーズ\n%3$s に鳴動</string>
 
+    <!-- Conflict Detection Strings -->
+    <string name="conflict_dialog_title">同一時刻のアラーム</string>
+    <string name="conflict_dialog_msg">%2$sの%1$s%3$sに既に設定されたアラームがあります。このまま保存しますか？</string>
+    <string name="conflict_warning_banner">注意: %2$sの%1$sに既にアラームがあります</string>
+    <string name="btn_save_anyway">そのまま保存</string>
+    <string name="btn_change_time">時間を変更</string>
+
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_2_title">v1.8.2（現在のバージョン）</string>
+    <string name="rel_v1_8_3_title">v1.8.3（現在のバージョン）</string>
+    <string name="rel_v1_8_2_title">v1.8.2 更新情報</string>
     <string name="rel_v1_8_1_title">v1.8.1 更新情報</string>
     <string name="rel_v1_8_title">v1.8 更新情報</string>
     <string name="rel_v1_7_3_title">v1.7.3 更新情報</string>
@@ -210,7 +218,13 @@
     <string name="rel_v1_7_title">v1.7 更新情報</string>
     <string name="rel_v1_6_5_title">v1.6.5 リリースノート</string>
 
-        <!-- Release Notes Items v1.8.2 -->
+        <!-- Release Notes Items v1.8.3 -->
+    <string name="rel_v1_8_3_item1">同一時刻重複チェック — 同じ日の同じ時刻にアラームが設定されている場合に自動警告と確認画面を表示</string>
+    <string name="rel_v1_8_3_item2">画面スペースの最大化 — アプリ名ヘッダーを削除し、次回アラーム表示を超小型チップ化</string>
+    <string name="rel_v1_8_3_item3">カード表示・リスト表示モード — コンパクトなカードと高密度リスト表示を瞬時に切り替え可能</string>
+    <string name="rel_v1_8_3_item4">プロ仕様の透過アイコン — 暗い正方形の背景を削除し、ファイルマネージャーやランチャーでの縮尺を統一</string>
+
+    <!-- Release Notes Items v1.8.2 -->
     <string name="rel_v1_8_2_item1">F-Droid自動更新の互換性向上 — F-Droid Botによる円滑な自動更新のためバージョンコードを10桁形式に更新</string>
     <string name="rel_v1_8_2_item2">安定性とメンテナンス — 内部安定性の向上およびリリース情報の同期</string>
 

@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">الأذونات والوصول إلى النظام</string>
     <string name="setting_permissions_subtitle">إدارة أذونات النظام المطلوبة لدقة التنبيه وشاشة القفل</string>
     <string name="about_cyclic_alarms">حول Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">الإصدار 1.8.2 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
+    <string name="about_cyclic_alarms_subtitle">الإصدار 1.8.3 • ملاحظات الإصدار والدعم ومعلومات المطور</string>
     <string name="tinted">مظلل</string>
     <string name="pure_white">أبيض ناصع</string>
 
@@ -200,8 +200,16 @@
     <string name="snooze_notif_subtext">تم التأجيل (%d د)</string>
     <string name="snooze_notif_big_text">تم التأجيل في %1$s لمدة %2$d دقيقة\nيرن في %3$s</string>
 
+    <!-- Conflict Detection Strings -->
+    <string name="conflict_dialog_title">منبه في نفس الوقت</string>
+    <string name="conflict_dialog_msg">تم تعيين منبه بالفعل في %1$s يوم %2$s%3$s. هل تريد الحفظ على أي حال؟</string>
+    <string name="conflict_warning_banner">تنبيه: يوجد منبه بالفعل في %1$s يوم %2$s</string>
+    <string name="btn_save_anyway">حفظ على أي حال</string>
+    <string name="btn_change_time">تغيير الوقت</string>
+
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_2_title">v1.8.2 (الإصدار الحالي)</string>
+    <string name="rel_v1_8_3_title">v1.8.3 (الإصدار الحالي)</string>
+    <string name="rel_v1_8_2_title">ملاحظات الإصدار v1.8.2</string>
     <string name="rel_v1_8_1_title">ملاحظات الإصدار v1.8.1</string>
     <string name="rel_v1_8_title">ملاحظات الإصدار v1.8</string>
     <string name="rel_v1_7_3_title">ملاحظات الإصدار v1.7.3</string>
@@ -210,7 +218,13 @@
     <string name="rel_v1_7_title">ملاحظات الإصدار v1.7</string>
     <string name="rel_v1_6_5_title">ملاحظات الإصدار v1.6.5</string>
 
-        <!-- Release Notes Items v1.8.2 -->
+        <!-- Release Notes Items v1.8.3 -->
+    <string name="rel_v1_8_3_item1">فحص تعارض الوقت المكرر — يكتشف تلقائياً عند جدولة منبه في نفس الوقت في نفس اليوم مع تحذير فوري وتأكيد الحفظ</string>
+    <string name="rel_v1_8_3_item2">أقصى استفادة من مساحة الشاشة — إزالة عنوان التطبيق العلوي وتحويل إشعار المنبه القادم إلى شريحة مدمجة فائقة الصغر</string>
+    <string name="rel_v1_8_3_item3">أوضاع عرض البطاقات والقائمة — التبديل بسلاسة بين البطاقات المدمجة وعرض القائمة عالي الكثافة</string>
+    <string name="rel_v1_8_3_item4">أيقونة شفافة احترافية — إزالة الخلفية المربعة الداكنة وتوحيد الحجم عبر مدير الملفات والمثبت والمشغل</string>
+
+    <!-- Release Notes Items v1.8.2 -->
     <string name="rel_v1_8_2_item1">توافق التحديث التلقائي مع F-Droid — ترقية رمز الإصدار إلى تنسيق 10 أرقام لضمان التحديثات التلقائية السلسة</string>
     <string name="rel_v1_8_2_item2">استقرار وصيانة — تحسينات داخلية للاستقرار ومزامنة بيانات الإصدار</string>
 

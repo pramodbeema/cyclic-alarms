@@ -84,13 +84,21 @@ Builds:
 
   - versionName: 1.8.2
     versionCode: 2026111301
-    commit: v1.8.2
+    commit: 39e6ddfa73efefa010026acfb958bf505ea6adaa
+    subdir: app
+    gradle:
+      - yes
+
+  - versionName: 1.8.3
+    versionCode: 2026112601
+    commit: 9502b4dfef203d8783bcb2e61fe3de3fd57bcfba
     subdir: app
     gradle:
       - yes
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.8.2
-CurrentVersionCode: 2026111301
+CurrentVersion: 1.8.3
+CurrentVersionCode: 2026112601
+
 

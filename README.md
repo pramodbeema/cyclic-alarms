@@ -85,6 +85,13 @@ I'm not a software developer. I'm just someone who needed a specific alarm app, 
 
 ---
 
+## What's new — v1.8.3
+
+- ⏰ **Duplicate Time Conflict Check** — automatically detects when an alarm is scheduled for the same time on the same day with real-time warning and confirmation prompt before saving.
+- 📐 **Maximized Screen Space** — removed the app name header and streamlined Next Alarm indication into an ultra-compact chip, giving maximum space to alarms.
+- 📑 **Cards & List View Modes** — user-selectable view toggle to switch between compact cards and a high-density list view.
+- 🎨 **Professional Transparent Icon** — eliminated dark square background and unified framing so the icon displays consistently across file managers, APK installer, and launcher.
+
 ## What's new — v1.8.2
 
 - 🤖 **F-Droid Auto-Update Compatibility** — upgraded internal version code to 10-digit format (`2026111301`) for seamless automatic updates via F-Droid Bot.

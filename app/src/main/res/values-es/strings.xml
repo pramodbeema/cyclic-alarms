@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">Permisos y acceso del sistema</string>
     <string name="setting_permissions_subtitle">Administre el acceso necesario para alarmas fiables y avisos en pantalla de bloqueo</string>
     <string name="about_cyclic_alarms">Acerca de Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Versión 1.8.2 • Notas de la versión, soporte e info del creador</string>
+    <string name="about_cyclic_alarms_subtitle">Versión 1.8.3 • Notas de la versión, soporte e info del creador</string>
     <string name="tinted">Matizado</string>
     <string name="pure_white">Blanco Puro</string>
 
@@ -200,8 +200,16 @@
     <string name="snooze_notif_subtext">Pospuesta (%dm)</string>
     <string name="snooze_notif_big_text">Pospuesta a las %1$s por %2$d min\nSonará a las %3$s</string>
 
+    <!-- Conflict Detection Strings -->
+    <string name="conflict_dialog_title">Alarma a la misma hora</string>
+    <string name="conflict_dialog_msg">Ya existe una alarma programada para las %1$s el %2$s%3$s. ¿Deseas guardar de todos modos?</string>
+    <string name="conflict_warning_banner">Aviso: Ya existe una alarma a las %1$s el %2$s</string>
+    <string name="btn_save_anyway">Guardar de todos modos</string>
+    <string name="btn_change_time">Cambiar hora</string>
+
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_2_title">v1.8.2 (Versión actual)</string>
+    <string name="rel_v1_8_3_title">v1.8.3 (Versión actual)</string>
+    <string name="rel_v1_8_2_title">Notas de la versión v1.8.2</string>
     <string name="rel_v1_8_1_title">Notas de la versión v1.8.1</string>
     <string name="rel_v1_8_title">Notas de la versión v1.8</string>
     <string name="rel_v1_7_3_title">Notas de la versión v1.7.3</string>
@@ -210,7 +218,13 @@
     <string name="rel_v1_7_title">Notas de la versión v1.7</string>
     <string name="rel_v1_6_5_title">Notas de la versión v1.6.5</string>
 
-        <!-- Release Notes Items v1.8.2 -->
+        <!-- Release Notes Items v1.8.3 -->
+    <string name="rel_v1_8_3_item1">Comprobación de conflicto de hora — Detecta automáticamente alarmas a la misma hora en el mismo día con aviso en tiempo real y confirmación</string>
+    <string name="rel_v1_8_3_item2">Espacio de pantalla maximizado — Se eliminó el título superior y se rediseñó la próxima alarma en una pastilla ultra compacta</string>
+    <string name="rel_v1_8_3_item3">Modos de vista Tarjetas y Lista — Cambia fácilmente entre tarjetas compactas y una vista de lista de alta densidad</string>
+    <string name="rel_v1_8_3_item4">Icono transparente profesional — Fondo cuadrado oscuro eliminado, escala unificada en administrador de archivos, instalador y lanzador</string>
+
+    <!-- Release Notes Items v1.8.2 -->
     <string name="rel_v1_8_2_item1">Compatibilidad con actualización automática de F-Droid — código de versión actualizado a 10 dígitos para actualizaciones automáticas fluidas con F-Droid Bot</string>
     <string name="rel_v1_8_2_item2">Estabilidad y mantenimiento — mejoras de estabilidad interna y alineación de lanzamiento</string>
 

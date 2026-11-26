@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">Permissions &amp; App Access</string>
     <string name="setting_permissions_subtitle">Manage system access required for reliable alarm ringing and lock-screen popups</string>
     <string name="about_cyclic_alarms">About Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.8.2 • Release notes, support &amp; creator info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.8.3 • Release notes, support &amp; creator info</string>
     <string name="tinted">Tinted</string>
     <string name="pure_white">Pure White</string>
 
@@ -201,8 +201,16 @@
     <string name="snooze_notif_subtext">Snoozed (%dm)</string>
     <string name="snooze_notif_big_text">Snoozed at %1$s for %2$d min\nRings at %3$s</string>
 
+    <!-- Conflict Detection Strings -->
+    <string name="conflict_dialog_title">Same Time Alarm</string>
+    <string name="conflict_dialog_msg">An alarm for %1$s is already scheduled on %2$s%3$s. Do you want to save anyway?</string>
+    <string name="conflict_warning_banner">Notice: An alarm already exists for %1$s on %2$s</string>
+    <string name="btn_save_anyway">Save Anyway</string>
+    <string name="btn_change_time">Change Time</string>
+
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_2_title">v1.8.2 (Current Release)</string>
+    <string name="rel_v1_8_3_title">v1.8.3 (Current Release)</string>
+    <string name="rel_v1_8_2_title">v1.8.2 Release Notes</string>
     <string name="rel_v1_8_1_title">v1.8.1 Release Notes</string>
     <string name="rel_v1_8_title">v1.8 Release Notes</string>
     <string name="rel_v1_7_3_title">v1.7.3 Release Notes</string>
@@ -221,6 +229,12 @@
     <string name="rel_v1_2_title">v1.2 Release Notes</string>
     <string name="rel_v1_1_title">v1.1 Release Notes</string>
     <string name="rel_v1_0_title">v1.0 Initial Release</string>
+
+    <!-- Release Notes Items v1.8.3 -->
+    <string name="rel_v1_8_3_item1">Duplicate Time Conflict Check — automatically detects when an alarm is scheduled for the same time on the same day with real-time warning and confirmation prompt</string>
+    <string name="rel_v1_8_3_item2">Maximized Screen Space — removed bulky header title and streamlined Next Alarm indication into an ultra-compact chip</string>
+    <string name="rel_v1_8_3_item3">Cards &amp; List View Modes — switch seamlessly between compact cards and a high-density list view</string>
+    <string name="rel_v1_8_3_item4">Professional Transparent Icon — removed dark square background, unified scale across file manager, installer, and launcher</string>
 
     <!-- Release Notes Items v1.8.2 -->
     <string name="rel_v1_8_2_item1">F-Droid Auto-Update Compatibility — upgraded internal version code to 10-digit format for seamless automatic updates via F-Droid Bot</string>

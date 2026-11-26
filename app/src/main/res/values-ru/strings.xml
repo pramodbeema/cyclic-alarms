@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">Разрешения и доступ к системе</string>
     <string name="setting_permissions_subtitle">Управление доступом для надежного срабатывания будильника и экрана блокировки</string>
     <string name="about_cyclic_alarms">О приложении Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Версия 1.8.2 • Примечания к выпуску, поддержка и автор</string>
+    <string name="about_cyclic_alarms_subtitle">Версия 1.8.3 • Примечания к выпуску, поддержка и автор</string>
     <string name="tinted">С оттенком</string>
     <string name="pure_white">Чистый белый</string>
 
@@ -200,8 +200,16 @@
     <string name="snooze_notif_subtext">Отложено (%dм)</string>
     <string name="snooze_notif_big_text">Отложен в %1$s на %2$d мин\nЗазвонит в %3$s</string>
 
+    <!-- Conflict Detection Strings -->
+    <string name="conflict_dialog_title">Будильник на то же время</string>
+    <string name="conflict_dialog_msg">Будильник на %1$s уже запланирован на %2$s%3$s. Всё равно сохранить?</string>
+    <string name="conflict_warning_banner">Внимание: Будильник на %1$s уже существует на %2$s</string>
+    <string name="btn_save_anyway">Всё равно сохранить</string>
+    <string name="btn_change_time">Изменить время</string>
+
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_2_title">v1.8.2 (Текущая версия)</string>
+    <string name="rel_v1_8_3_title">v1.8.3 (Текущая версия)</string>
+    <string name="rel_v1_8_2_title">Примечания к версии v1.8.2</string>
     <string name="rel_v1_8_1_title">Примечания к версии v1.8.1</string>
     <string name="rel_v1_8_title">Примечания к версии v1.8</string>
     <string name="rel_v1_7_3_title">Примечания к версии v1.7.3</string>
@@ -210,7 +218,13 @@
     <string name="rel_v1_7_title">Примечания к версии v1.7</string>
     <string name="rel_v1_6_5_title">Примечания к версии v1.6.5</string>
 
-        <!-- Release Notes Items v1.8.2 -->
+        <!-- Release Notes Items v1.8.3 -->
+    <string name="rel_v1_8_3_item1">Проверка конфликтов времени — Автоматическое предупреждение при установке будильника на то же время в тот же день с диалогом подтверждения</string>
+    <string name="rel_v1_8_3_item2">Максимум полезного места на экране — Удален крупный заголовок, а следующий будильник оформлен в виде ультракомпактного чипа</string>
+    <string name="rel_v1_8_3_item3">Режимы просмотра Карточки и Список — Удобное переключение между компактными карточками и плотным списком</string>
+    <string name="rel_v1_8_3_item4">Профессиональная прозрачная иконка — Убран темный квадратный фон, масштабирование унифицировано для проводника, установщика и лаунчера</string>
+
+    <!-- Release Notes Items v1.8.2 -->
     <string name="rel_v1_8_2_item1">Совместимость с автообновлением F-Droid — код версии переведен на 10-значный формат для бесперебойного автообновления через F-Droid Bot</string>
     <string name="rel_v1_8_2_item2">Стабильность и обслуживание — внутренние улучшения стабильности и синхронизация выпуска</string>
 

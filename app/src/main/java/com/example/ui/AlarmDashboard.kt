@@ -49,7 +49,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
+import com.example.data.AlarmConflictDetector
+import com.example.data.ConflictResult
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -128,6 +131,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
     val silentBannerDismissed by viewModel.silentBannerDismissed.collectAsStateWithLifecycle()
     val appLanguage      by viewModel.appLanguage.collectAsStateWithLifecycle()
     val showHomeClock    by viewModel.showHomeClock.collectAsStateWithLifecycle()
+    val alarmViewMode    by viewModel.alarmViewMode.collectAsStateWithLifecycle()
     var selectedThemeForSetup by remember { mutableStateOf(themeMode) }
     var selectedLanguageForSetup by remember { mutableStateOf(appLanguage) }
 
@@ -519,38 +523,18 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
         }
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().background(c.appBackground).padding(top = padding.calculateTopPadding()).padding(horizontal = 16.dp)) {
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Header
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            if (showHomeClock) {
+                Spacer(modifier = Modifier.height(6.dp))
                 Column {
-                    Text(
-                        text = stringResource(R.string.app_name),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = BrandBlue
-                    )
-                    if (showHomeClock) {
-                        Text(clock, fontSize = 24.sp, fontWeight = FontWeight.Black, color = c.textPrimary, fontFamily = FontFamily.Monospace)
-                        Text(date,  fontSize = 13.sp, color = c.textSecondary, fontWeight = FontWeight.Medium)
-                    }
+                    Text(clock, fontSize = 24.sp, fontWeight = FontWeight.Black, color = c.textPrimary, fontFamily = FontFamily.Monospace)
+                    Text(date,  fontSize = 13.sp, color = c.textSecondary, fontWeight = FontWeight.Medium)
                 }
-                // History icon button (top-right, only visible on Alarms tab)
-                if (currentTab == 0) {
-                    IconButton(onClick = { showHistory = true }) {
-                        Icon(
-                            Icons.Default.History,
-                            contentDescription = "Alarm History",
-                            tint = c.textSecondary,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
+                Spacer(modifier = Modifier.height(4.dp))
+            } else {
+                Spacer(modifier = Modifier.height(4.dp))
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Next alarm pill
+            // Compact Top Bar on Alarms tab (Next alarm badge on left, View Toggle + History on right)
             if (currentTab == 0) {
                 val nextPrefix = stringResource(R.string.next_alarm_prefix)
                 val noActiveStr = stringResource(R.string.no_active_alarms)
@@ -564,18 +548,60 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         if (diff > 0) {
                             val h = diff / 3_600_000; val m = (diff / 60_000) % 60
                             val tf = if (timeFormat == "24H") "E HH:mm" else "E hh:mm a"
-                            "$nextPrefix ${SimpleDateFormat(tf, Locale.getDefault()).format(Date(it.second))}  (${h}h ${m}m)"
+                            "${SimpleDateFormat(tf, Locale.getDefault()).format(Date(it.second))} (${h}h ${m}m)"
                         } else calcStr
                     } ?: noActiveStr
                 }
-                Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(
-                    if (c.isDark) Brush.horizontalGradient(listOf(Color(0xFF1C2D4A), Color(0xFF1E1A2E)))
-                    else Brush.horizontalGradient(listOf(Color(0xFFD6E4FF), Color(0xFFEBDEFF)))
-                ).padding(horizontal = 12.dp, vertical = 7.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(14.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(nextAlarmDisplay, fontSize = 12.sp, color = if (c.isDark) BrandCyan else BrandBlue, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Ultra-compact Next alarm indication (small chip)
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(if (c.isDark) Color(0xFF16233B) else Color(0xFFE8F0FE))
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Notifications, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(12.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = nextAlarmDisplay,
+                            fontSize = 11.sp,
+                            color = if (c.isDark) BrandCyan else BrandBlue,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+
+                    // View Mode toggle & Alarm History icon buttons
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                        IconButton(
+                            onClick = { viewModel.toggleAlarmViewMode() },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (alarmViewMode == "CARDS") Icons.AutoMirrored.Filled.List else Icons.Default.ViewAgenda,
+                                contentDescription = "Toggle View Mode",
+                                tint = c.textSecondary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                        IconButton(
+                            onClick = { showHistory = true },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.History,
+                                contentDescription = "Alarm History",
+                                tint = c.textSecondary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -653,20 +679,38 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
                         if (alarms.isEmpty()) {
                             EmptyStateView(Icons.Default.Notifications, stringResource(R.string.no_alarms_yet), stringResource(R.string.no_alarms_hint))
                         } else {
-                            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = padding.calculateBottomPadding() + 88.dp)) {
+                            LazyColumn(
+                                verticalArrangement = Arrangement.spacedBy(if (alarmViewMode == "LIST") 6.dp else 10.dp),
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(bottom = padding.calculateBottomPadding() + 88.dp)
+                            ) {
                                 items(alarms, key = { it.id }) { alarm ->
                                     val isSel = selectedIds.contains(alarm.id)
-                                    AlarmCard(
-                                        alarm = alarm, isSelected = isSel, isSelectionMode = selectionMode,
-                                        timeFormat = timeFormat,
-                                        onToggle = { if (!selectionMode) viewModel.toggleAlarm(alarm) },
-                                        onEdit = { editTarget = alarm; isDuplicating = false; showAddEdit = true },
-                                        onDuplicate = { editTarget = alarm; isDuplicating = true; showAddEdit = true },
-                                        onDelete = { viewModel.deleteAlarm(alarm) },
-                                        onPlayPreview = { viewModel.previewSound(alarm.soundPreset, alarm.volume) },
-                                        onLongPress = { selectedIds = selectedIds + alarm.id },
-                                        onSelectToggle = { selectedIds = if (isSel) selectedIds - alarm.id else selectedIds + alarm.id }
-                                    )
+                                    if (alarmViewMode == "LIST") {
+                                        AlarmListItem(
+                                            alarm = alarm, isSelected = isSel, isSelectionMode = selectionMode,
+                                            timeFormat = timeFormat,
+                                            onToggle = { if (!selectionMode) viewModel.toggleAlarm(alarm) },
+                                            onEdit = { editTarget = alarm; isDuplicating = false; showAddEdit = true },
+                                            onDuplicate = { editTarget = alarm; isDuplicating = true; showAddEdit = true },
+                                            onDelete = { viewModel.deleteAlarm(alarm) },
+                                            onPlayPreview = { viewModel.previewSound(alarm.soundPreset, alarm.volume) },
+                                            onLongPress = { selectedIds = selectedIds + alarm.id },
+                                            onSelectToggle = { selectedIds = if (isSel) selectedIds - alarm.id else selectedIds + alarm.id }
+                                        )
+                                    } else {
+                                        AlarmCard(
+                                            alarm = alarm, isSelected = isSel, isSelectionMode = selectionMode,
+                                            timeFormat = timeFormat,
+                                            onToggle = { if (!selectionMode) viewModel.toggleAlarm(alarm) },
+                                            onEdit = { editTarget = alarm; isDuplicating = false; showAddEdit = true },
+                                            onDuplicate = { editTarget = alarm; isDuplicating = true; showAddEdit = true },
+                                            onDelete = { viewModel.deleteAlarm(alarm) },
+                                            onPlayPreview = { viewModel.previewSound(alarm.soundPreset, alarm.volume) },
+                                            onLongPress = { selectedIds = selectedIds + alarm.id },
+                                            onSelectToggle = { selectedIds = if (isSel) selectedIds - alarm.id else selectedIds + alarm.id }
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -703,6 +747,7 @@ fun AlarmDashboard(viewModel: AlarmViewModel) {
             alarm = editTarget,
             isDuplicate = isDuplicating,
             timeFormat = timeFormat,
+            existingAlarms = alarms,
             lastCustomTrackUri = if (editTarget == null && !isDuplicating) lastCustomTrackUri else "",
             onDismiss = { viewModel.stopPreview(); showAddEdit = false; isDuplicating = false },
             onSave = { a -> viewModel.stopPreview(); if (editTarget == null || isDuplicating) viewModel.addAlarm(a) else viewModel.updateAlarm(a); showAddEdit = false; isDuplicating = false },
@@ -863,33 +908,11 @@ private fun RecurrenceOptionCard(
 }
 
 // ════════════════════════════════════════════════════════
-//  ALARM CARD
+//  ALARM SCHEDULE DESCRIPTION HELPER
 // ════════════════════════════════════════════════════════
-@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
-fun AlarmCard(
-    alarm: Alarm, isSelected: Boolean, isSelectionMode: Boolean,
-    timeFormat: String = "12H",
-    onToggle: () -> Unit, onEdit: () -> Unit, onDuplicate: () -> Unit, onDelete: () -> Unit,
-    onPlayPreview: () -> Unit, onLongPress: () -> Unit, onSelectToggle: () -> Unit
-) {
-    val isCyclic   = alarm.alarmType == "CYCLIC" || alarm.alarmType == "DAILY"
-    val isMonthly  = alarm.alarmType == "MONTHLY"
-    val isYearly   = alarm.alarmType == "YEARLY"
-    val isOnce     = alarm.alarmType == "ONCE" || alarm.isOneOff
-    val c          = LocalAppColors.current
-    val cardBg     = when { isYearly -> c.surfaceColor; isMonthly -> c.surfaceColor; isOnce -> c.surfaceColor; isCyclic -> c.cyclicCardBg; else -> c.weeklyCardBg }
-    val cardBorder = when { isYearly -> c.outlineColor; isMonthly -> c.outlineColor; isOnce -> c.outlineColor; isCyclic -> c.cyclicCardBorder; else -> c.weeklyCardBorder }
-    val accent     = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isOnce -> Color(0xFF00B4D8); isCyclic -> CyclicAccent; else -> WeeklyAccent }
-    val timeCol    = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isOnce -> Color(0xFF00B4D8); isCyclic -> c.cyclicTimeColor; else -> c.weeklyTimeColor }
-    val alpha      = if (alarm.isEnabled) 1f else 0.4f
-
-    val is24H       = timeFormat == "24H"
-    val displayHour = if (is24H) alarm.hour else when { alarm.hour == 0 -> 12; alarm.hour > 12 -> alarm.hour - 12; else -> alarm.hour }
-    val ampm        = if (is24H) "" else if (alarm.hour >= 12) "PM" else "AM"
-    val timeStr     = String.format("%02d:%02d", displayHour, alarm.minute)
-
-    val headerText = when (alarm.alarmType) {
+fun getAlarmScheduleDescription(alarm: Alarm): String {
+    return when (alarm.alarmType) {
         "ONCE" -> stringResource(R.string.sched_one_off)
         "DAILY" -> {
             if (alarm.cyclicIntervalDays <= 1) stringResource(R.string.sched_daily)
@@ -954,24 +977,53 @@ fun AlarmCard(
         }
         else -> stringResource(R.string.sched_daily)
     }
+}
+
+// ════════════════════════════════════════════════════════
+//  COMPACT ALARM CARD
+// ════════════════════════════════════════════════════════
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+@Composable
+fun AlarmCard(
+    alarm: Alarm, isSelected: Boolean, isSelectionMode: Boolean,
+    timeFormat: String = "12H",
+    onToggle: () -> Unit, onEdit: () -> Unit, onDuplicate: () -> Unit, onDelete: () -> Unit,
+    onPlayPreview: () -> Unit, onLongPress: () -> Unit, onSelectToggle: () -> Unit
+) {
+    val isCyclic   = alarm.alarmType == "CYCLIC" || alarm.alarmType == "DAILY"
+    val isMonthly  = alarm.alarmType == "MONTHLY"
+    val isYearly   = alarm.alarmType == "YEARLY"
+    val isOnce     = alarm.alarmType == "ONCE" || alarm.isOneOff
+    val c          = LocalAppColors.current
+    val cardBg     = when { isYearly -> c.surfaceColor; isMonthly -> c.surfaceColor; isOnce -> c.surfaceColor; isCyclic -> c.cyclicCardBg; else -> c.weeklyCardBg }
+    val cardBorder = when { isYearly -> c.outlineColor; isMonthly -> c.outlineColor; isOnce -> c.outlineColor; isCyclic -> c.cyclicCardBorder; else -> c.weeklyCardBorder }
+    val accent     = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isOnce -> Color(0xFF00B4D8); isCyclic -> CyclicAccent; else -> WeeklyAccent }
+    val timeCol    = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isOnce -> Color(0xFF00B4D8); isCyclic -> c.cyclicTimeColor; else -> c.weeklyTimeColor }
+    val alpha      = if (alarm.isEnabled) 1f else 0.4f
+
+    val is24H       = timeFormat == "24H"
+    val displayHour = if (is24H) alarm.hour else when { alarm.hour == 0 -> 12; alarm.hour > 12 -> alarm.hour - 12; else -> alarm.hour }
+    val ampm        = if (is24H) "" else if (alarm.hour >= 12) "PM" else "AM"
+    val timeStr     = String.format("%02d:%02d", displayHour, alarm.minute)
+    val headerText  = getAlarmScheduleDescription(alarm)
 
     Card(
         modifier = Modifier.fillMaxWidth()
-            .shadow(if (alarm.isEnabled) 4.dp else 0.dp, RoundedCornerShape(16.dp))
+            .shadow(if (alarm.isEnabled) 3.dp else 0.dp, RoundedCornerShape(14.dp))
             .combinedClickable(onClick = { if (isSelectionMode) onSelectToggle() }, onLongClick = onLongPress),
         colors = CardDefaults.cardColors(containerColor = if (isSelected) accent.copy(alpha = 0.18f) else cardBg),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(14.dp),
         border = BorderStroke(1.dp, if (isSelected) accent else cardBorder)
     ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(14.dp)) {
+        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp)) {
 
             // Badge + switch row
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(accent.copy(alpha = 0.18f)).padding(horizontal = 8.dp, vertical = 3.dp)) {
-                        Text(headerText, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, color = accent.copy(alpha = alpha), letterSpacing = 0.8.sp)
+                    Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(accent.copy(alpha = 0.18f)).padding(horizontal = 7.dp, vertical = 2.dp)) {
+                        Text(headerText, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, color = accent.copy(alpha = alpha), letterSpacing = 0.6.sp)
                     }
-                    Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(c.surfaceVariant).padding(horizontal = 6.dp, vertical = 3.dp)) {
+                    Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(c.surfaceVariant).padding(horizontal = 6.dp, vertical = 2.dp)) {
                         Text("💤 ${alarm.snoozeMinutes}m", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = c.textSecondary.copy(alpha = alpha))
                     }
                 }
@@ -981,26 +1033,26 @@ fun AlarmCard(
                 } else {
                     Switch(checked = alarm.isEnabled, onCheckedChange = { onToggle() },
                         colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = accent, uncheckedThumbColor = c.textDisabled, uncheckedTrackColor = c.surfaceVariant),
-                        modifier = Modifier.testTag("alarm_switch_${alarm.id}"))
+                        modifier = Modifier.scale(0.9f).testTag("alarm_switch_${alarm.id}"))
                 }
             }
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             // Time + sound pill row
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
-                Text(timeStr, fontSize = 48.sp, fontWeight = FontWeight.Black, color = timeCol.copy(alpha = alpha), fontFamily = FontFamily.Monospace, lineHeight = 48.sp)
+                Text(timeStr, fontSize = 36.sp, fontWeight = FontWeight.Black, color = timeCol.copy(alpha = alpha), fontFamily = FontFamily.Monospace, lineHeight = 36.sp)
                 if (!is24H) {
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(ampm, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = accent.copy(alpha = alpha), modifier = Modifier.padding(bottom = 8.dp))
+                    Text(ampm, fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, color = accent.copy(alpha = alpha), modifier = Modifier.padding(bottom = 4.dp))
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 if (!isSelectionMode) {
-                    Box(modifier = Modifier.align(Alignment.Bottom).clip(RoundedCornerShape(8.dp)).background(c.surfaceVariant).clickable { onPlayPreview() }.padding(horizontal = 8.dp, vertical = 5.dp)) {
+                    Box(modifier = Modifier.align(Alignment.Bottom).clip(RoundedCornerShape(6.dp)).background(c.surfaceVariant).clickable { onPlayPreview() }.padding(horizontal = 7.dp, vertical = 4.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.PlayArrow, contentDescription = "Preview", tint = accent.copy(alpha = alpha), modifier = Modifier.size(13.dp))
+                            Icon(Icons.Default.PlayArrow, contentDescription = "Preview", tint = accent.copy(alpha = alpha), modifier = Modifier.size(12.dp))
                             Spacer(Modifier.width(3.dp))
-                            Text(alarm.soundPreset.take(14), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = c.textSecondary.copy(alpha = alpha))
+                            Text(alarm.soundPreset.take(12), fontSize = 10.sp, fontWeight = FontWeight.Bold, color = c.textSecondary.copy(alpha = alpha))
                         }
                     }
                 }
@@ -1009,40 +1061,146 @@ fun AlarmCard(
             // Label
             if (alarm.label.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(2.dp))
-                Text(alarm.label, fontSize = 13.sp, color = c.textSecondary.copy(alpha = alpha), fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(alarm.label, fontSize = 12.sp, color = c.textSecondary.copy(alpha = alpha), fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
 
             if (!isSelectionMode) {
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 HorizontalDivider(color = cardBorder)
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
-                // Duplicate + Edit + Delete buttons — full width, equal 3-way split
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = onDuplicate, modifier = Modifier.weight(1f).height(42.dp),
+                // Compact Duplicate + Edit + Delete buttons
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Button(onClick = onDuplicate, modifier = Modifier.weight(1f).height(32.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = accent.copy(alpha = 0.15f), contentColor = accent),
-                        shape = RoundedCornerShape(10.dp), contentPadding = PaddingValues(horizontal = 4.dp),
+                        shape = RoundedCornerShape(8.dp), contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp),
                         elevation = ButtonDefaults.buttonElevation(0.dp)) {
-                        Icon(Icons.Default.ContentCopy, contentDescription = stringResource(R.string.duplicate), modifier = Modifier.size(14.dp))
+                        Icon(Icons.Default.ContentCopy, contentDescription = stringResource(R.string.duplicate), modifier = Modifier.size(13.dp))
                         Spacer(Modifier.width(4.dp))
-                        Text(stringResource(R.string.duplicate), fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(stringResource(R.string.duplicate), fontSize = 11.sp, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     }
-                    Button(onClick = onEdit, modifier = Modifier.weight(1f).height(42.dp),
+                    Button(onClick = onEdit, modifier = Modifier.weight(1f).height(32.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = accent.copy(alpha = 0.2f), contentColor = accent),
-                        shape = RoundedCornerShape(10.dp), contentPadding = PaddingValues(horizontal = 8.dp),
+                        shape = RoundedCornerShape(8.dp), contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp),
                         elevation = ButtonDefaults.buttonElevation(0.dp)) {
-                        Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit), modifier = Modifier.size(15.dp))
-                        Spacer(Modifier.width(6.dp))
-                        Text(stringResource(R.string.edit), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
+                        Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit), modifier = Modifier.size(13.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text(stringResource(R.string.edit), fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
-                    Button(onClick = onDelete, modifier = Modifier.weight(1f).height(42.dp),
+                    Button(onClick = onDelete, modifier = Modifier.weight(1f).height(32.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = DeleteRed.copy(alpha = 0.18f), contentColor = DeleteRed),
-                        shape = RoundedCornerShape(10.dp), contentPadding = PaddingValues(horizontal = 8.dp),
+                        shape = RoundedCornerShape(8.dp), contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp),
                         elevation = ButtonDefaults.buttonElevation(0.dp)) {
-                        Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete), modifier = Modifier.size(15.dp))
-                        Spacer(Modifier.width(6.dp))
-                        Text(stringResource(R.string.delete), fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete), modifier = Modifier.size(13.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text(stringResource(R.string.delete), fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
+                }
+            }
+        }
+    }
+}
+
+// ════════════════════════════════════════════════════════
+//  COMPACT ALARM LIST ITEM (LIST VIEW)
+// ════════════════════════════════════════════════════════
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+@Composable
+fun AlarmListItem(
+    alarm: Alarm, isSelected: Boolean, isSelectionMode: Boolean,
+    timeFormat: String = "12H",
+    onToggle: () -> Unit, onEdit: () -> Unit, onDuplicate: () -> Unit, onDelete: () -> Unit,
+    onPlayPreview: () -> Unit = {}, onLongPress: () -> Unit, onSelectToggle: () -> Unit
+) {
+    val isCyclic   = alarm.alarmType == "CYCLIC" || alarm.alarmType == "DAILY"
+    val isMonthly  = alarm.alarmType == "MONTHLY"
+    val isYearly   = alarm.alarmType == "YEARLY"
+    val isOnce     = alarm.alarmType == "ONCE" || alarm.isOneOff
+    val c          = LocalAppColors.current
+    val cardBg     = when { isYearly -> c.surfaceColor; isMonthly -> c.surfaceColor; isOnce -> c.surfaceColor; isCyclic -> c.cyclicCardBg; else -> c.weeklyCardBg }
+    val cardBorder = when { isYearly -> c.outlineColor; isMonthly -> c.outlineColor; isOnce -> c.outlineColor; isCyclic -> c.cyclicCardBorder; else -> c.weeklyCardBorder }
+    val accent     = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isOnce -> Color(0xFF00B4D8); isCyclic -> CyclicAccent; else -> WeeklyAccent }
+    val timeCol    = when { isYearly -> Color(0xFF10B981); isMonthly -> Color(0xFFFF9800); isOnce -> Color(0xFF00B4D8); isCyclic -> c.cyclicTimeColor; else -> c.weeklyTimeColor }
+    val alpha      = if (alarm.isEnabled) 1f else 0.4f
+
+    val is24H       = timeFormat == "24H"
+    val displayHour = if (is24H) alarm.hour else when { alarm.hour == 0 -> 12; alarm.hour > 12 -> alarm.hour - 12; else -> alarm.hour }
+    val ampm        = if (is24H) "" else if (alarm.hour >= 12) "PM" else "AM"
+    val timeStr     = String.format("%02d:%02d", displayHour, alarm.minute)
+    val headerText  = getAlarmScheduleDescription(alarm)
+
+    Card(
+        modifier = Modifier.fillMaxWidth()
+            .shadow(if (alarm.isEnabled) 2.dp else 0.dp, RoundedCornerShape(10.dp))
+            .combinedClickable(
+                onClick = { if (isSelectionMode) onSelectToggle() else onEdit() },
+                onLongClick = onLongPress
+            ),
+        colors = CardDefaults.cardColors(containerColor = if (isSelected) accent.copy(alpha = 0.18f) else cardBg),
+        shape = RoundedCornerShape(10.dp),
+        border = BorderStroke(1.dp, if (isSelected) accent else cardBorder)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        timeStr,
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.Black,
+                        color = timeCol.copy(alpha = alpha),
+                        fontFamily = FontFamily.Monospace
+                    )
+                    if (!is24H) {
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(
+                            ampm,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = accent.copy(alpha = alpha),
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Box(modifier = Modifier.clip(RoundedCornerShape(4.dp)).background(accent.copy(alpha = 0.15f)).padding(horizontal = 5.dp, vertical = 2.dp)) {
+                        Text(headerText, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = accent.copy(alpha = alpha), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
+                }
+                if (alarm.label.isNotEmpty()) {
+                    Text(alarm.label, fontSize = 11.sp, color = c.textSecondary.copy(alpha = alpha), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
+            }
+
+            // Quick actions on right
+            if (isSelectionMode) {
+                Checkbox(
+                    checked = isSelected,
+                    onCheckedChange = { onSelectToggle() },
+                    colors = CheckboxDefaults.colors(checkedColor = accent, uncheckedColor = c.textDisabled)
+                )
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                    IconButton(onClick = onDuplicate, modifier = Modifier.size(30.dp)) {
+                        Icon(Icons.Default.ContentCopy, contentDescription = stringResource(R.string.duplicate), tint = accent.copy(alpha = alpha), modifier = Modifier.size(15.dp))
+                    }
+                    IconButton(onClick = onDelete, modifier = Modifier.size(30.dp)) {
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = DeleteRed.copy(alpha = alpha), modifier = Modifier.size(16.dp))
+                    }
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Switch(
+                        checked = alarm.isEnabled,
+                        onCheckedChange = { onToggle() },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = Color.White,
+                            checkedTrackColor = accent,
+                            uncheckedThumbColor = c.textDisabled,
+                            uncheckedTrackColor = c.surfaceVariant
+                        ),
+                        modifier = Modifier.scale(0.85f).testTag("alarm_switch_${alarm.id}")
+                    )
                 }
             }
         }
@@ -1153,6 +1311,7 @@ fun AlarmAddEditDialog(
     alarm: Alarm?,
     isDuplicate: Boolean = false,
     timeFormat: String = "12H",
+    existingAlarms: List<Alarm> = emptyList(),
     onDismiss: () -> Unit,
     onSave: (Alarm) -> Unit,
     onPlayPreview: (String, Float) -> Unit,
@@ -1897,7 +2056,74 @@ fun AlarmAddEditDialog(
                     }
                 }
 
+                fun buildCandidate(): Alarm {
+                    syncTime()
+                    val daysStr = if (alarmType == "WEEKLY") weeklyDays.filterValues { it }.keys.sorted().joinToString(",") else ""
+                    val finalAlarmType = if (alarmType == "DAILY" && dailyMode == "INTERVAL") "CYCLIC" else alarmType
+                    val interval = if (finalAlarmType == "CYCLIC") (cyclicInterval.toIntOrNull() ?: 1).coerceAtLeast(1) else 1
+                    val validSnooze = snoozeMinutes.coerceIn(1, 180)
+                    val finalSubtype = if (alarmType == "MONTHLY" || alarmType == "YEARLY") recurrenceSubtype else ""
+                    val finalMonthlyDates = if (alarmType == "MONTHLY") {
+                        if (recurrenceSubtype == "SELECTED_DATES") selectedDates.sorted().joinToString(",")
+                        else baseDay.toString()
+                    } else ""
+                    val finalYearlyMonths = if (alarmType == "YEARLY") {
+                        if (recurrenceSubtype == "SELECTED_MONTHS") selectedMonths.sorted().joinToString(",")
+                        else (baseMonth + 1).toString()
+                    } else ""
+                    val finalOrdinal = if (recurrenceSubtype == "DAY_OF_WEEK") baseOrdinal else 0
+                    val finalDow = if (recurrenceSubtype == "DAY_OF_WEEK") baseDow else 0
+
+                    return Alarm(
+                        id = if (isDuplicate) 0 else (alarm?.id ?: 0), label = label, hour = hour, minute = minute, isEnabled = true,
+                        alarmType = finalAlarmType, weeklyDays = daysStr, cyclicIntervalDays = interval,
+                        cyclicStartDate = baseDateMillis, soundPreset = soundPreset, customTrackUri = customTrackUri,
+                        vibrate = vibrate, volume = volume, snoozeMinutes = validSnooze,
+                        lastTriggeredTime = alarm?.lastTriggeredTime ?: 0L,
+                        recurrenceSubtype = finalSubtype,
+                        monthlyDates = finalMonthlyDates,
+                        monthlyDayOrdinal = finalOrdinal,
+                        monthlyDayOfWeek = finalDow,
+                        yearlyMonths = finalYearlyMonths
+                    )
+                }
+
+                // Live conflict check
+                val activeConflict: ConflictResult? = remember(hour, minute, alarmType, dailyMode, cyclicInterval, baseDateMillis, recurrenceSubtype, selectedDates.size, selectedMonths.size, isPm, hour12Str, hour24Str, minuteStr, existingAlarms) {
+                    val candidate = buildCandidate()
+                    AlarmConflictDetector.findConflict(
+                        target = candidate,
+                        existingAlarms = existingAlarms,
+                        excludeAlarmId = if (isDuplicate) null else alarm?.id,
+                        timeFormat = timeFormat
+                    )
+                }
+
+                if (activeConflict != null) {
+                    Spacer(Modifier.height(6.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(WarningAmber.copy(alpha = 0.15f))
+                            .border(BorderStroke(1.dp, WarningAmber.copy(alpha = 0.4f)), RoundedCornerShape(8.dp))
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Warning, contentDescription = null, tint = WarningAmber, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            text = stringResource(R.string.conflict_warning_banner, activeConflict.timeFormatted, activeConflict.dayDescription),
+                            color = WarningAmber,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+
                 HorizontalDivider(color = c.outlineColor, modifier = Modifier.padding(vertical = 8.dp))
+
+                var showConflictDialog by remember { mutableStateOf<ConflictResult?>(null) }
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedButton(onClick = onDismiss, modifier = Modifier.weight(1f).height(48.dp),
@@ -1906,39 +2132,66 @@ fun AlarmAddEditDialog(
                         Text(stringResource(R.string.cancel), fontWeight = FontWeight.Bold)
                     }
                     Button(onClick = {
-                        val daysStr = if (alarmType == "WEEKLY") weeklyDays.filterValues { it }.keys.sorted().joinToString(",") else ""
-                        val finalAlarmType = if (alarmType == "DAILY" && dailyMode == "INTERVAL") "CYCLIC" else alarmType
-                        val interval = if (finalAlarmType == "CYCLIC") (cyclicInterval.toIntOrNull() ?: 1).coerceAtLeast(1) else 1
-                        val validSnooze = snoozeMinutes.coerceIn(1, 180)
-                        val finalSubtype = if (alarmType == "MONTHLY" || alarmType == "YEARLY") recurrenceSubtype else ""
-                        val finalMonthlyDates = if (alarmType == "MONTHLY") {
-                            if (recurrenceSubtype == "SELECTED_DATES") selectedDates.sorted().joinToString(",")
-                            else baseDay.toString()
-                        } else ""
-                        val finalYearlyMonths = if (alarmType == "YEARLY") {
-                            if (recurrenceSubtype == "SELECTED_MONTHS") selectedMonths.sorted().joinToString(",")
-                            else (baseMonth + 1).toString()
-                        } else ""
-                        val finalOrdinal = if (recurrenceSubtype == "DAY_OF_WEEK") baseOrdinal else 0
-                        val finalDow = if (recurrenceSubtype == "DAY_OF_WEEK") baseDow else 0
-
-                        onSave(Alarm(
-                            id = if (isDuplicate) 0 else (alarm?.id ?: 0), label = label, hour = hour, minute = minute, isEnabled = true,
-                            alarmType = finalAlarmType, weeklyDays = daysStr, cyclicIntervalDays = interval,
-                            cyclicStartDate = baseDateMillis, soundPreset = soundPreset, customTrackUri = customTrackUri,
-                            vibrate = vibrate, volume = volume, snoozeMinutes = validSnooze,
-                            lastTriggeredTime = alarm?.lastTriggeredTime ?: 0L,
-                            recurrenceSubtype = finalSubtype,
-                            monthlyDates = finalMonthlyDates,
-                            monthlyDayOrdinal = finalOrdinal,
-                            monthlyDayOfWeek = finalDow,
-                            yearlyMonths = finalYearlyMonths
-                        ))
+                        val candidate = buildCandidate()
+                        val conflict = AlarmConflictDetector.findConflict(
+                            target = candidate,
+                            existingAlarms = existingAlarms,
+                            excludeAlarmId = if (isDuplicate) null else alarm?.id,
+                            timeFormat = timeFormat
+                        )
+                        if (conflict != null) {
+                            showConflictDialog = conflict
+                        } else {
+                            onSave(candidate)
+                        }
                     }, modifier = Modifier.weight(1.6f).height(48.dp).testTag("save_alarm_button"),
                         colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166)),
                         shape = RoundedCornerShape(12.dp)) {
                         Text(stringResource(R.string.save_alarm), fontWeight = FontWeight.ExtraBold, fontSize = 15.sp)
                     }
+                }
+
+                val currentConflict = showConflictDialog
+                if (currentConflict != null) {
+                    val c2 = LocalAppColors.current
+                    val otherLabel = if (currentConflict.conflictingAlarm.label.isNotEmpty()) " (\"${currentConflict.conflictingAlarm.label}\")" else ""
+                    AlertDialog(
+                        onDismissRequest = { showConflictDialog = null },
+                        title = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(Icons.Default.Warning, contentDescription = null, tint = WarningAmber, modifier = Modifier.size(22.dp))
+                                Spacer(Modifier.width(8.dp))
+                                Text(stringResource(R.string.conflict_dialog_title), fontWeight = FontWeight.Bold, fontSize = 17.sp, color = c2.textPrimary)
+                            }
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(R.string.conflict_dialog_msg, currentConflict.timeFormatted, currentConflict.dayDescription, otherLabel),
+                                fontSize = 13.sp,
+                                color = c2.textPrimary
+                            )
+                        },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    val toSave = buildCandidate()
+                                    showConflictDialog = null
+                                    onSave(toSave)
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = BrandBlue, contentColor = Color(0xFF003166)),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text(stringResource(R.string.btn_save_anyway), fontWeight = FontWeight.Bold)
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showConflictDialog = null }) {
+                                Text(stringResource(R.string.btn_change_time), color = c2.textSecondary, fontWeight = FontWeight.SemiBold)
+                            }
+                        },
+                        containerColor = c2.surfaceColor,
+                        shape = RoundedCornerShape(16.dp)
+                    )
                 }
             }
         }
@@ -3133,7 +3386,7 @@ fun AboutPageView(bottomPadding: androidx.compose.ui.unit.Dp = 0.dp) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Beema's FINCON", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandBlue)
                 Spacer(Modifier.width(8.dp))
-                Text("Version 1.8.2", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
+                Text("Version 1.8.3", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = SuccessGreen,
                     modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(SuccessGreen.copy(alpha = 0.15f)).padding(horizontal = 8.dp, vertical = 2.dp))
             }
             Spacer(Modifier.height(8.dp))
@@ -3200,11 +3453,24 @@ fun AboutPageView(bottomPadding: androidx.compose.ui.unit.Dp = 0.dp) {
             Text(stringResource(R.string.release_history_subtitle), fontSize = 12.sp, color = c.textSecondary)
             Spacer(Modifier.height(4.dp))
 
-            // v1.8.2 — Expanded by default (current release)
+            // v1.8.3 — Expanded by default (current release)
             ExpandableReleaseNoteCard(
-                version = stringResource(R.string.rel_v1_8_2_title),
+                version = stringResource(R.string.rel_v1_8_3_title),
                 badgeText = stringResource(R.string.badge_latest),
                 isInitiallyExpanded = true,
+                items = listOf(
+                    "⏰" to stringResource(R.string.rel_v1_8_3_item1),
+                    "📐" to stringResource(R.string.rel_v1_8_3_item2),
+                    "📑" to stringResource(R.string.rel_v1_8_3_item3),
+                    "🎨" to stringResource(R.string.rel_v1_8_3_item4)
+                )
+            )
+
+            // v1.8.2 — Collapsed
+            ExpandableReleaseNoteCard(
+                version = stringResource(R.string.rel_v1_8_2_title),
+                badgeText = "v1.8.2",
+                isInitiallyExpanded = false,
                 items = listOf(
                     "🤖" to stringResource(R.string.rel_v1_8_2_item1),
                     "⚡" to stringResource(R.string.rel_v1_8_2_item2)

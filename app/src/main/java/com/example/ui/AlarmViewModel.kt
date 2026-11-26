@@ -46,6 +46,20 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     private val _showHomeClock = MutableStateFlow(prefs.getBoolean("show_home_clock", false))
     val showHomeClock = _showHomeClock.asStateFlow()
 
+    // Alarm view mode: "CARDS" or "LIST"
+    private val _alarmViewMode = MutableStateFlow(prefs.getString("alarm_view_mode", "CARDS") ?: "CARDS")
+    val alarmViewMode = _alarmViewMode.asStateFlow()
+
+    fun setAlarmViewMode(mode: String) {
+        _alarmViewMode.value = mode
+        prefs.edit().putString("alarm_view_mode", mode).apply()
+    }
+
+    fun toggleAlarmViewMode() {
+        val next = if (_alarmViewMode.value == "CARDS") "LIST" else "CARDS"
+        setAlarmViewMode(next)
+    }
+
     // Light mode whiteness (0.0 = default tinted bg, 1.0 = pure white)
     private val _lightWhiteness = MutableStateFlow(
         prefs.getFloat("light_whiteness", 0f)

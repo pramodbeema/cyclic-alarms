@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">İzinler ve Sistem Erişimi</string>
     <string name="setting_permissions_subtitle">Güvenilir alarm çalması ve kilit ekranı pencereleri için gereken izinleri yönetin</string>
     <string name="about_cyclic_alarms">Cyclic Alarms Hakkında</string>
-    <string name="about_cyclic_alarms_subtitle">Sürüm 1.8.2 • Sürüm notları, destek ve yapımcı bilgisi</string>
+    <string name="about_cyclic_alarms_subtitle">Sürüm 1.8.3 • Sürüm notları, destek ve yapımcı bilgisi</string>
     <string name="tinted">Tonlu</string>
     <string name="pure_white">Saf Beyaz</string>
 
@@ -200,8 +200,16 @@
     <string name="snooze_notif_subtext">Ertelendi (%dd)</string>
     <string name="snooze_notif_big_text">%1$s zamanında %2$d dk ertelendi\nÇalma zamanı: %3$s</string>
 
+    <!-- Conflict Detection Strings -->
+    <string name="conflict_dialog_title">Aynı Saatte Alarm</string>
+    <string name="conflict_dialog_msg">%2$s günü saat %1$s için zaten bir alarm planlanmış%3$s. Yine de kaydedilsin mi?</string>
+    <string name="conflict_warning_banner">Uyarı: %2$s günü saat %1$s için zaten bir alarm mevcut</string>
+    <string name="btn_save_anyway">Yine de Kaydet</string>
+    <string name="btn_change_time">Saati Değiştir</string>
+
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_2_title">v1.8.2 (Geçerli Sürüm)</string>
+    <string name="rel_v1_8_3_title">v1.8.3 (Geçerli Sürüm)</string>
+    <string name="rel_v1_8_2_title">v1.8.2 Sürüm Notları</string>
     <string name="rel_v1_8_1_title">v1.8.1 Sürüm Notları</string>
     <string name="rel_v1_8_title">v1.8 Sürüm Notları</string>
     <string name="rel_v1_7_3_title">v1.7.3 Sürüm Notları</string>
@@ -210,7 +218,13 @@
     <string name="rel_v1_7_title">v1.7 Sürüm Notları</string>
     <string name="rel_v1_6_5_title">v1.6.5 Sürüm Notları</string>
 
-        <!-- Release Notes Items v1.8.2 -->
+        <!-- Release Notes Items v1.8.3 -->
+    <string name="rel_v1_8_3_item1">Zaman Çakışması Kontrolü — Aynı gün ve aynı saatteki alarmları otomatik tespit ederek gerçek zamanlı uyarı ve onay penceresi sunar</string>
+    <string name="rel_v1_8_3_item2">Maksimum Ekran Alanı — Üst başlık kaldırılarak bir sonraki alarm göstergesi ultra kompakt bir çipe dönüştürüldü</string>
+    <string name="rel_v1_8_3_item3">Kart ve Liste Görünüm Modları — Kompakt kartlar ile yüksek yoğunluklu liste görünümü arasında kolayca geçiş yapın</string>
+    <string name="rel_v1_8_3_item4">Profesyonel Şeffaf Simge — Koyu kare arka plan kaldırıldı, dosya yöneticisi, yükleyici ve başlatıcıda ölçek eşitlendi</string>
+
+    <!-- Release Notes Items v1.8.2 -->
     <string name="rel_v1_8_2_item1">F-Droid Otomatik Güncelleme Uyumluluğu — F-Droid Bot ile sorunsuz otomatik güncellemeler için sürüm kodu 10 basamaklı formata yükseltildi</string>
     <string name="rel_v1_8_2_item2">Kararlılık ve Bakım — dahili kararlılık iyileştirmeleri ve sürüm bilgisi eşitlemesi</string>
 

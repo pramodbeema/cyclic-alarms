@@ -1,0 +1,4 @@
+- Duplicate Time Conflict Check: Real-time collision detection for same-time alarms on overlapping days with warning banner and confirmation dialog.
+- Maximized Screen Space: Removed app name header and streamlined Next Alarm into an ultra-compact chip.
+- Cards & List View: New view toggle allowing users to choose between compact cards and high-density list items.
+- Professional Transparent Icon: Removed solid dark square background, unified scale across file managers, installer, and launchers.

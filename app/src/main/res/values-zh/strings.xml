@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">权限与系统访问</string>
     <string name="setting_permissions_subtitle">管理精准响铃和锁屏弹窗所需的系统权限</string>
     <string name="about_cyclic_alarms">关于 Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">版本 1.8.2 • 发行说明、支持与开发者信息</string>
+    <string name="about_cyclic_alarms_subtitle">版本 1.8.3 • 发行说明、支持与开发者信息</string>
     <string name="tinted">淡色</string>
     <string name="pure_white">纯白</string>
 
@@ -200,8 +200,16 @@
     <string name="snooze_notif_subtext">稍后提醒 (%d分钟)</string>
     <string name="snooze_notif_big_text">于 %1$s 稍后提醒 %2$d 分钟\n将于 %3$s 响铃</string>
 
+    <!-- Conflict Detection Strings -->
+    <string name="conflict_dialog_title">同时段闹钟提示</string>
+    <string name="conflict_dialog_msg">%2$s的 %1$s%3$s 已有设定的闹钟。仍然要保存吗？</string>
+    <string name="conflict_warning_banner">提示: %2$s %1$s 已存在相同时间的闹钟</string>
+    <string name="btn_save_anyway">仍要保存</string>
+    <string name="btn_change_time">修改时间</string>
+
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_2_title">v1.8.2（当前版本）</string>
+    <string name="rel_v1_8_3_title">v1.8.3（当前版本）</string>
+    <string name="rel_v1_8_2_title">v1.8.2 更新说明</string>
     <string name="rel_v1_8_1_title">v1.8.1 更新说明</string>
     <string name="rel_v1_8_title">v1.8 更新说明</string>
     <string name="rel_v1_7_3_title">v1.7.3 更新说明</string>
@@ -210,7 +218,13 @@
     <string name="rel_v1_7_title">v1.7 更新说明</string>
     <string name="rel_v1_6_5_title">v1.6.5 发行说明</string>
 
-        <!-- Release Notes Items v1.8.2 -->
+        <!-- Release Notes Items v1.8.3 -->
+    <string name="rel_v1_8_3_item1">同时段冲突检测 — 自动检测同一天同一时间设定的闹钟，提供实时警示与确认保存弹窗</string>
+    <string name="rel_v1_8_3_item2">最大化屏幕展示空间 — 移除顶部应用大标题，下次响铃提示优化为超紧凑徽章</string>
+    <string name="rel_v1_8_3_item3">卡片与列表视图切换 — 可在精简卡片和高密度紧凑列表视图间一键无缝切换</string>
+    <string name="rel_v1_8_3_item4">专业级透明图标 — 彻底移除深色方形底框，统一文件管理器、安装器和启动器缩放比例</string>
+
+    <!-- Release Notes Items v1.8.2 -->
     <string name="rel_v1_8_2_item1">F-Droid 自动更新兼容性 — 将版本代码升级为10位数字格式，确保 F-Droid 机器人无缝自动更新</string>
     <string name="rel_v1_8_2_item2">稳定性与维护 — 内部稳定性改进与发布配置同步</string>
 

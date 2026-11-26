@@ -26,7 +26,7 @@
     <string name="setting_permissions_title">Berechtigungen &amp; App-Zugriff</string>
     <string name="setting_permissions_subtitle">Systemzugriff für zuverlässiges Klingeln und Sperrbildschirm-Popups verwalten</string>
     <string name="about_cyclic_alarms">Über Cyclic Alarms</string>
-    <string name="about_cyclic_alarms_subtitle">Version 1.8.2 • Versionshinweise, Support &amp; Entwickler-Info</string>
+    <string name="about_cyclic_alarms_subtitle">Version 1.8.3 • Versionshinweise, Support &amp; Entwickler-Info</string>
     <string name="tinted">Getönt</string>
     <string name="pure_white">Reinweiß</string>
 
@@ -200,8 +200,16 @@
     <string name="snooze_notif_subtext">Schlummern (%dm)</string>
     <string name="snooze_notif_big_text">Geschlummert um %1$s für %2$d Min.\nKlingelt um %3$s</string>
 
+    <!-- Conflict Detection Strings -->
+    <string name="conflict_dialog_title">Wecker zur gleichen Zeit</string>
+    <string name="conflict_dialog_msg">Ein Wecker für %1$s ist am %2$s%3$s bereits eingerichtet. Trotzdem speichern?</string>
+    <string name="conflict_warning_banner">Hinweis: Ein Wecker existiert bereits für %1$s am %2$s</string>
+    <string name="btn_save_anyway">Trotzdem speichern</string>
+    <string name="btn_change_time">Zeit ändern</string>
+
     <!-- Release Notes Titles -->
-    <string name="rel_v1_8_2_title">v1.8.2 (Aktuelle Version)</string>
+    <string name="rel_v1_8_3_title">v1.8.3 (Aktuelle Version)</string>
+    <string name="rel_v1_8_2_title">Versionshinweise v1.8.2</string>
     <string name="rel_v1_8_1_title">Versionshinweise v1.8.1</string>
     <string name="rel_v1_8_title">Versionshinweise v1.8</string>
     <string name="rel_v1_7_3_title">Versionshinweise v1.7.3</string>
@@ -210,7 +218,13 @@
     <string name="rel_v1_7_title">Versionshinweise v1.7</string>
     <string name="rel_v1_6_5_title">v1.6.5 Versionshinweise</string>
 
-        <!-- Release Notes Items v1.8.2 -->
+        <!-- Release Notes Items v1.8.3 -->
+    <string name="rel_v1_8_3_item1">Zeitkonflikt-Prüfung — Erkennt automatisch, wenn ein Wecker zur gleichen Zeit am selben Tag geplant ist, mit Echtzeit-Warnung und Bestätigungsdialog</string>
+    <string name="rel_v1_8_3_item2">Maximale Bildschirmfläche — App-Titel im Header entfernt und Anzeige des nächsten Weckers in einen ultrakompakten Chip umgewandelt</string>
+    <string name="rel_v1_8_3_item3">Karten- &amp; Listenansicht — Nahtloser Wechsel zwischen kompakten Karten und einer platzsparenden Listenansicht</string>
+    <string name="rel_v1_8_3_item4">Professionelles transparentes Icon — Dunkler quadratischer Hintergrund entfernt, einheitliche Skalierung im Dateimanager, Installer und Launcher</string>
+
+    <!-- Release Notes Items v1.8.2 -->
     <string name="rel_v1_8_2_item1">F-Droid Auto-Update-Kompatibilität — Versionscode auf 10-stelliges Format aktualisiert für nahtlose automatische Updates via F-Droid Bot</string>
     <string name="rel_v1_8_2_item2">Stabilität &amp; Wartung — interne Stabilitätsverbesserungen und Bereinigung der Release-Pipeline</string>
 
